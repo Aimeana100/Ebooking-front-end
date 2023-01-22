@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Button from "../Button";
 import "./login.scss";
-
 import Navigation from "../navigation/Navigation";
 
 function Login() {
@@ -29,12 +28,12 @@ function Login() {
                 name="email"
                 id="email"
                 className="form__control"
-                placeHolder="joe@olympichotel.rw"
+                placeholder="joe@olympichotel.rw"
               />
             </div>
             <div className="Form__row block">
               <input
-                type="text"
+                type="password"
                 value={value.pasword}
                 name="password"
                 id="password"
@@ -43,6 +42,11 @@ function Login() {
                 onChange={handleChange}
               />
             </div>
+            <div className="Form__row block">
+              {/* <Link to="/" exact={true} activeClassName="active">Reset password</Link> */}
+              <a style={{color: "green", float: "right"}} href="/">Reset password</a>
+              </div>
+             
             <div className="Form__row block">
               <Button btnText="Login" />
             </div>

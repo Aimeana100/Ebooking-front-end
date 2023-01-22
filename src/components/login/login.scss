@@ -1,7 +1,11 @@
 $primary_color: rgb(109,23,2);
+$primary_color__effect1: rgb(81, 18, 2);
+
 $secondary__color: rgb(232,170,0);
 $default__color: rgb(241,240,236);
 $white__color: rgb(255,255,255);
+$white__color__effect: rgba(213, 213, 213, 0.845);
+
 
 .Login{
     height: 100%;
@@ -39,7 +43,12 @@ $white__color: rgb(255,255,255);
             padding: 10px 20px;
             font-size: 1.2em;
             color: $primary_color;
+            cursor: pointer;
             border: none;
+
+            &:hover{
+                background-color: $white__color__effect;    
+            }
         }
     
         
@@ -53,10 +62,11 @@ $white__color: rgb(255,255,255);
         display: block;
         
         .heading{
-            font-size: 3em;
+            font-size: 4em;
             font-weight: bold;
-            color:  rgb(20, 9, 9);
+            color: $secondary__color;
             margin: 20px 0px;
+            margin: 15% 0%;
         }
 
         p{

@@ -3,6 +3,7 @@ import Button from "../Button";
 import "./login.scss";
 
 import Navigation from "../navigation/Navigation";
+import { Link } from "react-router-dom";
 
 function Login() {
   const [value, setValue] = useState("");
@@ -13,6 +14,7 @@ function Login() {
   return (
     <>
     <Navigation />
+
       <div className="Login">
         <div className="Login__guides">
           <h1 className="heading"> Olympic Hotel </h1>
@@ -43,6 +45,10 @@ function Login() {
                 onChange={handleChange}
               />
             </div>
+            <div className="Form__row block">
+              <Link> Login </Link>
+            </div>
+
             <div className="Form__row block">
               <Button btnText="Login" />
             </div>
