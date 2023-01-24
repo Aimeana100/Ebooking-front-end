@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import Button from "../Button";
+
 import "./login.scss";
 import Navigation from "../navigation/Navigation";
+import { Link } from "react-router-dom";
 
 function Login() {
   const [value, setValue] = useState("");
@@ -10,8 +12,9 @@ function Login() {
     setValue({ value: event.target.value });
   };
   return (
-    <>
-    <Navigation />
+<div className="App">
+  <div className="App-container">
+      <Navigation />
       <div className="Login">
         <div className="Login__guides">
           <h1 className="heading"> Olympic Hotel </h1>
@@ -43,8 +46,8 @@ function Login() {
               />
             </div>
             <div className="Form__row block">
-              {/* <Link to="/" exact={true} activeClassName="active">Reset password</Link> */}
-              <a style={{color: "green", float: "right"}} href="/">Reset password</a>
+              <Link className="login__reset__option" to="/reset" exact={true} activeClassName="active">Reset password</Link>
+
               </div>
              
             <div className="Form__row block">
@@ -53,7 +56,9 @@ function Login() {
           </form>
         </div>
       </div>
-    </>
+    </div>
+</div>
+
   );
 }
 

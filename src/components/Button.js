@@ -1,7 +1,7 @@
-function Button(btnText,classes) {
+function Button({btnText,classes}) {
   return (
     <div>
-      <button className={{...classes}}> Login </button>
+      <button className={{...classes}}> {btnText}  </button>
     </div>
   )
 }

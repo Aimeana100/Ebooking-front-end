@@ -11,19 +11,19 @@ $white__color__effect: rgba(213, 213, 213, 0.845);
     height: 100%;
     display: flex;
     justify-content: space-between;
-    padding: 0em 5em;
+    padding: 0em 8em;
     align-items: center;
 
     .Login__form{
-        background-color: rgba(24, 20, 20, 0.74);
+        background-color: rgba(47, 39, 39, 0.766);
         padding: 30px;
-        width: 35%;
+        width: 38%;
         border-radius: 10px;
         
         .form__heading{
             font-size: 3em;
             font-weight: bold;
-            color: rgba(213, 213, 213, 0.845);
+            color: rgba(229, 229, 229, 0.982);
         }
 
         .Form__row {
@@ -49,6 +49,11 @@ $white__color__effect: rgba(213, 213, 213, 0.845);
             &:hover{
                 background-color: $white__color__effect;    
             }
+        }
+
+        .login__reset__option{
+           color: rgba(184, 230, 215, 0.787); 
+
         }
     
         

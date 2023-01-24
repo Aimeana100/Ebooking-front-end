@@ -1,15 +1,13 @@
-import './App.scss';
-import Login from './components/login/Login';
+import {  Route, Routes } from "react-router-dom";
+import Login from "./components/login/Login";
+import ResetPassword from "./components/resetPassword/ResetPassword";
 
 function App() {
   return (
-    <div className="App">
-      <div className="App-container">
-      <Login/>
-
-      </div>
-      
-    </div>
+    <Routes>
+      <Route exact path="/" element={<Login />} />
+      <Route exact path="/reset" element={< ResetPassword />} />
+    </Routes>
   );
 }
 

@@ -4,4 +4,4 @@ This is an implementation of the `E-booking system` interface a proposed applica
 ## Application functions
 - User authentication
 - Hotel resource management
-- 
+- In hotel service delivery and management

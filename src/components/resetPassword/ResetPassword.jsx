@@ -1,18 +1,13 @@
-import React, { useState } from "react";
 import Button from "../Button";
-import "./login.scss";
+import "../login/login.scss";
 
 import Navigation from "../navigation/Navigation";
 import { Link } from "react-router-dom";
 
-function Login() {
-  const [value, setValue] = useState("");
-
-  const handleChange = (event) => {
-    setValue({ value: event.target.value });
-  };
+function ResetPassword() { 
   return (
-    <>
+<div className="App">
+  <div className="App-container">
     <Navigation />
 
       <div className="Login">
@@ -24,7 +19,7 @@ function Login() {
         </div>
         <div className="Login__form">
           <form>
-            <h1 className="form__heading"> Login </h1>
+            <h1 className="form__heading"> Rest Password </h1>
             <div className="Form__row block">
               <input
                 type="text"
@@ -35,28 +30,18 @@ function Login() {
               />
             </div>
             <div className="Form__row block">
-              <input
-                type="text"
-                value={value.pasword}
-                name="password"
-                id="password"
-                className="form__control"
-                placeholder="*********"
-                onChange={handleChange}
-              />
-            </div>
-            <div className="Form__row block">
-              <Link> Login </Link>
+              <Link className="login__reset__option" to="/"> Login </Link>
             </div>
 
             <div className="Form__row block">
-              <Button btnText="Login" />
+              <Button classes="reset" btnText="Reset" />
             </div>
           </form>
         </div>
       </div>
-    </>
+    </div>
+    </div>
   );
 }
 
-export default Login;
+export default ResetPassword;
