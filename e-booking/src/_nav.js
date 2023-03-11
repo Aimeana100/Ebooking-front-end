@@ -157,12 +157,12 @@ const _nav = [
     to: '/customers',
     icon: <CIcon icon={cilUser} customClassName="nav-icon" />,
   },
-  {
-    component: CNavItem,
-    name: ' ',
-    to: ' ',
-    icon: ' ',
-  },
+  // {
+  //   component: CNavItem,
+  //   name: ' ',
+  //   to: ' ',
+  //   icon: ' ',
+  // },
   {
     component: CNavGroup,
     name: 'Reports',

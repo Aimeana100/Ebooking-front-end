@@ -12,11 +12,12 @@ import {
   CFormTextarea,
   CRow,
 } from '@coreui/react'
-
+import { addRoom } from 'src/redux/Room/roomActions'
+import { useDispatch } from 'react-redux'
 const FormControl = () => {
   const [formState, setFormState] = useState({})
   const [rooms, setRooms] = useState([])
-
+  const dispatch = useDispatch()
   const handleChange = (event) => {
     event.preventDefault()
     setFormState({ ...formState, [event.target.name]: event.target.value })
@@ -28,7 +29,7 @@ const FormControl = () => {
   }
 
   useEffect(() => {
-    console.log(rooms)
+    dispatch(addRoom(formState))
   }, [rooms])
 
   return (

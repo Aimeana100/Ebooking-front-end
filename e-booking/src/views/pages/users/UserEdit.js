@@ -15,35 +15,41 @@ import {
 } from '@coreui/react';
 import { registerUser } from 'src/redux/Auth/authActions';
 import { getRoles } from 'src/redux/Roles/RolesActions';
+import { updateUser } from 'src/redux/User/userActions';
 
-const UserAdd = () => {
-  const [formData, setformData] = useState({});
+const UserEdit = () => {
+  let users = useSelector((state) => state.systemUsers.users);
+  const selectedUser =
+    useSelector((state) => state.systemUsers.selectedUser) || {};
+  const roles = useSelector((state) => state.roles.userRoles) || [];
+  const [formData, setformData] = useState({ ...selectedUser });
+
   const [roomClass, setroomClass] = useState([]);
   const dispatch = useDispatch();
-  const users = useSelector((state) => state.auth.users) || [];
-  const roles = useSelector((state) => state.roles.userRoles) || [];
   const handleChange = (e) => {
     setformData({ ...formData, [e.target.name]: e.target.value });
-    //console.log(formData);
-  };
-  const handleFileChange = (e) => {
-    setformData({ ...formData, [e.target.name]: e.target.files[0] });
-    //console.log(formData);
   };
 
   const hundleSubmit = async (e) => {
     e.preventDefault();
     console.log(formData);
     roomClass.push(formData);
-    const addUser = async () => {
-      dispatch(registerUser(formData));
-    };
-    addUser();
+
+    //updating users array
+    users = users.map((user) =>
+      user._id === selectedUser._id ? (user = { ...user, ...formData }) : user
+    );
+
+    dispatch(updateUser(formData, users));
+    // const addUser = async () => {
+    //   dispatch(registerUser(formData));
+    // };
+    // addUser();
   };
 
-  useEffect(() => {
-    dispatch(getRoles());
-  }, []);
+  // useEffect(() => {
+  //   dispatch(getRoles());
+  // }, []);
 
   return (
     <>
@@ -52,7 +58,7 @@ const UserAdd = () => {
           <CCard className="mb-4">
             <CCardHeader>
               <h2>
-                <strong> Add User </strong>
+                <strong> Edit user </strong>
               </h2>
             </CCardHeader>
             <CCardBody>
@@ -70,6 +76,7 @@ const UserAdd = () => {
                     name="firstName"
                     id="firstName"
                     size="md"
+                    value={formData.firstName}
                     required
                     onChange={handleChange}
                   />
@@ -82,6 +89,7 @@ const UserAdd = () => {
                     name="lastName"
                     id="lastName"
                     size="md"
+                    value={formData.lastName}
                     required
                     onChange={handleChange}
                   />
@@ -113,6 +121,7 @@ const UserAdd = () => {
                     name="email"
                     id="email"
                     size="md"
+                    value={formData.email}
                     required
                     onChange={handleChange}
                   />
@@ -126,12 +135,13 @@ const UserAdd = () => {
                     size="md"
                     className="mb-3"
                     aria-label="Room class"
+                    value={formData.role}
                     onChange={handleChange}
                   >
                     <option>-- Select -- </option>
                     {roles && roles.length !== 0
                       ? roles.map((role) => (
-                          <option value={role.id} key={role.id}>
+                          <option value={role.name} key={role._id}>
                             {role.name}
                           </option>
                         ))
@@ -151,7 +161,11 @@ const UserAdd = () => {
                   />
                 </CCol>
                 <CCol xs={12}>
-                  <CButton component="input" type="submit" value="Add a User" />
+                  <CButton
+                    component="input"
+                    type="submit"
+                    value="Save changes"
+                  />
                 </CCol>
               </CForm>
             </CCardBody>
@@ -162,4 +176,4 @@ const UserAdd = () => {
   );
 };
 
-export default UserAdd;
+export default UserEdit;
