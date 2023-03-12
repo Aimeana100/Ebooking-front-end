@@ -62,7 +62,7 @@ const Users = () => {
                       </CTableDataCell>
                       <CTableDataCell> </CTableDataCell>
                       <CTableDataCell> {user.email} </CTableDataCell>
-                      <CTableDataCell> {user.role}</CTableDataCell>
+                      <CTableDataCell> {user.Role.name}</CTableDataCell>
                       <CTableDataCell>
                         <Link
                           to="/booking/user/edit"

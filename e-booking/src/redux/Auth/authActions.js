@@ -3,9 +3,12 @@ import { IS_AUTH } from './AuthActionTypes';
 import { errorFunction } from '../errorFunction';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const baseUrl = 'http://localhost:5000/api/v1/';
 //const baseUrl = 'http://206.81.29.111/api/v1';
+const baseUrlLive = 'http://206.81.29.111:80/api/v1';
+
 export const auth = function (payload) {
   return {
     type: IS_AUTH.IS_AUTH,
@@ -14,7 +17,19 @@ export const auth = function (payload) {
 };
 export const login = function (payload) {
   return async function (dispatch) {
-    const res1 = await axios.post(`${baseUrl}users/login`, payload);
+    const res1 = await axios
+      .post(`${baseUrlLive}/login`, payload)
+      .catch((err) => {
+        toast.error(err.response.data.message);
+        console.log({ err });
+        dispatch({
+          type: IS_AUTH.LOGIN,
+          payload: {
+            isAuth: false,
+            user: null,
+          },
+        });
+      });
 
     dispatch({
       type: IS_AUTH.LOGIN,
@@ -22,7 +37,7 @@ export const login = function (payload) {
         isAuth: true,
         jwt: res1.data.accessToken,
         user: res1.data.user,
-        role: res1.data.user.role,
+        role: res1.data.user.Role.name,
       },
     });
 
@@ -42,7 +57,7 @@ export const registerUser = function (payload) {
   console.log(payload);
   return async function (dispatch) {
     const res = await axios
-      .post(`${baseUrl}users/register`, payload)
+      .post(`${baseUrlLive}/users/add`, payload)
       .catch((err) => {
         errorFunction(dispatch, err);
       });
@@ -59,15 +74,13 @@ export const registerUser = function (payload) {
 
 export const logout = function () {
   return async function (dispatch) {
-    const res = await axios
-      .get('http:://localhost:5000/api/v1/user/logout')
-      .catch((err) => {
-        console.log('error logging out', { errMessage: err.message });
-        dispatch({
-          type: IS_AUTH.LOGOUT,
-          isAuth: false,
-        });
+    const res = await axios.get(`${baseUrlLive}/users`).catch((err) => {
+      console.log('error logging out', { errMessage: err.message });
+      dispatch({
+        type: IS_AUTH.LOGOUT,
+        isAuth: false,
       });
+    });
     if (res) {
       console.log(res.data.status);
     }

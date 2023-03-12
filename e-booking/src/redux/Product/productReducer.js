@@ -1,22 +1,22 @@
-const { USER_ACTIONS } = require('./userActionTypes');
+import { PRODUCT_ACTIONS } from './productActionTypes';
 
-const userReducer = (
+const productReducer = (
   state = { users: {}, selectedUser: {} },
   { type, payload }
 ) => {
   switch (type) {
-    case USER_ACTIONS.SELECT:
+    case PRODUCT_ACTIONS.SELECT:
       return { ...state, selectedUser: payload };
-    case USER_ACTIONS.UPDATE:
+    case PRODUCT_ACTIONS.UPDATE:
       console.log('HAPAPAPAPA');
       return { ...state, users: [...payload.payloadLocal] };
-    case USER_ACTIONS.DELETE:
+    case PRODUCT_ACTIONS.DELETE:
       console.log('before delete reducer', payload);
       return { ...state, users: [...payload.payloadLocal] };
-    case USER_ACTIONS.GET_USERS:
+    case PRODUCT_ACTIONS.GET_ALL:
       return { ...state, users: payload };
     default:
       return { ...state, selectedUser: {}, users: [] };
   }
 };
-export default userReducer;
+export default productReducer;

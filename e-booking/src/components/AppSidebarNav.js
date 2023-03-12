@@ -6,9 +6,9 @@ import { CBadge } from '@coreui/react';
 import { useSelector } from 'react-redux';
 
 export const AppSidebarNav = ({ items }) => {
-  let noAddPrivilage = ['manager', 'cashier', 'receiptionist', 'waiter'];
+  let noAddPrivilage = ['cashier', 'receiptionist', 'waiter'];
   let isAuth = useSelector((state) => state.auth.isAuth);
-  let role = useSelector((state) => state.auth.user.role) || '';
+  let role = useSelector((state) => state.auth.role) || '';
   let user = useSelector((state) => {
     if (isAuth) {
       return state.auth.user;
@@ -19,6 +19,7 @@ export const AppSidebarNav = ({ items }) => {
 
   let isUser = user ? user : false;
   const userRole = isUser ? role : '';
+
   console.log('THIS IS THE USER ROLE', user);
   let tabsNotVisible = {
     waiter: [

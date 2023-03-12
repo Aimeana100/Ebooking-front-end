@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { USER_ACTIONS } from './userActionTypes';
+import { PRODUCT_ACTIONS } from './userActionTypes';
 
 const baseUrl = 'http://localhost:5000/api/v1/';
 const baseUrlLive = 'http://206.81.29.111:80/api/v1/users/';

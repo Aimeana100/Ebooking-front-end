@@ -22,7 +22,7 @@ const UserEdit = () => {
   const selectedUser =
     useSelector((state) => state.systemUsers.selectedUser) || {};
   const roles = useSelector((state) => state.roles.userRoles) || [];
-  const [formData, setformData] = useState({ ...selectedUser });
+  let [formData, setformData] = useState({ ...selectedUser });
 
   const [roomClass, setroomClass] = useState([]);
   const dispatch = useDispatch();
@@ -34,12 +34,14 @@ const UserEdit = () => {
     e.preventDefault();
     console.log(formData);
     roomClass.push(formData);
-
+    let myItem = JSON.parse(localStorage.getItem('persist:root'));
+    console.log(myItem);
     //updating users array
     users = users.map((user) =>
       user._id === selectedUser._id ? (user = { ...user, ...formData }) : user
     );
-
+    let role = formData.role;
+    console.log('role');
     dispatch(updateUser(formData, users));
     // const addUser = async () => {
     //   dispatch(registerUser(formData));
@@ -47,9 +49,9 @@ const UserEdit = () => {
     // addUser();
   };
 
-  // useEffect(() => {
-  //   dispatch(getRoles());
-  // }, []);
+  useEffect(() => {
+    dispatch(getRoles());
+  }, []);
 
   return (
     <>
@@ -141,7 +143,7 @@ const UserEdit = () => {
                     <option>-- Select -- </option>
                     {roles && roles.length !== 0
                       ? roles.map((role) => (
-                          <option value={role.name} key={role._id}>
+                          <option value={role.id} key={role._id}>
                             {role.name}
                           </option>
                         ))

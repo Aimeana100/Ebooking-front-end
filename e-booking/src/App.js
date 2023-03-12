@@ -1,7 +1,10 @@
-import React, { Suspense } from 'react';
-import { useSelector } from 'react-redux';
+import React, { Suspense, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { ToastContainer, Flip } from 'react-toastify';
+
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './scss/style.scss';
+import { getRoles } from './redux/Roles/RolesActions';
 
 const loading = (
   <div className="pt-3 text-center">
@@ -24,6 +27,13 @@ const ResetPassword = React.lazy(() =>
 
 function App() {
   const isAuth = useSelector((state) => state.auth.isAuth);
+  const role = useSelector((state) => state.auth.role);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (isAuth && role === 'admin') {
+      dispatch(getRoles());
+    }
+  }, []);
   console.log('App component', isAuth);
   return (
     <BrowserRouter>
