@@ -1,6 +1,9 @@
 const { USER_ACTIONS } = require('./userActionTypes')
 
-const userReducer = (state = { users: {}, selectedUser: {} }, { type, payload }) => {
+const userReducer = (
+  state = { users: {}, selectedUser: {} },
+  { type, payload },
+) => {
   switch (type) {
     case USER_ACTIONS.SELECT:
       return { ...state, selectedUser: payload }

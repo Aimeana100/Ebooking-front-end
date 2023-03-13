@@ -1,21 +1,16 @@
-import { React, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { getRoles } from 'src/redux/Roles/RolesActions';
+import { React } from 'react'
+import { useLocation } from 'react-router-dom'
+
 import {
   AppContent,
   AppSidebar,
   AppFooter,
   AppHeader,
-} from '../components/index';
+} from '../components/index'
 
 const DefaultLayout = () => {
-  const userRole = useSelector((state) => state.auth.user.role) || '';
-  const dispatch = useDispatch();
-  useEffect(() => {
-    if (userRole && userRole === 'admin') {
-      dispatch(getRoles);
-    }
-  }, []);
+  const location = useLocation()
+  console.log(location)
   return (
     <div>
       <AppSidebar />
@@ -27,7 +22,7 @@ const DefaultLayout = () => {
         <AppFooter />
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default DefaultLayout;
+export default DefaultLayout
