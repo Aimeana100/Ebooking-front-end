@@ -1,39 +1,31 @@
-import React from 'react';
+import React from 'react'
 
-const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'));
-const Cards = React.lazy(() => import('./views/base/cards/Cards'));
+const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
+const Cards = React.lazy(() => import('./views/base/cards/Cards'))
 // custom pages
-const addRoom = React.lazy(() => import('./views/pages/rooms/roomAdd'));
-const roomsAvailable = React.lazy(() => import('./views/pages/rooms/Room'));
-const occupiedRooms = React.lazy(() => import('./views/pages/rooms/Occupied'));
-const addRoomClass = React.lazy(() =>
-  import('./views/pages/roomClass/RoomClassAdd')
-);
-const ReservationAdd = React.lazy(() =>
-  import('./views/pages/reservation/ReservationAdd')
-);
-const Reservation = React.lazy(() =>
-  import('./views/pages/reservation/Reservation')
-);
-const Users = React.lazy(() => import('./views/pages/users/Users'));
-const UserAdd = React.lazy(() => import('./views/pages/users/UserAdd'));
-const UserEdit = React.lazy(() => import('./views/pages/users/UserEdit'));
+const addRoom = React.lazy(() => import('./views/pages/rooms/roomAdd'))
+const roomsAvailable = React.lazy(() => import('./views/pages/rooms/Room'))
+const occupiedRooms = React.lazy(() => import('./views/pages/rooms/Occupied'))
+const addRoomClass = React.lazy(() => import('./views/pages/roomClass/RoomClassAdd'))
+const ReservationAdd = React.lazy(() => import('./views/pages/reservation/ReservationAdd'))
+const Reservation = React.lazy(() => import('./views/pages/reservation/Reservation'))
+const Users = React.lazy(() => import('./views/pages/users/Users'))
+const UserAdd = React.lazy(() => import('./views/pages/users/UserAdd'))
+const UserEdit = React.lazy(() => import('./views/pages/users/UserEdit'))
 
 // products
 
-const ProductsAdd = React.lazy(() =>
-  import('./views/pages/products/ProductsAdd')
-);
-const Products = React.lazy(() => import('./views/pages/products/Products'));
+const ProductsAdd = React.lazy(() => import('./views/pages/products/ProductsAdd'))
+const Products = React.lazy(() => import('./views/pages/products/Products'))
 
 // services
 
-const ServicesAdd = React.lazy(() =>
-  import('./views/pages/services/ServicesAdd')
-);
-const Services = React.lazy(() => import('./views/pages/services/Services'));
+const ServicesAdd = React.lazy(() => import('./views/pages/services/ServicesAdd'))
+const Services = React.lazy(() => import('./views/pages/services/Services'))
 
 // stock
+
+const StockItemAdd = React.lazy(() => import('./views/pages/stockItems/StockItemAdd'))
 
 // const StockAdd = React.lazy(() => import('./views/pages/services/ServicesAdd'))
 // const AvailableStock = React.lazy(() => import('./views/pages/services/Services'))
@@ -117,6 +109,12 @@ const routes = [
     name: 'Service',
     element: Services,
   },
-];
+  {
+    path: '/booking/stock/item/add',
+    exact: true,
+    name: 'Stock Items',
+    element: StockItemAdd,
+  },
+]
 
-export default routes;
+export default routes

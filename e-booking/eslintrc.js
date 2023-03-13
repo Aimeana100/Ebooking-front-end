@@ -10,9 +10,10 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
-    'prettier/prettier': 'error',
     quotes: 'off',
-    allowTemplateLiterals: true,
+    allowTemplateLiterals: 'true',
+    'prettier/prettier': ['error', { semi: true }],
+    eqeqeq: 1,
   },
   plugins: ['prettier'],
-};
+}

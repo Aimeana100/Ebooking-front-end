@@ -1,6 +1,6 @@
 //jshint esversion:9
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   CButton,
   CCard,
@@ -12,38 +12,33 @@ import {
   CFormLabel,
   CFormSelect,
   CRow,
-} from '@coreui/react';
-import { registerUser } from 'src/redux/Auth/authActions';
-import { getRoles } from 'src/redux/Roles/RolesActions';
+} from '@coreui/react'
+import { registerUser } from 'src/redux/Auth/authActions'
+import { getRoles } from 'src/redux/Roles/RolesActions'
 
 const UserAdd = () => {
-  const [formData, setformData] = useState({});
-  const [roomClass, setroomClass] = useState([]);
-  const dispatch = useDispatch();
-  const users = useSelector((state) => state.auth.users) || [];
-  const roles = useSelector((state) => state.roles.userRoles) || [];
+  const [formData, setformData] = useState({})
+  const [roomClass, setroomClass] = useState([])
+  const dispatch = useDispatch()
+  const users = useSelector((state) => state.auth.users) || []
+  const roles = useSelector((state) => state.roles.userRoles) || []
   const handleChange = (e) => {
-    setformData({ ...formData, [e.target.name]: e.target.value });
-    //console.log(formData);
-  };
-  const handleFileChange = (e) => {
-    setformData({ ...formData, [e.target.name]: e.target.files[0] });
-    //console.log(formData);
-  };
+    setformData({ ...formData, [e.target.name]: e.target.value })
+  }
 
   const hundleSubmit = async (e) => {
-    e.preventDefault();
-    console.log(formData);
-    roomClass.push(formData);
+    e.preventDefault()
+    console.log(formData)
+    roomClass.push(formData)
     const addUser = async () => {
-      dispatch(registerUser(formData));
-    };
-    addUser();
-  };
+      dispatch(registerUser(formData))
+    }
+    addUser()
+  }
 
   useEffect(() => {
-    dispatch(getRoles());
-  }, []);
+    dispatch(getRoles())
+  }, [])
 
   return (
     <>
@@ -102,10 +97,7 @@ const UserAdd = () => {
                 <CCol md={6}>
                   <CFormLabel htmlFor="email">
                     {' '}
-                    email <span className="text-warning">
-                      {' '}
-                      use for login{' '}
-                    </span>{' '}
+                    email <span className="text-warning"> use for login </span>{' '}
                   </CFormLabel>
                   <CFormInput
                     className="mb-1"
@@ -159,7 +151,7 @@ const UserAdd = () => {
         </CCol>
       </CRow>
     </>
-  );
-};
+  )
+}
 
-export default UserAdd;
+export default UserAdd

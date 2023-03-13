@@ -1,4 +1,4 @@
-import { React, useEffect } from 'react';
+import { React, useEffect } from 'react'
 import {
   CCard,
   CCardBody,
@@ -11,24 +11,24 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
-} from '@coreui/react';
-import { Link } from 'react-router-dom';
-import { deleteUser, getUsers } from 'src/redux/User/userActions';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectUser } from 'src/redux/User/userActions';
-import { getRoles } from 'src/redux/Roles/RolesActions';
+} from '@coreui/react'
+import { Link } from 'react-router-dom'
+import { deleteUser, getUsers } from 'src/redux/User/userActions'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectUser } from 'src/redux/User/userActions'
+import { getRoles } from 'src/redux/Roles/RolesActions'
 
 const Users = () => {
-  let users = useSelector((state) => state.systemUsers.users) || [];
-  users = users ? users : [];
-  const dispatch = useDispatch();
+  let users = useSelector((state) => state.systemUsers.users) || []
+  users = users ? users : []
+  const dispatch = useDispatch()
   useEffect(() => {
-    console.log(users.length);
+    console.log(users.length)
     if (users.length === 0) {
-      dispatch(getUsers());
+      dispatch(getUsers())
     }
     //dispatch(getRoles());
-  }, []);
+  }, [])
 
   return (
     <CRow>
@@ -56,11 +56,8 @@ const Users = () => {
                   users.map((user, i) => (
                     <CTableRow key={user._id}>
                       <CTableHeaderCell scope="row">{i + 1}</CTableHeaderCell>
-                      <CTableDataCell>
-                        {' '}
-                        {user.firstName + ' ' + user.lastName}{' '}
-                      </CTableDataCell>
-                      <CTableDataCell> </CTableDataCell>
+                      <CTableDataCell> {user.firstName + ' ' + user.lastName} </CTableDataCell>
+                      <CTableDataCell>{user.phone} </CTableDataCell>
                       <CTableDataCell> {user.email} </CTableDataCell>
                       <CTableDataCell> {user.Role.name}</CTableDataCell>
                       <CTableDataCell>
@@ -68,8 +65,8 @@ const Users = () => {
                           to="/booking/user/edit"
                           className="btn btn-sm btn-warning"
                           onClick={() => {
-                            console.log('this is user', user);
-                            return dispatch(selectUser(user));
+                            console.log('this is user', user)
+                            return dispatch(selectUser(user))
                           }}
                         >
                           {' '}
@@ -78,7 +75,7 @@ const Users = () => {
                         <button
                           className="btn btn-sm btn-danger"
                           onClick={() => {
-                            return dispatch(deleteUser(user, users));
+                            return dispatch(deleteUser(user, users))
                           }}
                         >
                           Delete
@@ -95,7 +92,7 @@ const Users = () => {
         </CCard>
       </CCol>
     </CRow>
-  );
-};
+  )
+}
 
-export default Users;
+export default Users
