@@ -1,22 +1,54 @@
-import React, { useEffect, useState, useReff } from 'react'
-import { CButton } from '@coreui/react'
+import React, { useEffect, useState, useRef } from 'react';
+import { CButton } from '@coreui/react';
+import axios from 'axios';
+import './login.scss';
+import Navigation from '../navigation/Navigation';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { auth, login } from 'src/redux/Auth/authActions';
 
-import './login.scss'
-import Navigation from '../navigation/Navigation'
-import { Link } from 'react-router-dom'
-
+function generateRandomRole() {
+  let roles = ['admin', 'manager', 'cashier', 'receiptionist', 'waiter'];
+  let randomNumber = Math.floor(Math.random() * 5);
+  return roles[randomNumber];
+}
+function saveUserToGeneralStore() {}
 function Login() {
-  const [formState, setformState] = useState({})
+  const navigate = useNavigate();
+  const isAuth = useSelector((state) => state.auth.isAuth);
+  //const [isAuth, setIsAuth] = useState(auth);
+  const dispatch = useDispatch();
+  const [formState, setformState] = useState({});
+
   const handleChange = (event) => {
-    setformState({ ...formState, [event.target.name]: event.target.value })
-  }
+    setformState({
+      ...formState,
+      [event.target.name]: event.target.value,
+    });
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    console.log(formState)
+    e.preventDefault();
+    // let role = generateRandomRole()
 
-    // await axios({})
-  }
+    dispatch(
+      auth({
+        isAuth: true,
+        user: {
+          email: formState.email,
+          role: 'admin',
+        },
+      })
+    );
+
+    dispatch(login(formState));
+    navigate('/');
+    // setIsAuth(auth);
+    // console.log(isAuth);
+    // if (isAuth) {
+    //   navigate('/');
+    // }
+  };
 
   return (
     <div className="App">
@@ -30,7 +62,7 @@ function Login() {
             <p>E-booking system</p>
           </div>
           <div className="Login__form">
-            <form onSubmit={handleSubmit} method="POST">
+            <form method="POST" onSubmit={(e) => handleSubmit(e)}>
               <h1 className="form__heading"> Login </h1>
               <div className="Form__row block">
                 <input
@@ -46,7 +78,7 @@ function Login() {
               <div className="Form__row block">
                 <input
                   type="password"
-                  value={formState.pasword}
+                  value={formState.password}
                   name="password"
                   id="password"
                   className="form__control"
@@ -64,27 +96,32 @@ function Login() {
                   Reset password
                 </Link>
               </div>
-
-              {formState?.email && formState?.pasword && (
+              {(!formState?.email || !formState?.password) && (
                 <CButton type="submit" color="info" shape="rounded-0">
                   Login
                 </CButton>
               )}
 
-              {(!formState?.email || !formState?.pasword) && (
-                <Link to="/">
-                  {' '}
-                  <CButton type="submit" color="info" shape="rounded-0">
-                    Login
-                  </CButton>{' '}
-                </Link>
+              {formState?.email && formState?.password && (
+                <CButton type="submit">Login</CButton>
               )}
             </form>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default Login
+export default Login;
+
+// {
+//   formState?.email && formState?.password && (
+//     <Link to="/">
+//       <CButton type="submit" color="info" shape="rounded-0">
+//         Login
+//       </CButton>
+//     </Link>
+//   )
+// }
+//  <form onSubmit={(e) => handleSubmit(e)} method="POST">

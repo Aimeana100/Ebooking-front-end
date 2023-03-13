@@ -1,7 +1,7 @@
-import React from 'react'
+import React from 'react';
 
-import { CCard, CCardBody } from '@coreui/react'
-import WidgetsDropdown from '../widgets/WidgetsDropdown'
+import { CCard, CCardBody } from '@coreui/react';
+import WidgetsDropdown from '../widgets/WidgetsDropdown';
 
 const Dashboard = () => {
   const progressExample = [
@@ -9,8 +9,13 @@ const Dashboard = () => {
     { title: 'Rooms', value: '24.093 Users', percent: 20, color: 'info' },
     { title: 'Rooms', value: '78.706 Views', percent: 60, color: 'warning' },
     { title: 'Customers', value: '22.123 Users', percent: 80, color: 'danger' },
-    { title: 'Customers', value: 'Average Rate', percent: 40.15, color: 'primary' },
-  ]
+    {
+      title: 'Customers',
+      value: 'Average Rate',
+      percent: 40.15,
+      color: 'primary',
+    },
+  ];
 
   return (
     <>
@@ -202,7 +207,7 @@ const Dashboard = () => {
         </CCol>
       </CRow> */}
     </>
-  )
-}
+  );
+};
 
-export default Dashboard
+export default Dashboard;

@@ -1,4 +1,4 @@
-import React from 'react'
+import { React, useEffect } from 'react'
 import {
   CCard,
   CCardBody,
@@ -13,8 +13,18 @@ import {
   CTableRow,
 } from '@coreui/react'
 import { Link } from 'react-router-dom'
-
-const Users = (prop) => {
+// import { getData } from 'src/API';
+import axios from 'axios'
+const Users = () => {
+  useEffect(() => {
+    const services = async () => {
+      const data = await axios.get(
+        'https://bbd5-2c0f-eb68-65f-f700-ca6-f42-f3af-a6e5.ngrok.io/api/v1/users/all',
+      )
+      console.log(data)
+    }
+    services()
+  }, [])
   return (
     <CRow>
       <CCol xs={12}>

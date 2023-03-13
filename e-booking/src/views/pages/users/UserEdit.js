@@ -1,6 +1,6 @@
 //jshint esversion:9
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   CButton,
   CCard,
@@ -12,33 +12,46 @@ import {
   CFormLabel,
   CFormSelect,
   CRow,
-} from '@coreui/react'
-import { registerUser } from 'src/redux/Auth/authActions'
-import { getRoles } from 'src/redux/Roles/RolesActions'
+} from '@coreui/react';
+import { registerUser } from 'src/redux/Auth/authActions';
+import { getRoles } from 'src/redux/Roles/RolesActions';
+import { updateUser } from 'src/redux/User/userActions';
 
-const UserAdd = () => {
-  const [formData, setformData] = useState({})
-  const [roomClass, setroomClass] = useState([])
-  const dispatch = useDispatch()
-  const users = useSelector((state) => state.auth.users) || []
-  const roles = useSelector((state) => state.roles.userRoles) || []
+const UserEdit = () => {
+  let users = useSelector((state) => state.systemUsers.users);
+  const selectedUser =
+    useSelector((state) => state.systemUsers.selectedUser) || {};
+  const roles = useSelector((state) => state.roles.userRoles) || [];
+  let [formData, setformData] = useState({ ...selectedUser });
+
+  const [roomClass, setroomClass] = useState([]);
+  const dispatch = useDispatch();
   const handleChange = (e) => {
-    setformData({ ...formData, [e.target.name]: e.target.value })
-  }
+    setformData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const hundleSubmit = async (e) => {
-    e.preventDefault()
-    console.log(formData)
-    roomClass.push(formData)
-    const addUser = async () => {
-      dispatch(registerUser(formData))
-    }
-    addUser()
-  }
+    e.preventDefault();
+    console.log(formData);
+    roomClass.push(formData);
+    let myItem = JSON.parse(localStorage.getItem('persist:root'));
+    console.log(myItem);
+    //updating users array
+    users = users.map((user) =>
+      user._id === selectedUser._id ? (user = { ...user, ...formData }) : user
+    );
+    let role = formData.role;
+    console.log('role');
+    dispatch(updateUser(formData, users));
+    // const addUser = async () => {
+    //   dispatch(registerUser(formData));
+    // };
+    // addUser();
+  };
 
   useEffect(() => {
-    dispatch(getRoles())
-  }, [])
+    dispatch(getRoles());
+  }, []);
 
   return (
     <>
@@ -47,7 +60,7 @@ const UserAdd = () => {
           <CCard className="mb-4">
             <CCardHeader>
               <h2>
-                <strong> Add User </strong>
+                <strong> Edit user </strong>
               </h2>
             </CCardHeader>
             <CCardBody>
@@ -65,6 +78,7 @@ const UserAdd = () => {
                     name="firstName"
                     id="firstName"
                     size="md"
+                    value={formData.firstName}
                     required
                     onChange={handleChange}
                   />
@@ -77,6 +91,7 @@ const UserAdd = () => {
                     name="lastName"
                     id="lastName"
                     size="md"
+                    value={formData.lastName}
                     required
                     onChange={handleChange}
                   />
@@ -97,7 +112,10 @@ const UserAdd = () => {
                 <CCol md={6}>
                   <CFormLabel htmlFor="email">
                     {' '}
-                    email <span className="text-warning"> use for login </span>{' '}
+                    email <span className="text-warning">
+                      {' '}
+                      use for login{' '}
+                    </span>{' '}
                   </CFormLabel>
                   <CFormInput
                     className="mb-1"
@@ -105,6 +123,7 @@ const UserAdd = () => {
                     name="email"
                     id="email"
                     size="md"
+                    value={formData.email}
                     required
                     onChange={handleChange}
                   />
@@ -118,12 +137,13 @@ const UserAdd = () => {
                     size="md"
                     className="mb-3"
                     aria-label="Room class"
+                    value={formData.role}
                     onChange={handleChange}
                   >
                     <option>-- Select -- </option>
                     {roles && roles.length !== 0
                       ? roles.map((role) => (
-                          <option value={role.id} key={role.id}>
+                          <option value={role.id} key={role._id}>
                             {role.name}
                           </option>
                         ))
@@ -143,7 +163,11 @@ const UserAdd = () => {
                   />
                 </CCol>
                 <CCol xs={12}>
-                  <CButton component="input" type="submit" value="Add a User" />
+                  <CButton
+                    component="input"
+                    type="submit"
+                    value="Save changes"
+                  />
                 </CCol>
               </CForm>
             </CCardBody>
@@ -151,7 +175,7 @@ const UserAdd = () => {
         </CCol>
       </CRow>
     </>
-  )
-}
+  );
+};
 
-export default UserAdd
+export default UserEdit;
