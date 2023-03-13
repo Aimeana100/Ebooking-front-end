@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { addStockItem, getStockItems } from '../../../redux/StockItem/StockItemActions'
+import {
+  addStockItem,
+  getStockItems,
+} from '../../../redux/StockItem/StockItemActions'
 import {
   CButton,
   CCard,
@@ -38,11 +41,10 @@ const StockItemAdd = () => {
   const hundleSubmit = async (e) => {
     e.preventDefault()
     console.log(formData)
-    const addItem = async () => {
-      dispatch(addStockItem(formData))
-    }
-    addItem()
-    return
+    // const addItem = async () => {
+    dispatch(addStockItem(formData))
+    // }
+    // addItem()
   }
 
   useEffect(() => {
@@ -60,7 +62,11 @@ const StockItemAdd = () => {
               </h2>
             </CCardHeader>
             <CCardBody>
-              <CForm name="roomClassAddFrm" onSubmit={hundleSubmit} encType="multipart/form">
+              <CForm
+                name="roomClassAddFrm"
+                onSubmit={hundleSubmit}
+                encType="multipart/form"
+              >
                 <div className="mb-3">
                   <CFormLabel htmlFor="name"> Item name </CFormLabel>
                   <CFormInput
@@ -76,7 +82,10 @@ const StockItemAdd = () => {
                 <div className="mb-3">
                   <CFormLabel htmlFor="description">
                     {' '}
-                    Description <span className="text-primary"> Optional </span>{' '}
+                    Description <span className="text-primary">
+                      {' '}
+                      Optional{' '}
+                    </span>{' '}
                   </CFormLabel>
                   <CFormTextarea
                     name="description"
@@ -107,14 +116,20 @@ const StockItemAdd = () => {
                   <CTableRow>
                     <CTableHeaderCell scope="col">#</CTableHeaderCell>
                     <CTableHeaderCell scope="col"> Item name </CTableHeaderCell>
-                    <CTableHeaderCell scope="col"> Description </CTableHeaderCell>
+                    <CTableHeaderCell scope="col">
+                      {' '}
+                      Description{' '}
+                    </CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>
                 <CTableBody>
                   {stockItems.map((item, index) => {
                     return (
                       <CTableRow key={index}>
-                        <CTableHeaderCell scope="row"> {index} </CTableHeaderCell>
+                        <CTableHeaderCell scope="row">
+                          {' '}
+                          {index}{' '}
+                        </CTableHeaderCell>
                         <CTableDataCell> {item.name} </CTableDataCell>
                         <CTableDataCell> {item.descripttion} </CTableDataCell>
                       </CTableRow>
