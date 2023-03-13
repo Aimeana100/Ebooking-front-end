@@ -7,10 +7,11 @@ export const selectUser = (payload) => {
   return { type: USER_ACTIONS.SELECT, payload };
 };
 export const updateUser = (payloadApi, payloadLocal) => {
+  //${baseUrlLive}update
   return async function (dispatch) {
     console.log(payloadApi.id);
     const res = await axios
-      .put(`${baseUrlLive}update`, { ...payloadApi })
+      .put(`${baseUrl}users`, { ...payloadApi })
       .catch((err) => {
         console.log('error getting users', { errMessage: err.message });
         // dispatch({ type: USER_ACTIONS.DELETE, payload: [] });
@@ -44,8 +45,9 @@ export const deleteUser = (payloadApi, payloadLocal) => {
     console.log(payloadLocal.length);
   }
   return async function (dispatch) {
+    //${baseUrlLive}delete/${payloadApi.id}
     const res = await axios
-      .delete(`${baseUrlLive}delete/${payloadApi.id}`)
+      .delete(`${baseUrl}users/${payloadApi.id}`)
       .catch((err) => {
         console.log('error getting users', { errMessage: err.message });
 
@@ -70,9 +72,10 @@ export const deleteUser = (payloadApi, payloadLocal) => {
     // });
   };
 };
+//`${baseUrlLive}all`;
 export const getUsers = function () {
   return async function (dispatch) {
-    const res = await axios.get(`${baseUrlLive}all`).catch((err) => {
+    const res = await axios.get(`${baseUrl}users`).catch((err) => {
       console.log('error getting users', { errMessage: err.message });
       dispatch({ type: USER_ACTIONS.GET_USERS, payload: [] });
     });

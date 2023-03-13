@@ -3,7 +3,7 @@ import { IS_AUTH } from './AuthActionTypes';
 import { errorFunction } from '../errorFunction';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
+// import { toast } from 'react-toastify';
 
 const baseUrl = 'http://localhost:5000/api/v1/';
 //const baseUrl = 'http://206.81.29.111/api/v1';
@@ -15,12 +15,12 @@ export const auth = function (payload) {
     payload,
   };
 };
+//${baseUrlLive}/login
 export const login = function (payload) {
   return async function (dispatch) {
     const res1 = await axios
-      .post(`${baseUrlLive}/login`, payload)
+      .post(`${baseUrl}users/login`, payload)
       .catch((err) => {
-        toast.error(err.response.data.message);
         console.log({ err });
         dispatch({
           type: IS_AUTH.LOGIN,
@@ -31,16 +31,6 @@ export const login = function (payload) {
         });
       });
 
-    dispatch({
-      type: IS_AUTH.LOGIN,
-      payload: {
-        isAuth: true,
-        jwt: res1.data.accessToken,
-        user: res1.data.user,
-        role: res1.data.user.Role.name,
-      },
-    });
-
     // dispatch({
     //   type: IS_AUTH.LOGIN,
     //   payload: {
@@ -50,14 +40,25 @@ export const login = function (payload) {
     //     role: res1.data.user.Role.name,
     //   },
     // });
+
+    dispatch({
+      type: IS_AUTH.LOGIN,
+      payload: {
+        isAuth: true,
+        jwt: res1.data.accessToken,
+        user: res1.data.user,
+        role: res1.data.user.role,
+      },
+    });
   };
 };
 export const registerUser = function (payload) {
   //payload.role = Number(payload.role);
+  //`${baseUrlLive}/users/add`
   console.log(payload);
   return async function (dispatch) {
     const res = await axios
-      .post(`${baseUrlLive}/users/add`, payload)
+      .post(`${baseUrl}users/register`, payload)
       .catch((err) => {
         errorFunction(dispatch, err);
       });
@@ -88,13 +89,12 @@ export const logout = function () {
 };
 //206.81.29.111/api/v1/auth/login
 export const getUsers = function () {
+  //'http://206.81.29.111/api/v1/users/all
   return async function (dispatch) {
-    const res = await axios
-      .get('http://206.81.29.111/api/v1/users/all')
-      .catch((err) => {
-        console.log('error getting users', { errMessage: err.message });
-        dispatch({ type: IS_AUTH.GET_USERS, payload: [] });
-      });
+    const res = await axios.get(`${baseUrl}users/`).catch((err) => {
+      console.log('error getting users', { errMessage: err.message });
+      dispatch({ type: IS_AUTH.GET_USERS, payload: [] });
+    });
     if (res.users) {
       dispatch({ type: IS_AUTH.GET_USERS, payload: res.data.users });
     }
