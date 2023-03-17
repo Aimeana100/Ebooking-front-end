@@ -3,10 +3,17 @@
 import { getData, postData, updateData } from 'src/API'
 import { ROOM_ACTION_TYPES } from './roomActionTypes'
 
+export const selectRoom = (payload) => {
+  return { type: ROOM_ACTION_TYPES.SELECT_ROOM, payload }
+}
+
 export const getRooms = () => {
   return async function (dispatch) {
     let res = await getData('/rooms').catch((err) => {
-      console.log({ errorMessage: err.message, customMessage: 'error fetching rooms' })
+      console.log({
+        errorMessage: err.message,
+        customMessage: 'error fetching rooms',
+      })
       dispatch({
         type: ROOM_ACTION_TYPES.GET_ROOMS,
         payload: {},
@@ -36,7 +43,9 @@ export const addRoom = (payload) => {
 }
 export const bookRoom = (payload) => {
   return async function (dispatch) {
-    const res = await updateData(`/rooms/${payload.id}`, { isBooked: true }).catch((err) => {
+    const res = await updateData(`/rooms/${payload.id}`, {
+      isBooked: true,
+    }).catch((err) => {
       console.log({ errMessage: err.message })
       dispatch({
         type: ROOM_ACTION_TYPES.BOOK_ROOM,
@@ -50,7 +59,9 @@ export const bookRoom = (payload) => {
 }
 export const releaseRoom = (payload) => {
   return async function (dispatch) {
-    const res = await updateData(`/rooms/${payload.id}`, { isBooked: false }).catch((err) => {
+    const res = await updateData(`/rooms/${payload.id}`, {
+      isBooked: false,
+    }).catch((err) => {
       console.log({ errMessage: err.message })
       dispatch({
         type: ROOM_ACTION_TYPES.RELEASE_ROOM,

@@ -1,34 +1,36 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { CButton } from '@coreui/react';
-import axios from 'axios';
-import './login.scss';
-import Navigation from '../navigation/Navigation';
-import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { auth, login } from 'src/redux/Auth/authActions';
+import React, { useEffect, useState, useRef } from 'react'
+import { CButton } from '@coreui/react'
+import axios from 'axios'
+import './login.scss'
+import Navigation from '../navigation/Navigation'
+import { Link, useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { auth, login } from 'src/redux/Auth/authActions'
+import { showSuccess } from 'src/redux/UI/ui-actions'
+import { success } from 'src/redux/Notifications/notificationActions'
 
 function generateRandomRole() {
-  let roles = ['admin', 'manager', 'cashier', 'receiptionist', 'waiter'];
-  let randomNumber = Math.floor(Math.random() * 5);
-  return roles[randomNumber];
+  let roles = ['admin', 'manager', 'cashier', 'receiptionist', 'waiter']
+  let randomNumber = Math.floor(Math.random() * 5)
+  return roles[randomNumber]
 }
 function saveUserToGeneralStore() {}
 function Login() {
-  const navigate = useNavigate();
-  const isAuth = useSelector((state) => state.auth.isAuth);
+  const navigate = useNavigate()
+  const isAuth = useSelector((state) => state.auth.isAuth)
   //const [isAuth, setIsAuth] = useState(auth);
-  const dispatch = useDispatch();
-  const [formState, setformState] = useState({});
+  const dispatch = useDispatch()
+  const [formState, setformState] = useState({})
 
   const handleChange = (event) => {
     setformState({
       ...formState,
       [event.target.name]: event.target.value,
-    });
-  };
+    })
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     // let role = generateRandomRole()
 
     dispatch(
@@ -38,17 +40,14 @@ function Login() {
           email: formState.email,
           role: 'admin',
         },
-      })
-    );
+      }),
+    )
 
-    dispatch(login(formState));
-    navigate('/');
-    // setIsAuth(auth);
-    // console.log(isAuth);
-    // if (isAuth) {
-    //   navigate('/');
-    // }
-  };
+    dispatch(login(formState))
+
+    navigate('/')
+    dispatch(success('Login succesfull'))
+  }
 
   return (
     <div className="App">
@@ -110,10 +109,10 @@ function Login() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default Login;
+export default Login
 
 // {
 //   formState?.email && formState?.password && (

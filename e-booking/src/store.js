@@ -1,7 +1,7 @@
 //jshint esversion:9
 
 import rootReducer from './redux/root-reducer'
-import { configureStore } from '@reduxjs/toolkit'
+import { createStore, applyMiddleware, compose } from '@reduxjs/toolkit'
 import logger from 'redux-logger'
 import thunk from 'redux-thunk'
 
@@ -38,14 +38,29 @@ function loadFromLocalStorage() {
 
 let persistedState = loadFromLocalStorage()
 
-const middleware = [thunk, logger]
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
-export const store = configureStore({
-  reducer: rootReducer,
+// const middleware = [thunk, logger]
+
+// // export const store = configureStore({
+// //   reducer: rootReducer,
+// //   persistedState,
+// //   middleware: [...middleware],
+// // })
+
+const store = createStore(
+  rootReducer,
   persistedState,
-  middleware: [...middleware],
-})
+  composeEnhancers(applyMiddleware(thunk)),
+)
 
-store.subscribe(() => saveToLocalStorage(store.getState()))
+store.subscribe(() => {
+  try {
+    const serializedState = JSON.stringify(store.getState())
+    localStorage.setItem('state', serializedState)
+  } catch (error) {
+    console.log('Error saving state to localStorage:', error)
+  }
+})
 
 export default store

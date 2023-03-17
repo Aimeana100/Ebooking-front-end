@@ -7,6 +7,9 @@ import roomReducer from './Room/roomReducer'
 import rolesReducer from './Roles/RolesReducer'
 import userReducer from './User/userReducer'
 import itemReducer from './StockItem/ItemReducer'
+import productReducer from './Product/productReducer'
+import categoryReducer from './Categories/categroiesReducer'
+import notificationReducer from './Notifications/notificationReducer'
 
 export default combineReducers({
   sidebarShow: UIReducer,
@@ -14,5 +17,8 @@ export default combineReducers({
   rooms: roomReducer,
   roles: rolesReducer,
   systemUsers: userReducer,
+  products: productReducer,
   stockItems: itemReducer,
+  categories: categoryReducer,
+  notification: notificationReducer,
 })

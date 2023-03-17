@@ -1,6 +1,5 @@
 import React, { Suspense, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { ToastContainer, Flip } from 'react-toastify'
 
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import './scss/style.scss'

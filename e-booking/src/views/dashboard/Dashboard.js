@@ -1,9 +1,25 @@
-import React from 'react';
+import React, { useEffect } from 'react'
 
-import { CCard, CCardBody } from '@coreui/react';
-import WidgetsDropdown from '../widgets/WidgetsDropdown';
+import { CCard, CCardBody } from '@coreui/react'
+import WidgetsDropdown from '../widgets/WidgetsDropdown'
+import { useDispatch } from 'react-redux'
+import { getProducts } from 'src/redux/Product/productActions'
+import {
+  getProductCategories,
+  getServiceCategories,
+} from 'src/redux/Categories/categoriesActions'
 
 const Dashboard = () => {
+  const dispatch = useDispatch()
+  const getInitialData = () => {
+    dispatch(getProductCategories())
+    dispatch(getServiceCategories())
+    dispatch(getProducts())
+  }
+  useEffect(() => {
+    getInitialData()
+  }, [])
+
   const progressExample = [
     { title: 'Visits', value: '29.703 Users', percent: 40, color: 'success' },
     { title: 'Rooms', value: '24.093 Users', percent: 20, color: 'info' },
@@ -15,7 +31,7 @@ const Dashboard = () => {
       percent: 40.15,
       color: 'primary',
     },
-  ];
+  ]
 
   return (
     <>
@@ -207,7 +223,7 @@ const Dashboard = () => {
         </CCol>
       </CRow> */}
     </>
-  );
-};
+  )
+}
 
-export default Dashboard;
+export default Dashboard

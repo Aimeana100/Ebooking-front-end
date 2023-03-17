@@ -53,13 +53,36 @@ const _nav = [
   },
   {
     component: CNavGroup,
+    name: 'Hall',
+    to: '/halls',
+    icon: <CIcon icon={cilHouse} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Halls',
+        to: '/booking/halls',
+      },
+      {
+        component: CNavItem,
+        name: 'Add Hall',
+        to: '/booking/halls/add',
+      },
+      {
+        component: CNavItem,
+        name: 'Edit Hall',
+        to: '/booking/halls/edit',
+      },
+    ],
+  },
+  {
+    component: CNavGroup,
     name: 'Reservations',
     to: '/Reservations',
     icon: <CIcon icon={cilSave} customClassName="nav-icon" />,
     items: [
       {
         component: CNavItem,
-        name: 'Book a Hotel',
+        name: 'Create a Reservation',
         to: '/booking/reservations/add',
       },
       {
@@ -95,7 +118,12 @@ const _nav = [
     items: [
       {
         component: CNavItem,
-        name: 'Add prodcts',
+        name: 'Sell product',
+        to: '/booking/products/sell',
+      },
+      {
+        component: CNavItem,
+        name: 'Add products',
         to: '/booking/products/add',
       },
       {
@@ -111,6 +139,11 @@ const _nav = [
     to: '/booking/services',
     icon: <CIcon icon={cilSatelite} customClassName="nav-icon" />,
     items: [
+      {
+        component: CNavItem,
+        name: 'Sell service',
+        to: '/booking/services/sell',
+      },
       {
         component: CNavItem,
         name: 'Add service',
@@ -170,10 +203,22 @@ const _nav = [
     ],
   },
   {
-    component: CNavItem,
+    component: CNavGroup,
     name: 'Customers',
     to: '/customers',
     icon: <CIcon icon={cilUser} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'All Customers',
+        to: '/customers',
+      },
+      {
+        component: CNavItem,
+        name: 'Add Customer',
+        to: '/customers/add',
+      },
+    ],
   },
   // {
   //   component: CNavItem,

@@ -14,26 +14,23 @@ import {
 } from '@coreui/react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
-import { useDispatch } from 'react-redux'
-import { selectRoom } from 'src/redux/Room/roomActions'
 
-const Room = (prop) => {
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
-  const [rooms, setRooms] = useState([])
+function Customers() {
+  const [customers, setCustomers] = useState([])
   useEffect(() => {
-    const getRooms = async () => {
+    const getCustomers = async () => {
       const res = await axios
-        .get('http://206.81.29.111:80/api/v1/room/all')
+        .get('http://206.81.29.111:80/api/v1/customers/all')
         .then((res) => {
           console.log(res.data)
-          setRooms(res.data.data)
+          setCustomers(res.data.data)
         })
         .catch((err) => {
-          console.log('err getting rooms')
+          console.log('err getting halls')
         })
+      console.log('customers async to get halls')
     }
-    getRooms()
+    getCustomers()
   }, [])
 
   return (
@@ -42,7 +39,7 @@ const Room = (prop) => {
         <CCard className="mb-4">
           <CCardHeader>
             <h2>
-              <strong> Available rooms </strong>
+              <strong> Registered customers </strong>
             </h2>
           </CCardHeader>
           <CCardBody>
@@ -50,36 +47,31 @@ const Room = (prop) => {
               <CTableHead>
                 <CTableRow>
                   <CTableHeaderCell scope="col">#</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Class</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">
-                    {' '}
-                    Name | N <sup>o</sup>{' '}
-                  </CTableHeaderCell>
-                  <CTableHeaderCell scope="col"> Release ON </CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Name</CTableHeaderCell>
+                  <CTableHeaderCell scope="col"> ID</CTableHeaderCell>
+                  <CTableHeaderCell scope="col"> action</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {rooms && rooms.length !== 0
-                  ? rooms.map((room, i) => {
+                {customers && customers.length !== 0
+                  ? customers.map((customer, i) => {
                       return (
-                        <CTableRow key={room.id}>
+                        <CTableRow key={customer.id}>
                           <CTableHeaderCell scope="row">
                             {i + 1}
                           </CTableHeaderCell>
-                          <CTableDataCell>
-                            {' '}
-                            {room.RoomClass.name}{' '}
-                          </CTableDataCell>
-                          <CTableDataCell>{`#${room.name}`}</CTableDataCell>
+                          <CTableDataCell>{`${customer.names}`}</CTableDataCell>
+                          <CTableDataCell>{`${customer.identification}`}</CTableDataCell>
                           <CTableDataCell>
                             {' '}
                             <Link
-                              to="/booking/reservations/add"
+                              to="/customers/info"
                               onClick={() => {
-                                return dispatch(selectRoom(room))
+                                console.log(' customer view')
+                                // return dispatch(selectRoom(hall))
                               }}
                             >
-                              Book now
+                              view
                             </Link>{' '}
                           </CTableDataCell>
                         </CTableRow>
@@ -95,4 +87,4 @@ const Room = (prop) => {
   )
 }
 
-export default Room
+export default Customers

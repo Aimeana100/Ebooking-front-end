@@ -14,26 +14,24 @@ import {
 } from '@coreui/react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
-import { useDispatch } from 'react-redux'
-import { selectRoom } from 'src/redux/Room/roomActions'
 
-const Room = (prop) => {
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
-  const [rooms, setRooms] = useState([])
+function Hall() {
+  const [halls, setHalls] = useState([])
   useEffect(() => {
-    const getRooms = async () => {
+    const getHalls = async () => {
       const res = await axios
-        .get('http://206.81.29.111:80/api/v1/room/all')
+        .get('http://206.81.29.111:80/api/v1/halls/all')
         .then((res) => {
           console.log(res.data)
-          setRooms(res.data.data)
+          setHalls(res.data.data)
         })
         .catch((err) => {
-          console.log('err getting rooms')
+          console.log('err getting halls')
         })
+      console.log('halls async to get halls')
     }
-    getRooms()
+
+    getHalls()
   }, [])
 
   return (
@@ -42,7 +40,7 @@ const Room = (prop) => {
         <CCard className="mb-4">
           <CCardHeader>
             <h2>
-              <strong> Available rooms </strong>
+              <strong> Available halls </strong>
             </h2>
           </CCardHeader>
           <CCardBody>
@@ -50,36 +48,38 @@ const Room = (prop) => {
               <CTableHead>
                 <CTableRow>
                   <CTableHeaderCell scope="col">#</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Class</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">
-                    {' '}
-                    Name | N <sup>o</sup>{' '}
-                  </CTableHeaderCell>
-                  <CTableHeaderCell scope="col"> Release ON </CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Name</CTableHeaderCell>
+                  <CTableHeaderCell scope="col"> Action </CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {rooms && rooms.length !== 0
-                  ? rooms.map((room, i) => {
+                {halls && halls.length !== 0
+                  ? halls.map((hall, i) => {
                       return (
-                        <CTableRow key={room.id}>
+                        <CTableRow key={hall.id}>
                           <CTableHeaderCell scope="row">
                             {i + 1}
                           </CTableHeaderCell>
-                          <CTableDataCell>
-                            {' '}
-                            {room.RoomClass.name}{' '}
-                          </CTableDataCell>
-                          <CTableDataCell>{`#${room.name}`}</CTableDataCell>
+                          <CTableDataCell>{`${hall.name}`}</CTableDataCell>
                           <CTableDataCell>
                             {' '}
                             <Link
-                              to="/booking/reservations/add"
+                              to="/booking/halls/info"
                               onClick={() => {
-                                return dispatch(selectRoom(room))
+                                console.log('hall view')
+                                // return dispatch(selectRoom(hall))
                               }}
                             >
-                              Book now
+                              view
+                            </Link>{' '}
+                            <Link
+                              to="/booking/hall/edit"
+                              onClick={() => {
+                                console.log('hall edit')
+                                // return dispatch(selectRoom(hall))
+                              }}
+                            >
+                              edit
                             </Link>{' '}
                           </CTableDataCell>
                         </CTableRow>
@@ -95,4 +95,4 @@ const Room = (prop) => {
   )
 }
 
-export default Room
+export default Hall

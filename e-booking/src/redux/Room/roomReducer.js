@@ -1,8 +1,13 @@
 //jshint esversion:9
 import { ROOM_ACTION_TYPES } from './roomActionTypes'
 
-const roomReducer = (state = { rooms: {} }, { type, payload }) => {
+const roomReducer = (
+  state = { rooms: {}, selectedRoom: {} },
+  { type, payload },
+) => {
   switch (type) {
+    case ROOM_ACTION_TYPES.SELECT_ROOM:
+      return { ...state, selectedRoom: { ...payload } }
     case ROOM_ACTION_TYPES.GET_ROOMS:
       return { ...state, rooms: [...payload] }
     case ROOM_ACTION_TYPES.ADD_ROOM:
@@ -11,7 +16,6 @@ const roomReducer = (state = { rooms: {} }, { type, payload }) => {
       let rooms = state.rooms.filter((room) =>
         room.id === payload.id ? { ...room, isBooked: true } : room,
       )
-
       return { ...state, rooms: rooms }
     case ROOM_ACTION_TYPES.RELEASE_ROOM:
       let Rrooms = state.rooms.filter((room) =>

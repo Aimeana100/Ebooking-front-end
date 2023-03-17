@@ -1,22 +1,24 @@
-import { PRODUCT_ACTIONS } from './productActionTypes';
+import { PRODUCT_ACTIONS } from './productActionTypes'
 
 const productReducer = (
-  state = { users: {}, selectedUser: {} },
-  { type, payload }
+  state = { products: [], selectedProduct: {} },
+  { type, payload },
 ) => {
   switch (type) {
     case PRODUCT_ACTIONS.SELECT:
-      return { ...state, selectedUser: payload };
+      return { ...state, selectedProduct: payload }
     case PRODUCT_ACTIONS.UPDATE:
-      console.log('HAPAPAPAPA');
-      return { ...state, users: [...payload.payloadLocal] };
+      console.log('HAPAPAPAPA')
+      return { ...state, products: [...payload.payloadLocal] }
     case PRODUCT_ACTIONS.DELETE:
-      console.log('before delete reducer', payload);
-      return { ...state, users: [...payload.payloadLocal] };
+      console.log('before delete reducer', payload)
+      return { ...state, products: [...payload.payloadLocal] }
     case PRODUCT_ACTIONS.GET_ALL:
-      return { ...state, users: payload };
+      return { ...state, products: [...payload] }
+    case PRODUCT_ACTIONS.ADD_PRODUCT:
+      return { ...state, products: [...payload] }
     default:
-      return { ...state, selectedUser: {}, users: [] };
+      return { ...state, selectedProduct: {}, products: [] }
   }
-};
-export default productReducer;
+}
+export default productReducer

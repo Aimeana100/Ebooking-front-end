@@ -20,6 +20,7 @@ import { getRoles } from 'src/redux/Roles/RolesActions'
 
 const Users = () => {
   let users = useSelector((state) => state.systemUsers.users) || []
+  let loggedInUser = useSelector((state) => state.auth.user.Role.name)
   users = users ? users : []
   const dispatch = useDispatch()
   useEffect(() => {
@@ -56,14 +57,19 @@ const Users = () => {
                   users.map((user, i) => (
                     <CTableRow key={user._id}>
                       <CTableHeaderCell scope="row">{i + 1}</CTableHeaderCell>
-                      <CTableDataCell> {user.firstName + ' ' + user.lastName} </CTableDataCell>
+                      <CTableDataCell>
+                        {' '}
+                        {user.firstName + ' ' + user.lastName}{' '}
+                      </CTableDataCell>
                       <CTableDataCell>{user.phone} </CTableDataCell>
                       <CTableDataCell> {user.email} </CTableDataCell>
                       <CTableDataCell> {user.Role.name}</CTableDataCell>
                       <CTableDataCell>
                         <Link
                           to="/booking/user/edit"
-                          className="btn btn-sm btn-warning"
+                          className={`${
+                            loggedInUser === 'controller' ? 'disabled' : ''
+                          } btn btn-sm btn-warning`}
                           onClick={() => {
                             console.log('this is user', user)
                             return dispatch(selectUser(user))
@@ -73,7 +79,9 @@ const Users = () => {
                           Edit{' '}
                         </Link>
                         <button
-                          className="btn btn-sm btn-danger"
+                          className={`${
+                            loggedInUser === 'controller' ? 'disabled' : ''
+                          } btn btn-sm btn-danger`}
                           onClick={() => {
                             return dispatch(deleteUser(user, users))
                           }}

@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react'
+
 import {
   CButton,
   CCard,
@@ -8,21 +9,26 @@ import {
   CForm,
   CFormInput,
   CFormLabel,
-  CFormTextarea,
   CFormSelect,
   CRow,
   CFormCheck,
-} from '@coreui/react';
-import { useForm } from 'react-hook-form';
-import { useSelector } from 'react-redux';
+} from '@coreui/react'
+import { useForm } from 'react-hook-form'
+import { useSelector, useDispatch } from 'react-redux'
+import axios, { all } from 'axios'
+import { createProduct } from 'src/redux/Product/productActions'
 
 const ProductAdd = () => {
-  const { register, handleSubmit, watch, reset } = useForm();
-
+  const [success, setSuccess] = useState(false)
+  const { register, handleSubmit, watch, reset } = useForm()
+  const [allDataPackages, setAllDataPackages] = useState([])
+  const [allDataCategories, setAllDataCategories] = useState([])
+  const [allProducts, setAllProducts] = useState([])
+  const dispatch = useDispatch()
   const [categories, setCategories] = useState([
     { name: 'food', id: 5001209 },
     { name: 'drinks', id: 69560 },
-  ]);
+  ])
   const [drinkPackages, setDrinkPackages] = useState({
     id: '69560',
     packs: [
@@ -30,7 +36,7 @@ const ProductAdd = () => {
       { name: 'shot', id: 6560 },
       { name: 'glass', id: 6950 },
     ],
-  });
+  })
   const [foodPackages, setFoodPackages] = useState({
     id: '5001209',
     packs: [
@@ -38,29 +44,23 @@ const ProductAdd = () => {
       { name: 'large-plate', id: 660 },
       { name: 'piece', id: 650 },
     ],
-  });
-  const role = useSelector((state) => state.auth.user.role);
-  const packages = [drinkPackages, foodPackages];
-  const category = watch('category', '---');
-  const packs = watch('packs', '---');
-  const getAllPacks = [];
-  // const handleChange = (e) => {
-  //   setformData({ ...formData, [e.target.name]: e.target.value });
-  //   console.log(formData);
-  // };
-  // const handleFileChange = (e) => {
-  //   setformData({ ...formData, [e.target.name]: e.target.files[0] });
-  //   console.log(formData);
-  // };
+  })
+  const role = useSelector((state) => state.auth.role)
+  const packages = [drinkPackages, foodPackages]
+  const category = watch('category', '---')
+  const packs = watch('packs', '---')
+  console.log('packs', packs)
 
   const onSubmit = (data) => {
-    console.log(data);
-    //roomClass.push(formData);
-  };
+    console.log(data)
+    dispatch(createProduct(data, allProducts))
+    reset()
+  }
   const onManagerSubmit = (data) => {
-    console.log(data, { role });
-  };
-  // let m =
+    console.log(data, { role })
+    reset()
+  }
+
   //   category !== '---' && category !== '-- Select -- '
   //     ? packages.map((packageSet) =>
   //         packageSet.id === category && packs && packs !== '---'
@@ -75,12 +75,47 @@ const ProductAdd = () => {
   //           : null
   //       )
   //     : null;
-  console.log(category);
-  console.log(packs);
-  // console.log('this is ', m);
-  // useEffect(() => {
-  //   console.log(roomClass);
-  // }, [roomClass]);
+  console.log('this is trhe role', role)
+  console.log(category)
+  console.log(allDataPackages)
+  console.log(allDataCategories)
+
+  useEffect(() => {
+    const getAllPacks = async () => {
+      const res = await axios
+        .get('http://206.81.29.111:80/api/v1/packages/all')
+        .catch((err) => {
+          console.log('error getting packages')
+        })
+      if (res.status === 200) {
+        setAllDataPackages(res.data.data)
+      }
+    }
+    const getAllCategories = async () => {
+      const res = await axios
+        .get('http://206.81.29.111:80/api/v1/products/category/all')
+        .catch((err) => {
+          console.log('error getting categories')
+        })
+      if (res.status === 200) {
+        setAllDataCategories(res.data.data)
+      }
+    }
+    const getAllProducts = async () => {
+      const res = await axios
+        .get('http://206.81.29.111:80/api/v1/products/all')
+        .catch((err) => {
+          console.log('error getting all products')
+        })
+      if (res.status === 200) {
+        setAllProducts(res.data.data)
+        setSuccess(true)
+      }
+    }
+    getAllCategories()
+    getAllPacks()
+    getAllProducts()
+  }, [])
 
   if (role === 'admin') {
     return (
@@ -126,8 +161,8 @@ const ProductAdd = () => {
                       {...register('category', { required: true })}
                     >
                       <option>-- Select -- </option>
-                      {categories && categories.length !== 0
-                        ? categories.map((category) => (
+                      {allDataCategories && allDataCategories.length !== 0
+                        ? allDataCategories.map((category) => (
                             <option value={category.id} key={category.id}>
                               {category.name}
                             </option>
@@ -145,67 +180,69 @@ const ProductAdd = () => {
 
                   <CCol>
                     {category && category !== '-- Select -- '
-                      ? packages.map((packageSet) =>
-                          packageSet.id === category ? (
+                      ? allDataPackages.map((packageSet) =>
+                          packageSet.categoryId == category ? (
                             <CCol md={6}>
                               <CFormLabel htmlFor="package">
                                 Product packages{' '}
                               </CFormLabel>
-                              {packageSet.packs.map((item) => (
-                                <CFormCheck
-                                  name={item.name}
-                                  id="check"
-                                  size="md"
-                                  label={item.name}
-                                  value={item.id}
-                                  className="mb-3"
-                                  aria-label={item.name}
-                                  {...register('packs', { required: true })}
-                                />
-                              ))}
+                              <CFormCheck
+                                name={packageSet.name}
+                                id="check"
+                                size="md"
+                                label={packageSet.name}
+                                value={packageSet.id}
+                                className="mb-3"
+                                aria-label={packageSet.name}
+                                {...register('packs', { required: true })}
+                              />
                             </CCol>
-                          ) : null
+                          ) : null,
                         )
                       : null}
 
                     {category && category !== '---'
-                      ? packages.map((packageSet) =>
-                          packageSet.id === category && packs && packs !== '---'
-                            ? packageSet.packs.map((pack) =>
-                                packs.map((item) =>
-                                  pack.id == item ? (
-                                    <div>
-                                      <CCol md={6}>
-                                        <CFormLabel
-                                          htmlFor="price1"
-                                          className="col-form-label"
-                                        >
-                                          Set price for
-                                          <span className="strong">
-                                            {' '}
-                                            {pack.name}
-                                          </span>{' '}
-                                          package
-                                        </CFormLabel>
-                                      </CCol>
-                                      <CCol md="6">
-                                        <CFormInput
-                                          type="Number"
-                                          min="1"
-                                          id="price1"
-                                          aria-describedby={pack.name}
-                                          {...register(`package_${pack.id}`, {
+                      ? allDataPackages.map((packageSet) =>
+                          packageSet.categoryId == category &&
+                          packs &&
+                          packs !== '---'
+                            ? packs.map((item) =>
+                                packageSet.id == item ? (
+                                  <div>
+                                    <CCol md={6}>
+                                      <CFormLabel
+                                        htmlFor="price1"
+                                        className="col-form-label"
+                                      >
+                                        Set price for
+                                        <span className="strong">
+                                          {' '}
+                                          {packageSet.name}
+                                        </span>{' '}
+                                        package
+                                      </CFormLabel>
+                                    </CCol>
+                                    <CCol md="6">
+                                      <CFormInput
+                                        type="Number"
+                                        min="1"
+                                        id="price1"
+                                        aria-describedby={packageSet.name}
+                                        {...register(
+                                          `package_${packageSet.id}`,
+                                          {
                                             required: true,
-                                          })}
-                                        />
-                                      </CCol>
-                                    </div>
-                                  ) : null
-                                )
+                                          },
+                                        )}
+                                      />
+                                    </CCol>
+                                  </div>
+                                ) : null,
                               )
-                            : null
+                            : null,
                         )
                       : null}
+
                     {packs && packs !== '---' ? (
                       <CCol xs={12} className="text-center my-3">
                         <CButton
@@ -222,7 +259,7 @@ const ProductAdd = () => {
           </CCol>
         </CRow>
       </>
-    );
+    )
   } else {
     return (
       <>
@@ -267,8 +304,8 @@ const ProductAdd = () => {
                       {...register('category', { required: true })}
                     >
                       <option>-- Select -- </option>
-                      {categories && categories.length !== 0
-                        ? categories.map((category) => (
+                      {allDataCategories && allDataCategories.length !== 0
+                        ? allDataCategories.map((category) => (
                             <option value={category.id} key={category.id}>
                               {category.name}
                             </option>
@@ -289,11 +326,11 @@ const ProductAdd = () => {
           </CCol>
         </CRow>
       </>
-    );
+    )
   }
-};
+}
 
-export default ProductAdd;
+export default ProductAdd
 
 //product description keep for later
 

@@ -4,10 +4,14 @@ import { CContainer, CSpinner } from '@coreui/react'
 
 // routes config
 import routes from '../routes'
+import SuccessNotification from 'src/views/notifications/toasts/SuccessNotification'
+import { useSelector } from 'react-redux'
 
 const AppContent = () => {
+  const success = useSelector((state) => state.sidebarShow.success) || false
   return (
     <CContainer lg>
+      <SuccessNotification activate={success} />
       <Suspense fallback={<CSpinner color="primary" />}>
         <Routes>
           {routes.map((route, idx) => {
