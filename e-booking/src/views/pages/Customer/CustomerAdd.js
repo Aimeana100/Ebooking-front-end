@@ -12,12 +12,13 @@ import {
   CFormSelect,
   CRow,
 } from '@coreui/react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
+import { success } from 'src/redux/Notifications/notificationActions'
 
 function CustomerAdd() {
   let loggedInUser = useSelector((state) => state.auth.user.Role.name)
-
+  const dispatch = useDispatch()
   const { register, handleSubmit, watch, reset } = useForm()
   const customerType = watch('customerType') || 'individual'
 
@@ -29,6 +30,7 @@ function CustomerAdd() {
       .post('http://206.81.29.111:80/api/v1/customers/add', data)
       .then((res) => {
         console.log(res.data)
+        dispatch(success({ text: 'Customer created', color: 'primary' }))
       })
       .catch((err) => {
         console.log('err creating room room', err.message)

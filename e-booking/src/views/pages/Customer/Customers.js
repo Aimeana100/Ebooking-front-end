@@ -12,10 +12,13 @@ import {
   CTableHeaderCell,
   CTableRow,
 } from '@coreui/react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import axios from 'axios'
+import { selectItem } from 'src/redux/Select/selectionActions'
+import { useDispatch } from 'react-redux'
 
 function Customers() {
+  const dispatch = useDispatch()
   const [customers, setCustomers] = useState([])
   useEffect(() => {
     const getCustomers = async () => {
@@ -67,8 +70,7 @@ function Customers() {
                             <Link
                               to="/customers/info"
                               onClick={() => {
-                                console.log(' customer view')
-                                // return dispatch(selectRoom(hall))
+                                return dispatch(selectItem(customer))
                               }}
                             >
                               view

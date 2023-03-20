@@ -1,9 +1,9 @@
 import React from 'react'
 import { CToast, CToastBody, CToaster, CToastHeader } from '@coreui/react'
-function Notification({ activate, position, text }) {
+function Notification({ activate, position, text, color }) {
   return (
     <CToaster push={activate} position={position}>
-      <CToast autohide={false} visible={true}>
+      <CToast autohide={false} visible={true} color={`${color}`}>
         <CToastHeader closeButton>
           <svg
             className="rounded me-2"

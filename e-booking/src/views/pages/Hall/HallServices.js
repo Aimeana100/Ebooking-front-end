@@ -17,24 +17,23 @@ import axios from 'axios'
 import { useDispatch } from 'react-redux'
 import { selectItem } from 'src/redux/Select/selectionActions'
 
-function Hall() {
+function HallServices() {
   const dispatch = useDispatch()
-  const [halls, setHalls] = useState([])
+  const [hallServices, setHallServices] = useState([])
   useEffect(() => {
-    const getHalls = async () => {
+    const getHallServices = async () => {
       const res = await axios
-        .get('http://206.81.29.111:80/api/v1/halls/all')
+        .get('http://206.81.29.111:80/api/v1/hall/services/all')
         .then((res) => {
           console.log(res.data)
-          setHalls(res.data.data)
+          setHallServices(res.data.data)
         })
         .catch((err) => {
           console.log('err getting halls')
         })
       console.log('halls async to get halls')
     }
-
-    getHalls()
+    getHallServices()
   }, [])
 
   return (
@@ -43,7 +42,7 @@ function Hall() {
         <CCard className="mb-4">
           <CCardHeader>
             <h2>
-              <strong> Available halls </strong>
+              <strong> Available hall Services </strong>
             </h2>
           </CCardHeader>
           <CCardBody>
@@ -56,34 +55,31 @@ function Hall() {
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {halls && halls.length !== 0
-                  ? halls.map((hall, i) => {
+                {hallServices && hallServices.length !== 0
+                  ? hallServices.map((hallService, i) => {
                       return (
-                        <CTableRow key={hall.id}>
+                        <CTableRow key={hallService.id}>
                           <CTableHeaderCell scope="row">
                             {i + 1}
                           </CTableHeaderCell>
-                          <CTableDataCell>{`${hall.name}`}</CTableDataCell>
+                          <CTableDataCell>{`${hallService.name}`}</CTableDataCell>
                           <CTableDataCell>
-                            {' '}
                             <Link
-                              to="/booking/halls/info"
+                              to="/booking/halls/services/edit"
                               onClick={() => {
-                                console.log('hall view')
-                                return dispatch(selectItem(hall))
-                              }}
-                            >
-                              view
-                            </Link>{' '}
-                            <Link
-                              to="/booking/halls/edit"
-                              onClick={() => {
-                                console.log('hall edit')
-
-                                return dispatch(selectItem(hall))
+                                return dispatch(selectItem(hallService))
                               }}
                             >
                               edit
+                            </Link>{' '}
+                            <Link
+                              to="/booking/halls/services/"
+                              onClick={() => {
+                                console.log('hall edit')
+                                // return dispatch(selectRoom(hall))
+                              }}
+                            >
+                              remove
                             </Link>{' '}
                           </CTableDataCell>
                         </CTableRow>
@@ -99,4 +95,4 @@ function Hall() {
   )
 }
 
-export default Hall
+export default HallServices

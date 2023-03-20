@@ -8,16 +8,17 @@ import {
   CForm,
   CFormInput,
   CFormLabel,
+  CFormSelect,
   CFormTextarea,
   CRow,
 } from '@coreui/react'
 import { useForm } from 'react-hook-form'
 import { useSelector } from 'react-redux'
 
-function HallEdit() {
-  const selectedHall = useSelector((state) => state.selection.selected) || {}
-  const { register, handleSubmit, reset } = useForm({
-    defaultValues: { ...selectedHall },
+function HallServiceEdit() {
+  const selectedService = useSelector((state) => state.selection.selected) || {}
+  const { register, handleSubmit, watch, reset } = useForm({
+    defaultValues: { ...selectedService },
   })
 
   const onSubmit = (data) => {
@@ -44,40 +45,27 @@ function HallEdit() {
               onSubmit={handleSubmit(onSubmit)}
             >
               <CCol md={6}>
-                <CFormLabel htmlFor="name"> Name </CFormLabel>
+                <CFormLabel htmlFor="name"> Service name </CFormLabel>
                 <CFormInput
                   className="mb-1"
                   type="text"
                   name="name"
                   id="title"
                   size="md"
-                  defaultValue={selectedHall.name}
+                  defaultvalue={selectedService.name}
                   required
                   {...register('name')}
                 />
               </CCol>
               <CCol md={6}>
-                <CFormLabel htmlFor="name">Size</CFormLabel>
-                <CFormInput
-                  className="mb-1"
-                  type="text"
-                  name="name"
-                  id="title"
-                  size="md"
-                  defaultValue={selectedHall.size ? selectedHall.size : ''}
-                  required
-                  {...register('name')}
-                />
-              </CCol>
-              <CCol md={6}>
-                <CFormLabel htmlFor="name"> Hall price in USD</CFormLabel>
+                <CFormLabel htmlFor="name"> Service price in USD</CFormLabel>
                 <CFormInput
                   className="mb-1"
                   type="text"
                   name="price"
                   id="title"
                   size="md"
-                  defaultValue={selectedHall.price}
+                  defaultValue={selectedService.price}
                   required
                   {...register('price')}
                 />
@@ -89,13 +77,16 @@ function HallEdit() {
                 <CFormTextarea
                   name="description"
                   id="description"
-                  defaultValue={selectedHall.description}
                   rows="3"
                   {...register('description')}
                 ></CFormTextarea>
               </CCol>
               <CCol xs={12} className="text-center my-3">
-                <CButton component="input" type="submit" value=" Update Hall" />
+                <CButton
+                  component="input"
+                  type="submit"
+                  value=" Update service"
+                />
               </CCol>
             </CForm>
           </CCardBody>
@@ -105,4 +96,4 @@ function HallEdit() {
   )
 }
 
-export default HallEdit
+export default HallServiceEdit

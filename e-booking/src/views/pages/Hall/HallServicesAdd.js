@@ -1,6 +1,3 @@
-import React, { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
-
 import {
   CButton,
   CCard,
@@ -13,26 +10,26 @@ import {
   CFormTextarea,
   CRow,
 } from '@coreui/react'
-import { useSelector } from 'react-redux'
 import axios from 'axios'
+import React from 'react'
+import { useForm } from 'react-hook-form'
+import { useSelector } from 'react-redux'
 
-function HallAdd() {
+function HallServicesAdd() {
   let loggedInUser = useSelector((state) => state.auth.role)
-  const [hallServices, setHallServices] = useState([])
   const { register, handleSubmit, reset } = useForm()
   const onSubmit = async (data) => {
     console.log(data)
     const res = await axios
-      .post('http://206.81.29.111:80/api/v1/halls/add', data)
+      .post('http://206.81.29.111:80/api/v1/hall/services/add', data)
       .then((res) => {
         console.log(res.data)
       })
       .catch((err) => {
-        console.log('err creating Hall', err.message)
+        console.log('err creating Hall product', err.message)
       })
     reset()
   }
-  // useEffect(() => {}, [])
 
   return (
     <CRow>
@@ -40,31 +37,20 @@ function HallAdd() {
         <CCard className="mb-4">
           <CCardHeader>
             <h2>
-              <strong> Add new hall </strong>
+              <strong> Add new hall product </strong>
             </h2>
           </CCardHeader>
           <CCardBody>
             <CForm name="roomAddFrm" onSubmit={handleSubmit(onSubmit)}>
               <div className="mb-3">
-                <CFormLabel htmlFor="hallName"> Hall name </CFormLabel>
+                <CFormLabel htmlFor="hallName">Product name </CFormLabel>
                 <CFormInput
                   type="text"
                   name="hallName"
                   id="hallName"
-                  placeholder="hall name"
+                  placeholder="product name"
                   size="md"
                   {...register('name', { required: true })}
-                />
-              </div>
-              <div className="mb-3">
-                <CFormLabel htmlFor="hallCapacity"> Capacity </CFormLabel>
-                <CFormInput
-                  type="text"
-                  name="hallCapacity"
-                  id="hallCapacity"
-                  placeholder="maximum number of people"
-                  size="md"
-                  {...register('size', { required: true })}
                 />
               </div>
               <div className="mb-3">
@@ -72,8 +58,8 @@ function HallAdd() {
                   <CFormLabel htmlFor="hallPrice"> Price in USD </CFormLabel>
                   <CFormInput
                     type="text"
-                    name="hallPrice "
-                    id="hallPrice"
+                    name="hallServicePrice "
+                    id="hallServicePrice"
                     placeholder="price in USD"
                     size="md"
                     {...register('price', { required: true })}
@@ -94,7 +80,9 @@ function HallAdd() {
                 <CButton
                   component="input"
                   className={`${
-                    loggedInUser === 'controller' ? 'disabled' : ''
+                    loggedInUser === 'controller' || loggedInUser !== 'admin'
+                      ? 'disabled'
+                      : ''
                   }`}
                   type="submit"
                   value="Add Hall"
@@ -108,4 +96,4 @@ function HallAdd() {
   )
 }
 
-export default HallAdd
+export default HallServicesAdd

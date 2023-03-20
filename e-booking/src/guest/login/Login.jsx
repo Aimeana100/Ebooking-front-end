@@ -33,20 +33,20 @@ function Login() {
     e.preventDefault()
     // let role = generateRandomRole()
 
-    dispatch(
-      auth({
-        isAuth: true,
-        user: {
-          email: formState.email,
-          role: 'admin',
-        },
-      }),
-    )
+    // dispatch(
+    //   auth({
+    //     isAuth: true,
+    //     user: {
+    //       email: formState.email,
+    //       role: 'admin',
+    //     },
+    //   }),
+    // )
 
     dispatch(login(formState))
 
     navigate('/')
-    dispatch(success('Login succesfull'))
+    dispatch(success({ text: 'Login succesfull', color: 'primary' }))
   }
 
   return (
@@ -79,6 +79,7 @@ function Login() {
                   type="password"
                   value={formState.password}
                   name="password"
+                  required
                   id="password"
                   className="form__control"
                   placeholder="*********"

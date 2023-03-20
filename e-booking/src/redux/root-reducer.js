@@ -10,6 +10,7 @@ import itemReducer from './StockItem/ItemReducer'
 import productReducer from './Product/productReducer'
 import categoryReducer from './Categories/categroiesReducer'
 import notificationReducer from './Notifications/notificationReducer'
+import selectionReducer from './Select/selectionReducer'
 
 export default combineReducers({
   sidebarShow: UIReducer,
@@ -21,4 +22,5 @@ export default combineReducers({
   stockItems: itemReducer,
   categories: categoryReducer,
   notification: notificationReducer,
+  selection: selectionReducer,
 })

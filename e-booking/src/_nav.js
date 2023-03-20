@@ -69,8 +69,13 @@ const _nav = [
       },
       {
         component: CNavItem,
-        name: 'Edit Hall',
-        to: '/booking/halls/edit',
+        name: 'Hall services',
+        to: '/booking/halls/services',
+      },
+      {
+        component: CNavItem,
+        name: 'Add Hall services',
+        to: '/booking/halls/services/add',
       },
     ],
   },
@@ -234,13 +239,23 @@ const _nav = [
     items: [
       {
         component: CNavItem,
-        name: 'H. Reservations ',
-        to: '/booking/reports/reservations',
+        name: 'Reservation reports',
+        to: '/reports/reservations',
       },
       {
         component: CNavItem,
-        name: 'Services',
-        to: '/booking/reports/services',
+        name: 'Cashier reports',
+        to: '/reports/cashier',
+      },
+      {
+        component: CNavItem,
+        name: 'Petit stock reports',
+        to: '/reports/petit-stock',
+      },
+      {
+        component: CNavItem,
+        name: 'Stock reports',
+        to: '/reports/stock',
       },
     ],
   },

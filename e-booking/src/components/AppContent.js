@@ -8,10 +8,13 @@ import SuccessNotification from 'src/views/notifications/toasts/SuccessNotificat
 import { useSelector } from 'react-redux'
 
 const AppContent = () => {
-  const success = useSelector((state) => state.sidebarShow.success) || false
+  const success = useSelector((state) => state.notification.activate) || false
+  const text = useSelector((state) => state.notification.text)
+  const color = useSelector((state) => state.notification.color)
+
   return (
     <CContainer lg>
-      <SuccessNotification activate={success} />
+      <SuccessNotification activate={success} text={text} color={color} />
       <Suspense fallback={<CSpinner color="primary" />}>
         <Routes>
           {routes.map((route, idx) => {

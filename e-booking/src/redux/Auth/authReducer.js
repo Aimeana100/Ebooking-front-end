@@ -13,7 +13,7 @@ const authReducer = (state = { isAuth: false }, { type, payload }) => {
         role: payload.role,
       }
     case IS_AUTH.REGISTER:
-      return { ...state, isAuth: payload.isAuth, user: payload.user }
+      return { ...state, isAuth: payload.isAuth }
     case IS_AUTH.LOGOUT:
       return { ...state, isAuth: false, user: null, role: null }
     default:

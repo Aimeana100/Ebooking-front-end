@@ -20,6 +20,16 @@ const Hall = React.lazy(() => import('./views/pages/Hall/Hall'))
 const HallAdd = React.lazy(() => import('./views/pages/Hall/HallAdd'))
 const HallEdit = React.lazy(() => import('./views/pages/Hall/HallEdit'))
 const HallInfo = React.lazy(() => import('./views/pages/Hall/HallInfo.js'))
+const HallServicesAdd = React.lazy(() =>
+  import('./views/pages/Hall/HallServicesAdd.js'),
+)
+const HallServicesEdit = React.lazy(() =>
+  import('./views/pages/Hall/HallServicesEdit.js'),
+)
+const HallServices = React.lazy(() =>
+  import('./views/pages/Hall/HallServices.js'),
+)
+
 const ReservationAdd = React.lazy(() =>
   import('./views/pages/reservation/ReservationAdd'),
 )
@@ -74,6 +84,18 @@ const CustomerView = React.lazy(() =>
   import('./views/pages/Customer/CustomerView'),
 )
 
+const PetitStockReports = React.lazy(() =>
+  import('./views/pages/Reports/PetitStockReports.js'),
+)
+const CashierReports = React.lazy(() =>
+  import('./views/pages/Reports/CashierReports.js'),
+)
+const ReservationReports = React.lazy(() =>
+  import('./views/pages/Reports/ReservationReports.js'),
+)
+const StockReports = React.lazy(() =>
+  import('./views/pages/Reports/StockReports.js'),
+)
 // const StockAdd = React.lazy(() => import('./views/pages/services/ServicesAdd'))
 // const AvailableStock = React.lazy(() => import('./views/pages/services/Services'))
 
@@ -110,6 +132,24 @@ const routes = [
     exact: true,
     name: 'View Hall',
     element: HallInfo,
+  },
+  {
+    path: 'booking/halls/services/add',
+    exact: true,
+    name: 'Add Hall products',
+    element: HallServicesAdd,
+  },
+  {
+    path: 'booking/halls/services/edit',
+    exact: true,
+    name: 'Add Hall products',
+    element: HallServicesEdit,
+  },
+  {
+    path: 'booking/halls/services',
+    exact: true,
+    name: 'Hall services',
+    element: HallServices,
   },
 
   {
@@ -249,6 +289,30 @@ const routes = [
     exact: true,
     name: 'View customer',
     element: CustomerView,
+  },
+  {
+    path: '/reports/cashier',
+    exact: true,
+    name: 'Cashier reports',
+    element: CashierReports,
+  },
+  {
+    path: '/reports/reservations',
+    exact: true,
+    name: 'Cashier reports',
+    element: ReservationReports,
+  },
+  {
+    path: '/reports/petit-stock',
+    exact: true,
+    name: 'Petit stock reports',
+    element: PetitStockReports,
+  },
+  {
+    path: '/reports/stock',
+    exact: true,
+    name: 'Stock reports',
+    element: StockReports,
   },
 ]
 

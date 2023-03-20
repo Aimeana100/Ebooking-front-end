@@ -14,12 +14,11 @@ import {
   CBadge,
 } from '@coreui/react'
 import { Link } from 'react-router-dom'
-
 import axios from 'axios'
 import { useDispatch } from 'react-redux'
 import { selectItem } from 'src/redux/Select/selectionActions'
 
-const Reservation = () => {
+const Reservation = (prop) => {
   const dispatch = useDispatch()
   const [reservations, setReservations] = useState([])
   useEffect(() => {
@@ -49,63 +48,48 @@ const Reservation = () => {
             <CTable bordered>
               <CTableHead>
                 <CTableRow>
-                  <CTableHeaderCell scope="col">#</CTableHeaderCell>
-                  <CTableHeaderCell scope="col"> Names </CTableHeaderCell>
-                  <CTableHeaderCell scope="col"> Phone </CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Names</CTableHeaderCell>
+                  <CTableHeaderCell scope="col"> Check In </CTableHeaderCell>
+                  <CTableHeaderCell scope="col"> Check Out</CTableHeaderCell>
                   <CTableHeaderCell scope="col"> Room/Hall </CTableHeaderCell>
-                  <CTableHeaderCell scope="col"> Done By </CTableHeaderCell>
-                  <CTableHeaderCell scope="col"> Check in </CTableHeaderCell>
-                  <CTableHeaderCell scope="col"> Check out </CTableHeaderCell>
-                  <CTableHeaderCell scope="col"> Options </CTableHeaderCell>
+                  <CTableHeaderCell scope="col"> Booked On </CTableHeaderCell>
+                  <CTableHeaderCell scope="col"> Status </CTableHeaderCell>
+                  <CTableHeaderCell scope="col"> Price </CTableHeaderCell>
+                  <CTableHeaderCell scope="col"> Commission </CTableHeaderCell>
+                  <CTableHeaderCell scope="col">
+                    {' '}
+                    Booking number{' '}
+                  </CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody>
                 {reservations && reservations.length !== 0
                   ? reservations.map((reserv, i) => (
                       <CTableRow key={reserv.id}>
-                        <CTableHeaderCell scope="row">{i + 1}</CTableHeaderCell>
+                        <CTableHeaderCell scope="row">
+                          {reserv.Customer.names}
+                        </CTableHeaderCell>
                         <CTableDataCell>
-                          {' '}
-                          {reserv.Customer.names}{' '}
-                          {Number(reserv.amount) > Number(reserv.payment) ? (
-                            <CBadge color="danger"> Debt</CBadge>
-                          ) : null}
+                          {new Date(reserv.checkIn).toLocaleDateString()}
+                        </CTableDataCell>
+                        <CTableDataCell>
+                          {new Date(reserv.checkOut).toLocaleDateString()}
+                        </CTableDataCell>
+                        <CTableDataCell>
+                          {reserv.Room ? reserv.Room.name : reserv.Hall.name}
+                        </CTableDataCell>
+                        <CTableDataCell>
+                          {new Date(reserv.createdAt).toLocaleDateString()}
                         </CTableDataCell>
                         <CTableDataCell>
                           {' '}
-                          {reserv.Customer.phone}{' '}
+                          {reserv.status !== null ? reserv.status : 'active'}
                         </CTableDataCell>
+                        <CTableDataCell>{reserv.amount}</CTableDataCell>
                         <CTableDataCell>
-                          {' '}
-                          {reserv.Room
-                            ? reserv.Room.name
-                            : reserv.Hall.name}{' '}
+                          {reserv.commission ? reserv.commisssion : '0'}
                         </CTableDataCell>
-                        <CTableDataCell>
-                          {' '}
-                          {reserv.User.firstName + ' ' + reserv.User.lastName}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {' '}
-                          {new Date(reserv.checkIn).toLocaleString()}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {' '}
-                          {new Date(reserv.checkOut).toLocaleString()}{' '}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          <span className="badge badge-primary  text-secondary">
-                            Print
-                          </span>
-                          <Link
-                            to="/booking/reservations/info"
-                            className="badge badge-primary text-primary"
-                            onClick={() => dispatch(selectItem(reserv))}
-                          >
-                            {' '}
-                            View{' '}
-                          </Link>
-                        </CTableDataCell>
+                        <CTableDataCell>{reserv.id}</CTableDataCell>
                       </CTableRow>
                     ))
                   : null}

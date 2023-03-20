@@ -19,28 +19,20 @@ import { useSelector } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import DatePicker from 'react-multi-date-picker'
 
-import axios, { all } from 'axios'
+import axios from 'axios'
 import TimePicker from 'react-multi-date-picker/plugins/time_picker'
 
 const ReservationAdd = () => {
   const { register, handleSubmit, watch, reset } = useForm()
-  const [formData, setformData] = useState({})
   const [roomClass, setroomClass] = useState([])
   const [customer, setCustomer] = useState([])
   const [service, setService] = useState([])
   const [rooms, setRooms] = useState([])
   const [halls, setHalls] = useState([])
-  const [services, setServices] = useState([])
+  const [hallServices, setHallServices] = useState([])
   const [dateIn, setDateIn] = useState({})
   const [dateOut, setDateOut] = useState({})
   let [customers, setCustomers] = useState([])
-
-  // customers =
-  //   customers && customers.length !== 0
-  //     ? customers.map((cust) => {
-  //         return { ...cust, label: cust.names }
-  //       })
-  //     : customers
 
   let loggedInUser = useSelector((state) => state.auth.user.Role.name)
   let user = useSelector((state) => state.auth.user)
@@ -48,10 +40,18 @@ const ReservationAdd = () => {
   let priceHall = 0
   let priceRoom = 0
   const type = watch('booking_type') || '---'
+  const additional = watch('additionalServices') || {}
+  console.log('Additional ', additional)
+  const additionalTotal =
+    Object.keys(additional).length !== 0
+      ? Object.keys(additional).map((e) =>
+          additional[e] != false ? Number(additional[e]) : 0,
+        )
+      : [0]
+  const additionalServicesTotal = additionalTotal.reduce((a, b) => a + b) || 0
   let all = []
   all = type && type === 'room' ? [...rooms] : [...halls]
-  console.log(new Date(dateIn).getTime())
-  console.log(type)
+
   if (type === 'hall' && service.length !== 0) {
     console.log('service', service[0].price)
     priceHall = service[0].price
@@ -63,8 +63,7 @@ const ReservationAdd = () => {
       ? new Date(dateOut).getTime() - new Date(dateIn).getTime()
       : null
   const days = Math.ceil(time / (1000 * 3600 * 24))
-  let total = 0
-
+  const currentDate = new Date()
   const format = 'DD/MM/YY/HH'
   const onSubmit = (data) => {
     console.log('this is dates', { dateIn, dateOut })
@@ -73,7 +72,7 @@ const ReservationAdd = () => {
       data.amount = service[0].RoomClass.price * days
     } else if (days) {
       data.hallId = service[0].id
-      data.amount = priceHall * days
+      data.amount = priceHall * days + additionalServicesTotal
       delete data.children_number
       delete data.adults_number
     }
@@ -84,6 +83,7 @@ const ReservationAdd = () => {
       checkIn: new Date(dateIn.toDate().toString()).getTime(),
       checkOut: new Date(dateOut.toDate().toString()).getTime(),
     }
+    console.log(data)
     const createReservation = async () => {
       console.log(data)
       const res = await axios
@@ -96,7 +96,6 @@ const ReservationAdd = () => {
         })
     }
 
-    console.log(data)
     createReservation()
     reset()
   }
@@ -124,6 +123,19 @@ const ReservationAdd = () => {
         .catch((err) => {
           console.log('err getting rooms')
         })
+      const getHallServices = async () => {
+        const res = await axios
+          .get('http://206.81.29.111:80/api/v1/hall/services/all')
+          .then((res) => {
+            console.log(res.data)
+            setHallServices(res.data.data)
+          })
+          .catch((err) => {
+            console.log('err getting halls')
+          })
+        console.log('halls async to get halls')
+      }
+      getHallServices()
     }
 
     const getHalls = async () => {
@@ -138,8 +150,20 @@ const ReservationAdd = () => {
         })
       console.log('halls async to get halls')
     }
+    const getHallServices = async () => {
+      const res = await axios
+        .get('http://206.81.29.111:80/api/v1/hall/services/all')
+        .then((res) => {
+          console.log(res.data)
+          //setHallServices()
+        })
+        .catch((err) => {
+          console.log('error getting hall services', err.message)
+        })
+    }
 
     getHalls()
+    getHallServices()
     getRooms()
     getCustomers()
   }, [roomClass])
@@ -225,6 +249,7 @@ const ReservationAdd = () => {
                           inputClass="form-control "
                           multiple={false}
                           sort
+                          minDate={currentDate}
                           value={dateIn}
                           format={format}
                           onChange={setDateIn}
@@ -239,6 +264,7 @@ const ReservationAdd = () => {
                         <DatePicker
                           inputClass="form-control "
                           sort
+                          minDate={currentDate}
                           multiple={false}
                           value={dateOut}
                           format={format}
@@ -259,48 +285,25 @@ const ReservationAdd = () => {
                         <div>
                           <div className="d-flex flex-row justify-content-around my-2">
                             <div>
-                              <CFormCheck
-                                id="service 1"
-                                label="Service 1"
-                                {...register('services.service1')}
-                              />
-                              <CFormCheck
-                                id="service 2"
-                                label="Service 2"
-                                {...register('services.service2')}
-                              />
-                              <CFormCheck
-                                id="service 3"
-                                label="Service 3"
-                                {...register('services.service3')}
-                              />
-                              <CFormCheck
-                                id="service 4"
-                                label="Service 4"
-                                {...register('services.service4')}
-                              />
-                            </div>
-                            <div>
-                              <CFormCheck
-                                id="product 1"
-                                label="Product 1"
-                                {...register('products.product1')}
-                              />
-                              <CFormCheck
-                                id="product 2"
-                                label="Product 2"
-                                {...register('products.product2')}
-                              />
-                              <CFormCheck
-                                id="product 3"
-                                label="Product 3"
-                                {...register('products.product3')}
-                              />
-                              <CFormCheck
-                                id="product 4"
-                                label="Product 4"
-                                {...register('products.product4')}
-                              />
+                              {hallServices && hallServices.length !== 0
+                                ? hallServices.map((hallService, i) => (
+                                    <div className="d-flex flex-row">
+                                      <CFormCheck
+                                        id="service 1"
+                                        value={hallService.price}
+                                        label={
+                                          hallService.name +
+                                          ' ' +
+                                          hallService.price +
+                                          ' $'
+                                        }
+                                        {...register(
+                                          `additionalServices.${hallService.name}`,
+                                        )}
+                                      />
+                                    </div>
+                                  ))
+                                : null}
                             </div>
                           </div>
                         </div>
@@ -340,12 +343,16 @@ const ReservationAdd = () => {
                     <div className="d-flex flex-row my-2 ">
                       <strong> Total </strong>
                       <p className="mx-2">
-                        {type === 'room' && service.length !== 0
-                          ? Number(priceRoom) * days
-                          : 0}
-                        {type === 'hall' && service.length !== 0
-                          ? Number(priceHall) * days
-                          : 0}
+                        {type === 'room'
+                          ? type === 'room' && service.length !== 0
+                            ? Number(priceRoom) * days + additionalServicesTotal
+                            : additionalServicesTotal
+                          : ''}
+                        {type === 'hall'
+                          ? type === 'hall' && service.length !== 0
+                            ? Number(priceHall) * days + additionalServicesTotal
+                            : additionalServicesTotal
+                          : ''}
                       </p>
                     </div>
 
@@ -412,41 +419,13 @@ const ReservationAdd = () => {
 
 export default ReservationAdd
 
-//  <div className="mb-3">
-//                       <CFormLabel htmlFor="room"> Check in Room </CFormLabel>
-//                       <CFormSelect
-//                         name="room"
-//                         id="room"
-//                         size="md"
-//                         value={
-//                           room && Object.values(room).length !== 0
-//                             ? room.name
-//                             : '-- Select --'
-//                         }
-//                         className="mb-3"
-//                         aria-label="Room class"
-//                         {...register('room')}
-//                       >
-//                         {' '}
-//                         {room && Object.values(room).length !== 0 ? (
-//                           <option style={{ display: 'none' }}>
-//                             -- Select --{' '}
-//                           </option>
-//                         ) : null}
-//                         {room && Object.values(room).length !== 0 ? (
-//                           <option>{room.name}</option>
-//                         ) : null}
-//                       </CFormSelect>
-//                     </div>
-
 // {
-//   type === 'room'
-//     ? service && service.length !== 0 && days
-//       ? type === 'room'
-//         ? Number(service[0].RoomClass.price) * days
-//         : Number(service[0].price) * days
-//       : 0
-//     : service && service.length !== 0 && days && type === 'hall'
-//     ? Number(service[0].price) * days
-//     : 0
+//   type === 'room' && service.length !== 0
+//     ? Number(priceRoom) * days + additionalServicesTotal
+//     : additionalServicesTotal
+// }
+// {
+//   type === 'hall' && service.length !== 0
+//     ? Number(priceHall) * days + additionalServicesTotal
+//     : additionalServicesTotal
 // }
