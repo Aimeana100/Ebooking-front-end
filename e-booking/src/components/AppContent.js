@@ -4,8 +4,14 @@ import { CContainer, CSpinner } from '@coreui/react'
 
 // routes config
 import routes from '../routes'
+import SuccessNotification from 'src/views/notifications/toasts/SuccessNotification'
+import { useSelector } from 'react-redux'
 
 const AppContent = () => {
+  const success = useSelector((state) => state.notification.activate) || false
+  const text = useSelector((state) => state.notification.text)
+  const color = useSelector((state) => state.notification.color)
+
   return (
     <CContainer lg>
       <Suspense fallback={<CSpinner color="primary" />}>

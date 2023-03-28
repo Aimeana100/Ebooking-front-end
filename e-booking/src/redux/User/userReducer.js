@@ -1,22 +1,22 @@
-const { USER_ACTIONS } = require('./userActionTypes');
+const { USER_ACTIONS } = require('./userActionTypes')
 
 const userReducer = (
   state = { users: {}, selectedUser: {} },
-  { type, payload }
+  { type, payload },
 ) => {
   switch (type) {
     case USER_ACTIONS.SELECT:
-      return { ...state, selectedUser: payload };
+      return { ...state, selectedUser: payload }
     case USER_ACTIONS.UPDATE:
-      console.log('HAPAPAPAPA');
-      return { ...state, users: [...payload.payloadLocal] };
+      console.log('HAPAPAPAPA')
+      return { ...state, users: [...payload.payloadLocal] }
     case USER_ACTIONS.DELETE:
-      console.log('before delete reducer', payload);
-      return { ...state, users: [...payload.payloadLocal] };
+      console.log('before delete reducer', payload)
+      return { ...state, users: [...payload.payloadLocal] }
     case USER_ACTIONS.GET_USERS:
-      return { ...state, users: payload };
+      return { ...state, users: payload }
     default:
-      return { ...state, selectedUser: {}, users: [] };
+      return { ...state, selectedUser: {}, users: [] }
   }
-};
-export default userReducer;
+}
+export default userReducer

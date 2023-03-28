@@ -41,13 +41,36 @@ const _nav = [
       },
       {
         component: CNavItem,
-        name: 'Available',
+        name: 'All Rooms',
         to: '/booking/rooms/available',
+      },
+    ],
+  },
+  {
+    component: CNavGroup,
+    name: 'Halls',
+    to: '/halls',
+    icon: <CIcon icon={cilHouse} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'All Halls',
+        to: '/booking/halls',
       },
       {
         component: CNavItem,
-        name: 'Occupied',
-        to: '/booking/rooms/occupied',
+        name: 'Add Hall',
+        to: '/booking/halls/add',
+      },
+      {
+        component: CNavItem,
+        name: 'Hall services',
+        to: '/booking/halls/services',
+      },
+      {
+        component: CNavItem,
+        name: 'Add Hall services',
+        to: '/booking/halls/services/add',
       },
     ],
   },
@@ -59,7 +82,7 @@ const _nav = [
     items: [
       {
         component: CNavItem,
-        name: 'Book a Hotel',
+        name: 'Create a Reservation',
         to: '/booking/reservations/add',
       },
       {
@@ -82,8 +105,18 @@ const _nav = [
       },
       {
         component: CNavItem,
-        name: 'Users',
+        name: 'All Users',
         to: '/booking/users',
+      },
+      {
+        component: CNavItem,
+        name: 'Add user roles',
+        to: '/booking/user/roles/add',
+      },
+      {
+        component: CNavItem,
+        name: 'User roles ',
+        to: '/booking/user/roles',
       },
     ],
   },
@@ -95,7 +128,12 @@ const _nav = [
     items: [
       {
         component: CNavItem,
-        name: 'Add prodcts',
+        name: 'Sell product',
+        to: '/booking/products/sell',
+      },
+      {
+        component: CNavItem,
+        name: 'Add products',
         to: '/booking/products/add',
       },
       {
@@ -113,6 +151,11 @@ const _nav = [
     items: [
       {
         component: CNavItem,
+        name: 'Sell service',
+        to: '/booking/services/sell',
+      },
+      {
+        component: CNavItem,
         name: 'Add service',
         to: '/booking/services/add',
       },
@@ -120,6 +163,24 @@ const _nav = [
         component: CNavItem,
         name: 'All services',
         to: '/booking/services/all',
+      },
+    ],
+  },
+  {
+    component: CNavGroup,
+    name: 'Stock Items',
+    to: '/stock/items',
+    icon: <CIcon icon={cilStorage} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Add Stock Items',
+        to: '/booking/stock/item/add',
+      },
+      {
+        component: CNavItem,
+        name: 'All Stock Items',
+        to: '/booking/stock/items',
       },
     ],
   },
@@ -152,10 +213,22 @@ const _nav = [
     ],
   },
   {
-    component: CNavItem,
+    component: CNavGroup,
     name: 'Customers',
     to: '/customers',
     icon: <CIcon icon={cilUser} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'All Customers',
+        to: '/customers',
+      },
+      {
+        component: CNavItem,
+        name: 'Add Customer',
+        to: '/customers/add',
+      },
+    ],
   },
   // {
   //   component: CNavItem,
@@ -171,13 +244,28 @@ const _nav = [
     items: [
       {
         component: CNavItem,
-        name: 'H. Reservations ',
-        to: '/booking/reports/reservations',
+        name: 'Add reports',
+        to: '/reports/create',
       },
       {
         component: CNavItem,
-        name: 'Services',
-        to: '/booking/reports/services',
+        name: 'Reservation reports',
+        to: '/reports/reservations',
+      },
+      {
+        component: CNavItem,
+        name: 'Cashier reports',
+        to: '/reports/cashier',
+      },
+      {
+        component: CNavItem,
+        name: 'Petit stock reports',
+        to: '/reports/petit-stock',
+      },
+      {
+        component: CNavItem,
+        name: 'Stock reports',
+        to: '/reports/stock',
       },
     ],
   },

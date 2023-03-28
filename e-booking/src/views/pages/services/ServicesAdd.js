@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'
 import {
   CButton,
   CCard,
@@ -12,29 +12,57 @@ import {
   CFormSelect,
   CRow,
   CFormCheck,
-} from '@coreui/react';
-import { useForm } from 'react-hook-form';
-import { useSelector } from 'react-redux';
+} from '@coreui/react'
+import { useForm } from 'react-hook-form'
+import { useSelector, useDispatch } from 'react-redux'
+import axios from 'axios'
 
 const ServiceAdd = () => {
-  const { register, handleSubmit, watch, reset } = useForm();
-  const role = useSelector((state) => state.auth.user.role) || '';
+  const { register, handleSubmit, watch, reset } = useForm()
+  const role = useSelector((state) => state.auth.user.role) || ''
+  const dispatch = useDispatch()
   const [categories, setCategories] = useState([
     { name: 'Sauna', id: 5001209 },
     { name: 'Gym', id: 69560 },
-  ]);
+  ])
 
-  const category = watch('category', '---');
-  const price = watch('price', '---');
-  console.log(role);
-  const onSubmit = (data) => {
-    console.log(data);
-  };
-  const onManagerSubmit = (data) => {
-    console.log(data, { role });
-  };
-  console.log(category);
-  console.log(price);
+  const category = watch('category', '---')
+  const price = watch('price', '---')
+  console.log(role)
+  const onSubmit = async (data) => {
+    const res = await axios
+      .post('http://206.81.29.111:80/api/v1/services/add', data)
+      .then((res) => {
+        console.log(res.data)
+      })
+      .catch((err) => {
+        console.log('error adding service', err.message)
+      })
+  }
+  const onManagerSubmit = async (data) => {
+    const res = await axios
+      .post('http://206.81.29.111:80/api/v1/services/add', data)
+      .then((res) => {
+        console.log(res.data)
+      })
+      .catch((err) => {
+        console.log('error adding service', err.message)
+      })
+  }
+  useEffect(() => {
+    const getServiceCategories = async () => {
+      const res = await axios
+        .get('http://206.81.29.111:80/api/v1/services/category/all')
+        .then((res) => {
+          setCategories(res.data.data)
+        })
+        .catch((err) => {
+          console.log('error getting categories')
+        })
+    }
+    getServiceCategories()
+  }, [])
+
   if (role === 'admin') {
     return (
       <>
@@ -121,7 +149,7 @@ const ServiceAdd = () => {
                                 />
                               </CCol>
                             </div>
-                          ) : null
+                          ) : null,
                         )
                       : null}
                     {price && price !== '---' ? (
@@ -140,7 +168,7 @@ const ServiceAdd = () => {
           </CCol>
         </CRow>
       </>
-    );
+    )
   } else {
     return (
       <>
@@ -205,8 +233,8 @@ const ServiceAdd = () => {
           </CCol>
         </CRow>
       </>
-    );
+    )
   }
-};
+}
 
-export default ServiceAdd;
+export default ServiceAdd

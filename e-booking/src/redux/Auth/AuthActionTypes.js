@@ -3,4 +3,4 @@ export const IS_AUTH = {
   LOGIN: 'LOGIN',
   LOGOUT: 'LOGOUT',
   REGISTER: 'REGISTER',
-};
+}

@@ -1,4 +1,4 @@
-import { React, useEffect } from 'react';
+import { React, useEffect } from 'react'
 import {
   CCard,
   CCardBody,
@@ -11,33 +11,26 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
-} from '@coreui/react';
-import { Link } from 'react-router-dom';
-import { deleteUser, getUsers } from 'src/redux/User/userActions';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectUser } from 'src/redux/User/userActions';
-import { getRoles } from 'src/redux/Roles/RolesActions';
+} from '@coreui/react'
+import { Link } from 'react-router-dom'
+import { deleteUser, getUsers } from 'src/redux/User/userActions'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectUser } from 'src/redux/User/userActions'
+import { getRoles } from 'src/redux/Roles/RolesActions'
+import { selectItem } from 'src/redux/Select/selectionActions'
 
 const Users = () => {
-  let users = useSelector((state) => state.systemUsers.users) || [];
-  users = users ? users : [];
-
-  function loadFromLocalStorage() {
-    const serializedState = localStorage.getItem('persist:root');
-    console.log({ serializedState: JSON.parse(serializedState) });
-    if (serializedState === null) return undefined;
-    return JSON.parse(serializedState);
-  }
-  loadFromLocalStorage();
-
-  const dispatch = useDispatch();
+  let users = useSelector((state) => state.systemUsers.users) || []
+  let loggedInUser = useSelector((state) => state.auth.user.Role.name)
+  users = users ? users : []
+  const dispatch = useDispatch()
   useEffect(() => {
-    console.log(users.length);
+    console.log(users.length)
     if (users.length === 0) {
-      dispatch(getUsers());
+      dispatch(getUsers())
     }
     //dispatch(getRoles());
-  }, []);
+  }, [])
 
   return (
     <CRow>
@@ -69,30 +62,33 @@ const Users = () => {
                         {' '}
                         {user.firstName + ' ' + user.lastName}{' '}
                       </CTableDataCell>
-                      <CTableDataCell> </CTableDataCell>
+                      <CTableDataCell>{user.phone} </CTableDataCell>
                       <CTableDataCell> {user.email} </CTableDataCell>
                       <CTableDataCell> {user.role}</CTableDataCell>
                       <CTableDataCell>
-                        <div className="d-flex ">
-                          <Link
-                            to="/booking/user/edit"
-                            className="btn btn-sm btn-warning px-1 mx-1"
-                            onClick={() => {
-                              console.log('this is user', user);
-                              return dispatch(selectUser(user));
-                            }}
-                          >
-                            <i class="ri-file-edit-line btn-light " />
-                          </Link>
-                          <button
-                            className="btn btn-sm btn-danger text-bg-light px-1 mx-1"
-                            onClick={() => {
-                              return dispatch(deleteUser(user, users));
-                            }}
-                          >
-                            <i class="ri-delete-bin-2-fill btn-light " />
-                          </button>
-                        </div>
+                        <Link
+                          to="/booking/user/edit"
+                          className={`${
+                            loggedInUser === 'controller' ? 'disabled' : ''
+                          } btn btn-sm btn-warning`}
+                          onClick={() => {
+                            console.log('this is user', user)
+                            return dispatch(selectItem(user))
+                          }}
+                        >
+                          {' '}
+                          Edit{' '}
+                        </Link>
+                        <button
+                          className={`${
+                            loggedInUser === 'controller' ? 'disabled' : ''
+                          } btn btn-sm btn-danger`}
+                          onClick={() => {
+                            return dispatch(deleteUser(user, users))
+                          }}
+                        >
+                          Delete
+                        </button>
                       </CTableDataCell>
                     </CTableRow>
                   ))
@@ -105,8 +101,7 @@ const Users = () => {
         </CCard>
       </CCol>
     </CRow>
-  );
-};
+  )
+}
 
-export default Users;
-//  <CTableDataCell> {user.Role.name}</CTableDataCell>;
+export default Users

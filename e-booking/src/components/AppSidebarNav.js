@@ -1,109 +1,50 @@
-import React from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import React from 'react'
+import { NavLink, useLocation } from 'react-router-dom'
+import PropTypes from 'prop-types'
 
-import { CBadge } from '@coreui/react';
-import { useSelector } from 'react-redux';
+import { CBadge } from '@coreui/react'
+import { useSelector } from 'react-redux'
 
 export const AppSidebarNav = ({ items }) => {
-  let noAddPrivilage = ['cashier', 'receiptionist', 'waiter'];
-  let isAuth = useSelector((state) => state.auth.isAuth);
-  let role = useSelector((state) => state.auth.role) || '';
-  let user = useSelector((state) => {
-    if (isAuth) {
-      return state.auth.user;
-    } else {
-      return {};
+  /*Get role accessTabs, authentication state, and permissions from the redux store  */
+
+  let isAuth = useSelector((state) => state.auth.isAuth)
+  let role = useSelector((state) => state.auth.role) || ''
+  let access = useSelector((state) => state.auth.access) || []
+  let permission = useSelector((state) => state.auth.permission) || []
+
+  /*filter through items check if item name is included in access of the role
+  if yes show the item in the nav else remove it from the nav*/
+
+  items =
+    isAuth && items && role !== 'admin'
+      ? items.filter((item) =>
+          access.includes(item.name.toLowerCase()) ? item : '',
+        )
+      : items
+
+  /*filter through items check for items with sub-items*/
+  /*for items with sub-items filter through the sub-items*/
+  /*if the sub item starts with Add and add is not included in permissions remove the sub-item else keep the sub-item*/
+  /*if the sub item starts with All and view is not included in permissions remove the sub-item else keep the sub-item*/
+
+  items = items.map((item) => {
+    if (isAuth && item.items && item.items.length !== 0) {
+      let subs = item.items
+      subs = subs.filter((sub) => {
+        if (!permission.includes('view') && sub.name.startsWith('All')) {
+          return ''
+        }
+        if (!permission.includes('add') && sub.name.startsWith('add')) {
+          return ''
+        }
+        return sub
+      })
     }
-  });
+    return item
+  })
 
-  let isUser = user ? user : false;
-  const userRole = isUser ? role : '';
-
-  console.log('THIS IS THE USER ROLE', user);
-  let tabsNotVisible = {
-    waiter: [
-      'Stock',
-      'User',
-      'Reservations',
-      'Room',
-      'Room class',
-      'Reports',
-      'Customers',
-    ],
-    receiptionist: ['Stock', 'User', 'Room class', 'Reports', 'Customers'],
-    cashier: ['User'],
-    manager: ['User'],
-    admin: [],
-  };
-
-  let itemsNow = items.filter((item) => {
-    if (userRole) {
-      return !tabsNotVisible[userRole].includes(item) ? item : '';
-    } else {
-      return !tabsNotVisible['waiter'];
-    }
-  });
-  //console.log('the alternative', itemsNow);
-  items = items.filter((item) => {
-    switch (userRole) {
-      case 'waiter':
-        return ![
-          'Stock',
-          'User',
-          'Reservations',
-          'Room',
-          'Room class',
-          'Reports',
-          'Customers',
-        ].includes(item.name)
-          ? item
-          : '';
-      case 'receiptionist':
-        return ![
-          'Stock',
-          'User',
-          'Room class',
-          'Reports',
-          'Customers',
-        ].includes(item.name)
-          ? item
-          : '';
-      case 'cashier':
-        return !['User'].includes(item.name) ? item : '';
-      case 'manager':
-        return !['User'].includes(item.name) ? item : '';
-      case 'admin':
-        return item;
-      default:
-        return ![
-          'Stock',
-          'User',
-          'Reservations',
-          'Room',
-          'Room class',
-          'Reports',
-          'Customers',
-        ].includes(item.name)
-          ? item
-          : '';
-    }
-  });
-
-  if (noAddPrivilage.includes(userRole) && isAuth) {
-    items = items.map((item) => {
-      let subNavs = item.items ? item.items : [];
-
-      item.items =
-        subNavs.length !== 0
-          ? subNavs.filter((item) => !item.name.includes('Add'))
-          : null;
-      return item;
-    });
-    console.log('inside if', items);
-  }
-
-  const location = useLocation();
+  const location = useLocation()
   const navLink = (name, icon, badge) => {
     return (
       <>
@@ -115,12 +56,12 @@ export const AppSidebarNav = ({ items }) => {
           </CBadge>
         )}
       </>
-    );
-  };
+    )
+  }
 
   const navItem = (item, index) => {
-    const { component, name, badge, icon, ...rest } = item;
-    const Component = component;
+    const { component, name, badge, icon, ...rest } = item
+    const Component = component
     return (
       <Component
         {...(rest.to &&
@@ -132,11 +73,11 @@ export const AppSidebarNav = ({ items }) => {
       >
         {navLink(name, icon, badge)}
       </Component>
-    );
-  };
+    )
+  }
   const navGroup = (item, index) => {
-    const { component, name, icon, to, ...rest } = item;
-    const Component = component;
+    const { component, name, icon, to, ...rest } = item
+    const Component = component
     return (
       <Component
         idx={String(index)}
@@ -146,22 +87,22 @@ export const AppSidebarNav = ({ items }) => {
         {...rest}
       >
         {item.items?.map((item, index) =>
-          item.items ? navGroup(item, index) : navItem(item, index)
+          item.items ? navGroup(item, index) : navItem(item, index),
         )}
       </Component>
-    );
-  };
+    )
+  }
 
   return (
     <React.Fragment>
       {items &&
         items.map((item, index) =>
-          item.items ? navGroup(item, index) : navItem(item, index)
+          item.items ? navGroup(item, index) : navItem(item, index),
         )}
     </React.Fragment>
-  );
-};
+  )
+}
 
 AppSidebarNav.propTypes = {
   items: PropTypes.arrayOf(PropTypes.any).isRequired,
-};
+}

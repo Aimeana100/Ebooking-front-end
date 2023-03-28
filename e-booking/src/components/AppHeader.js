@@ -19,6 +19,7 @@ import { AppHeaderDropdown } from './header/index'
 // import { logo } from 'src/assets/brand/logo'
 
 const AppHeader = () => {
+  const role = useSelector((state) => state.auth.role)
   const dispatch = useDispatch()
   const sidebarShow = useSelector((state) => state.sidebarShow)
   console.log(sidebarShow)
@@ -28,7 +29,9 @@ const AppHeader = () => {
       <CContainer fluid>
         <CHeaderToggler
           className="ps-1"
-          onClick={() => dispatch({ type: 'TOGGLE_SIDEBAR', sidebarShow: !sidebarShow })}
+          onClick={() =>
+            dispatch({ type: 'TOGGLE_SIDEBAR', sidebarShow: !sidebarShow })
+          }
         >
           <CIcon icon={cilMenu} size="lg" />
         </CHeaderToggler>
@@ -40,6 +43,11 @@ const AppHeader = () => {
           <CNavItem>
             <CNavLink to="/dashboard" component={NavLink}>
               Olympic Hotel Management
+            </CNavLink>
+          </CNavItem>
+          <CNavItem>
+            <CNavLink to="/dashboard" component={NavLink}>
+              <strong className="text-capitalize">{role}</strong>
             </CNavLink>
           </CNavItem>
         </CHeaderNav>

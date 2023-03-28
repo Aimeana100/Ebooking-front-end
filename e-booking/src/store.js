@@ -1,12 +1,8 @@
 //jshint esversion:9
 
-import rootReducer from './redux/root-reducer';
-import { configureStore } from '@reduxjs/toolkit';
-import logger from 'redux-logger';
-import thunk from 'redux-thunk';
-import storage from 'redux-persist/lib/storage';
-import { persistStore, persistReducer } from 'redux-persist';
-import autoMergeLevel2 from 'redux-persist/es/stateReconciler/autoMergeLevel2';
+import rootReducer from './redux/root-reducer'
+import { createStore, applyMiddleware, compose } from '@reduxjs/toolkit'
+import thunk from 'redux-thunk'
 
 // const initialState = {
 //   sidebarShow: true,
@@ -21,18 +17,41 @@ import autoMergeLevel2 from 'redux-persist/es/stateReconciler/autoMergeLevel2';
 //   }
 // }
 
-const persistConfig = {
-  key: 'root',
-  storage,
-  stateReconciler: autoMergeLevel2,
-};
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+function saveToLocalStorage(state) {
+  try {
+    localStorage.setItem('state', JSON.stringify(state))
+  } catch (e) {
+    console.error(e)
+  }
+}
 
-const middleware = [thunk, logger];
+function loadFromLocalStorage() {
+  try {
+    const stateStr = localStorage.getItem('state')
+    return stateStr ? JSON.parse(stateStr) : undefined
+  } catch (e) {
+    console.error(e)
+    return undefined
+  }
+}
 
-export const store = configureStore({
-  reducer: persistedReducer,
-  middleware: [...middleware],
-});
+let persistedState = loadFromLocalStorage()
 
-export const persistor = persistStore(store);
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+
+const store = createStore(
+  rootReducer,
+  persistedState,
+  composeEnhancers(applyMiddleware(thunk)),
+)
+
+store.subscribe(() => {
+  try {
+    const serializedState = JSON.stringify(store.getState())
+    localStorage.setItem('state', serializedState)
+  } catch (error) {
+    console.log('Error saving state to localStorage:', error)
+  }
+})
+
+export default store

@@ -1,4 +1,4 @@
-import { React, useEffect } from 'react';
+import React, { useEffect, useState } from 'react'
 import {
   CCard,
   CCardBody,
@@ -11,20 +11,26 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
-} from '@coreui/react';
-import { Link } from 'react-router-dom';
+} from '@coreui/react'
+import { Link } from 'react-router-dom'
 // import { getData } from 'src/API';
-import axios from 'axios';
-const Users = () => {
+import axios from 'axios'
+const Services = () => {
+  const [services, setServices] = useState([])
   useEffect(() => {
     const services = async () => {
-      const data = await axios.get(
-        'https://bbd5-2c0f-eb68-65f-f700-ca6-f42-f3af-a6e5.ngrok.io/api/v1/users/all'
-      );
-      console.log(data);
-    };
-    services();
-  }, []);
+      const data = await axios
+        .get('http://206.81.29.111:80/api/v1/services/all')
+        .then((res) => {
+          setServices(res.data.data)
+        })
+        .catch((err) => {
+          console.log('error getting services')
+        })
+    }
+
+    services()
+  }, [])
   return (
     <CRow>
       <CCol xs={12}>
@@ -52,27 +58,31 @@ const Users = () => {
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                <CTableRow>
-                  <CTableHeaderCell scope="row">1</CTableHeaderCell>
-                  <CTableDataCell> Swimming pool </CTableDataCell>
-                  <CTableDataCell> 2000 </CTableDataCell>
-                  <CTableDataCell>
-                    {' '}
-                    Swimming pool access for a whole day once{' '}
-                  </CTableDataCell>
-                  <CTableDataCell>
-                    <Link to="" className="btn btn-sm btn-warning">
-                      Edit
-                    </Link>
-                  </CTableDataCell>
-                </CTableRow>
+                {services && services.length !== 0
+                  ? services.map((service, i) => (
+                      <CTableRow>
+                        <CTableHeaderCell scope="row">{i + 1}</CTableHeaderCell>
+                        <CTableDataCell> {service.name} </CTableDataCell>
+                        <CTableDataCell> {service.price} </CTableDataCell>
+                        <CTableDataCell>
+                          {' '}
+                          Swimming pool access for a whole day once{' '}
+                        </CTableDataCell>
+                        <CTableDataCell>
+                          <Link to="" className="btn btn-sm btn-warning">
+                            Edit
+                          </Link>
+                        </CTableDataCell>
+                      </CTableRow>
+                    ))
+                  : null}
               </CTableBody>
             </CTable>
           </CCardBody>
         </CCard>
       </CCol>
     </CRow>
-  );
-};
+  )
+}
 
-export default Users;
+export default Services

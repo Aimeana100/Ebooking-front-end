@@ -1,6 +1,6 @@
 //jshint esversion:9
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   CButton,
   CCard,
@@ -12,38 +12,40 @@ import {
   CFormLabel,
   CFormSelect,
   CRow,
-} from '@coreui/react';
-import { registerUser } from 'src/redux/Auth/authActions';
-import { getRoles } from 'src/redux/Roles/RolesActions';
+} from '@coreui/react'
+import { registerUser } from 'src/redux/Auth/authActions'
+import { getRoles } from 'src/redux/Roles/RolesActions'
+import { getUsers } from 'src/redux/User/userActions'
+import { useForm } from 'react-hook-form'
 
 const UserAdd = () => {
-  const [formData, setformData] = useState({});
-  const [roomClass, setroomClass] = useState([]);
-  const dispatch = useDispatch();
-  const users = useSelector((state) => state.auth.users) || [];
-  const roles = useSelector((state) => state.roles.userRoles) || [];
-  const handleChange = (e) => {
-    setformData({ ...formData, [e.target.name]: e.target.value });
-    //console.log(formData);
-  };
-  const handleFileChange = (e) => {
-    setformData({ ...formData, [e.target.name]: e.target.files[0] });
-    //console.log(formData);
-  };
+  const [formData, setformData] = useState({})
 
-  const hundleSubmit = async (e) => {
-    e.preventDefault();
-    console.log(formData);
-    roomClass.push(formData);
-    const addUser = async () => {
-      dispatch(registerUser(formData));
-    };
-    addUser();
-  };
+  const { register, handleSubmit, watch, reset } = useForm()
+
+  const dispatch = useDispatch()
+  const users = useSelector((state) => state.auth.users) || []
+  const roles = useSelector((state) => state.roles.userRoles) || []
+  // const handleChange = (e) => {
+  //   setformData({ ...formData, [e.target.name]: e.target.value })
+  // }
+  const onSubmit = (data) => {
+    dispatch(registerUser(data))
+    reset()
+  }
+  // const hundleSubmit = async (e) => {
+  //   e.preventDefault()
+  //   console.log(formData)
+  //   roomClass.push(formData)
+  //   const addUser = async () => {
+  //     dispatch(registerUser(formData))
+  //   }
+  //   addUser()
+  // }
 
   useEffect(() => {
-    dispatch(getRoles());
-  }, []);
+    dispatch(getRoles())
+  }, [])
 
   return (
     <>
@@ -59,7 +61,7 @@ const UserAdd = () => {
               <CForm
                 className="row"
                 name="roomClassAddFrm"
-                onSubmit={(e) => hundleSubmit(e)}
+                onSubmit={handleSubmit(onSubmit)}
                 encType="multipart/form"
               >
                 <CCol md={6}>
@@ -71,7 +73,7 @@ const UserAdd = () => {
                     id="firstName"
                     size="md"
                     required
-                    onChange={handleChange}
+                    {...register('firstName')}
                   />
                 </CCol>
                 <CCol md={6}>
@@ -83,7 +85,7 @@ const UserAdd = () => {
                     id="lastName"
                     size="md"
                     required
-                    onChange={handleChange}
+                    {...register('lastName')}
                   />
                 </CCol>
 
@@ -96,7 +98,7 @@ const UserAdd = () => {
                     id="phone"
                     size="md"
                     required
-                    onChange={handleChange}
+                    {...register('phone')}
                   />
                 </CCol>
                 <CCol md={6}>
@@ -114,7 +116,7 @@ const UserAdd = () => {
                     id="email"
                     size="md"
                     required
-                    onChange={handleChange}
+                    {...register('email')}
                   />
                 </CCol>
 
@@ -126,7 +128,7 @@ const UserAdd = () => {
                     size="md"
                     className="mb-3"
                     aria-label="Room class"
-                    onChange={handleChange}
+                    {...register('role')}
                   >
                     <option>-- Select -- </option>
                     {roles && roles.length !== 0
@@ -147,7 +149,7 @@ const UserAdd = () => {
                     id="password"
                     size="md"
                     required
-                    onChange={handleChange}
+                    {...register('password')}
                   />
                 </CCol>
                 <CCol xs={12}>
@@ -159,7 +161,7 @@ const UserAdd = () => {
         </CCol>
       </CRow>
     </>
-  );
-};
+  )
+}
 
-export default UserAdd;
+export default UserAdd
