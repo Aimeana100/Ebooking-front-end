@@ -15,6 +15,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
 import { success } from 'src/redux/Notifications/notificationActions'
+import { toast } from 'react-hot-toast'
 
 function CustomerAdd() {
   let loggedInUser = useSelector((state) => state.auth.user.Role.name)
@@ -30,10 +31,10 @@ function CustomerAdd() {
       .post('http://206.81.29.111:80/api/v1/customers/add', data)
       .then((res) => {
         console.log(res.data)
-        dispatch(success({ text: 'Customer created', color: 'primary' }))
+        toast.success('customer created')
       })
       .catch((err) => {
-        console.log('err creating room room', err.message)
+        toast.error('customer creation failed')
       })
     console.log(data)
     reset()

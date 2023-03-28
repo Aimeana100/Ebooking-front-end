@@ -2,7 +2,6 @@
 
 import rootReducer from './redux/root-reducer'
 import { createStore, applyMiddleware, compose } from '@reduxjs/toolkit'
-import logger from 'redux-logger'
 import thunk from 'redux-thunk'
 
 // const initialState = {
@@ -39,14 +38,6 @@ function loadFromLocalStorage() {
 let persistedState = loadFromLocalStorage()
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
-
-// const middleware = [thunk, logger]
-
-// // export const store = configureStore({
-// //   reducer: rootReducer,
-// //   persistedState,
-// //   middleware: [...middleware],
-// // })
 
 const store = createStore(
   rootReducer,

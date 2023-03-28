@@ -55,12 +55,12 @@ function HallServicesAdd() {
               </div>
               <div className="mb-3">
                 <div>
-                  <CFormLabel htmlFor="hallPrice"> Price in USD </CFormLabel>
+                  <CFormLabel htmlFor="hallPrice"> Price in RWF </CFormLabel>
                   <CFormInput
                     type="text"
                     name="hallServicePrice "
                     id="hallServicePrice"
-                    placeholder="price in USD"
+                    placeholder="price in RWF"
                     size="md"
                     {...register('price', { required: true })}
                   />

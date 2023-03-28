@@ -14,7 +14,6 @@ const AppContent = () => {
 
   return (
     <CContainer lg>
-      <SuccessNotification activate={success} text={text} color={color} />
       <Suspense fallback={<CSpinner color="primary" />}>
         <Routes>
           {routes.map((route, idx) => {

@@ -15,6 +15,7 @@ import {
 } from '@coreui/react'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
+import { toast } from 'react-hot-toast'
 
 function HallAdd() {
   let loggedInUser = useSelector((state) => state.auth.role)
@@ -26,11 +27,14 @@ function HallAdd() {
       .post('http://206.81.29.111:80/api/v1/halls/add', data)
       .then((res) => {
         console.log(res.data)
+        toast.success('Hall created')
+        reset()
       })
       .catch((err) => {
         console.log('err creating Hall', err.message)
+        toast.error('Hall create failed')
+        reset()
       })
-    reset()
   }
   // useEffect(() => {}, [])
 
@@ -69,12 +73,12 @@ function HallAdd() {
               </div>
               <div className="mb-3">
                 <div>
-                  <CFormLabel htmlFor="hallPrice"> Price in USD </CFormLabel>
+                  <CFormLabel htmlFor="hallPrice"> Price in RWF </CFormLabel>
                   <CFormInput
                     type="text"
                     name="hallPrice "
                     id="hallPrice"
-                    placeholder="price in USD"
+                    placeholder="price in RWF"
                     size="md"
                     {...register('price', { required: true })}
                   />

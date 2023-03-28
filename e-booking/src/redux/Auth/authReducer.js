@@ -11,6 +11,8 @@ const authReducer = (state = { isAuth: false }, { type, payload }) => {
         isAuth: payload.isAuth,
         user: payload.user,
         role: payload.role,
+        access: payload.access,
+        permission: payload.permission,
       }
     case IS_AUTH.REGISTER:
       return { ...state, isAuth: payload.isAuth }

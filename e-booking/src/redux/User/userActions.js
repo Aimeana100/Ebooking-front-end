@@ -7,10 +7,17 @@ export const selectUser = (payload) => ({ type: USER_ACTIONS.SELECT, payload })
 export const updateUser = (payloadApi, payloadLocal) =>
   async function (dispatch) {
     console.log(payloadApi.id)
-    const res = await axios.put(`${baseUrlLive}update`, { ...payloadApi }).catch((err) => {
-      console.log('error getting users', { errMessage: err.message })
-      // dispatch({ type: USER_ACTIONS.DELETE, payload: [] });
-    })
+    const res = await axios
+      .put(`${baseUrlLive}update`, { ...payloadApi })
+      .then((res) => {
+        console.log(res.data)
+      })
+      .catch((err) => {
+        console.log(err)
+        console.log('error getting users', { errMessage: err.message })
+        // dispatch({ type: USER_ACTIONS.DELETE, payload: [] });
+      })
+    console.log(res)
     console.log('UPDATING USER', payloadApi)
 
     // dispatch({
@@ -33,24 +40,29 @@ export const deleteUser = (payloadApi, payloadLocal) => {
   console.log(payloadApi, payloadLocal)
   if (payloadLocal.length !== 0) {
     console.log(payloadLocal)
-    payloadLocal = payloadLocal.filter((user) => (user._id === payloadApi.id ? '' : user))
+    payloadLocal = payloadLocal.filter((user) =>
+      user._id === payloadApi.id ? '' : user,
+    )
     console.log(payloadLocal.length)
   }
   return async function (dispatch) {
-    const res = await axios.delete(`${baseUrlLive}delete/${payloadApi.id}`).catch((err) => {
-      console.log('error getting users', { errMessage: err.message })
-
-      // dispatch({ type: USER_ACTIONS.DELETE, payload: [] });
-    })
-    if (res.status === 200) {
-      dispatch({
-        type: USER_ACTIONS.DELETE,
-        payload: {
-          payloadApi,
-          payloadLocal,
-        },
+    const res = await axios
+      .delete(`${baseUrlLive}delete/${payloadApi.id}`)
+      .then((res) => {
+        console.log(res)
+        dispatch({
+          type: USER_ACTIONS.DELETE,
+          payload: {
+            payloadApi,
+            payloadLocal,
+          },
+        })
       })
-    }
+      .catch((err) => {
+        console.log('error getting users', { errMessage: err.message })
+
+        // dispatch({ type: USER_ACTIONS.DELETE, payload: [] });
+      })
     // if (res.status === 200) {
     // dispatch({
     //   type: USER_ACTIONS.DELETE,

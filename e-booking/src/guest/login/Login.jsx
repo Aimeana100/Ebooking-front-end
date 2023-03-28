@@ -8,7 +8,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { auth, login } from 'src/redux/Auth/authActions'
 import { showSuccess } from 'src/redux/UI/ui-actions'
 import { success } from 'src/redux/Notifications/notificationActions'
-
+import { toast } from 'react-hot-toast'
+toast
 function generateRandomRole() {
   let roles = ['admin', 'manager', 'cashier', 'receiptionist', 'waiter']
   let randomNumber = Math.floor(Math.random() * 5)
@@ -46,7 +47,6 @@ function Login() {
     dispatch(login(formState))
 
     navigate('/')
-    dispatch(success({ text: 'Login succesfull', color: 'primary' }))
   }
 
   return (

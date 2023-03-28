@@ -17,6 +17,7 @@ import { deleteUser, getUsers } from 'src/redux/User/userActions'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectUser } from 'src/redux/User/userActions'
 import { getRoles } from 'src/redux/Roles/RolesActions'
+import { selectItem } from 'src/redux/Select/selectionActions'
 
 const Users = () => {
   let users = useSelector((state) => state.systemUsers.users) || []
@@ -72,7 +73,7 @@ const Users = () => {
                           } btn btn-sm btn-warning`}
                           onClick={() => {
                             console.log('this is user', user)
-                            return dispatch(selectUser(user))
+                            return dispatch(selectItem(user))
                           }}
                         >
                           {' '}

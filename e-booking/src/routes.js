@@ -1,4 +1,5 @@
 import React from 'react'
+import UserRolesAdd from './views/pages/users/UserRolesAdd'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const Cards = React.lazy(() => import('./views/base/cards/Cards'))
@@ -43,6 +44,13 @@ const ReservationView = React.lazy(() =>
 const Users = React.lazy(() => import('./views/pages/users/Users'))
 const UserAdd = React.lazy(() => import('./views/pages/users/UserAdd'))
 const UserEdit = React.lazy(() => import('./views/pages/users/UserEdit'))
+const UserRoles = React.lazy(() => import('./views/pages/users/UserRoles'))
+const UserEditRolesAdd = React.lazy(() =>
+  import('./views/pages/users/UserRolesAdd'),
+)
+const UserRolesEdit = React.lazy(() =>
+  import('./views/pages/users/UserRolesEdit'),
+)
 
 // products
 const ProductEdit = React.lazy(() =>
@@ -84,6 +92,14 @@ const CustomerView = React.lazy(() =>
   import('./views/pages/Customer/CustomerView'),
 )
 
+//reports
+
+const CreateReport = React.lazy(() =>
+  import('./views/pages/Reports/CreateReport.js'),
+)
+const DaySalesReport = React.lazy(() =>
+  import('./views/pages/Reports/DaySalesReport'),
+)
 const PetitStockReports = React.lazy(() =>
   import('./views/pages/Reports/PetitStockReports.js'),
 )
@@ -216,6 +232,24 @@ const routes = [
     name: 'Edit user',
     element: UserEdit,
   },
+  {
+    path: '/booking/user/roles',
+    exact: true,
+    name: 'Edit user',
+    element: UserRoles,
+  },
+  {
+    path: '/booking/user/roles/add',
+    exact: true,
+    name: 'Add user Role',
+    element: UserRolesAdd,
+  },
+  {
+    path: '/booking/user/roles/edit',
+    exact: true,
+    name: 'Edit user Role',
+    element: UserRolesEdit,
+  },
   { path: '/booking/users', exact: true, name: 'User', element: Users },
   {
     path: '/booking/products/sell',
@@ -289,6 +323,18 @@ const routes = [
     exact: true,
     name: 'View customer',
     element: CustomerView,
+  },
+  {
+    path: '/reports/create',
+    exact: true,
+    name: 'Add report',
+    element: CreateReport,
+  },
+  {
+    path: '/reports/create/daysales',
+    exact: true,
+    name: 'Add Day Sales Report',
+    element: DaySalesReport,
   },
   {
     path: '/reports/cashier',

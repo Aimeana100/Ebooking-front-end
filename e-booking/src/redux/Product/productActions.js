@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { toast } from 'react-hot-toast'
 import { PRODUCT_ACTIONS } from './productActionTypes'
 
 const baseUrl = 'http://localhost:5000/api/v1/'
@@ -87,8 +88,13 @@ export const createProduct = (payload, products) => {
   return async function (dispatch) {
     const res = await axios
       .post(`http://206.81.29.111:80/api/v1/products/add`, { ...payload })
+      .then(() => {
+        toast.success('Product created')
+      })
       .catch((err) => {
         console.log('error updating product', { errMessage: err.message })
+        toast.success('Product creation failed')
+
         // dispatch({ type: USER_ACTIONS.DELETE, payload: [] });
       })
     console.log(res)

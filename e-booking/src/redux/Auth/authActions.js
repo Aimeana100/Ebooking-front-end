@@ -3,9 +3,7 @@ import { IS_AUTH } from './AuthActionTypes'
 import { errorFunction } from '../errorFunction'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
-import { toast } from 'react-toastify'
-import { fail, success } from '../Notifications/notificationActions'
-import notificationTypes from '../Notifications/notificicationTypes'
+import { toast } from 'react-hot-toast'
 
 const baseUrl = 'http://localhost:5000/api/v1/'
 //const baseUrl = 'http://206.81.29.111/api/v1';
@@ -22,7 +20,7 @@ export const login = function (payload) {
     const res1 = await axios
       .post(`${baseUrlLive}/login`, payload)
       .catch((err) => {
-        toast.error(err.response.data.message)
+        toast.error(err.message)
         console.log({ err })
         dispatch({
           type: IS_AUTH.LOGIN,
@@ -40,9 +38,11 @@ export const login = function (payload) {
         jwt: res1.data.accessToken,
         user: res1.data.user,
         role: res1.data.user.Role.name,
+        access: res1.data.user.Role.access,
+        permission: res1.data.user.Role.permission,
       },
     })
-
+    toast.success('User Logged in')
     // dispatch({
     //   type: IS_AUTH.LOGIN,
     //   payload: {
@@ -67,9 +67,11 @@ export const registerUser = function (payload) {
       dispatch({
         type: IS_AUTH.REGISTER,
         payload: {
+          isAuth: true,
           status: res.status,
         },
       })
+      toast.success('User created')
       dispatch({
         type: notificationTypes.SUCCESS,
         payload: { text: 'User added successfuly', color: 'primary' },
@@ -79,17 +81,10 @@ export const registerUser = function (payload) {
 }
 
 export const logout = function () {
-  return async function (dispatch) {
-    const res = await axios.get(`${baseUrlLive}/users`).catch((err) => {
-      console.log('error logging out', { errMessage: err.message })
-      dispatch({
-        type: IS_AUTH.LOGOUT,
-        isAuth: false,
-      })
-    })
-    if (res) {
-      console.log(res.data.status)
-    }
+  toast.success('User logged out')
+  return {
+    type: IS_AUTH.LOGOUT,
+    isAuth: false,
   }
 }
 //206.81.29.111/api/v1/auth/login

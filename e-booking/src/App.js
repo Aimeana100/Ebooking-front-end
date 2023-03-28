@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-
+import toast, { Toaster } from 'react-hot-toast'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import './scss/style.scss'
 import { getRoles } from './redux/Roles/RolesActions'
@@ -62,6 +62,7 @@ function App() {
           />
         </Routes>
       </Suspense>
+      <Toaster />
     </BrowserRouter>
   )
 }

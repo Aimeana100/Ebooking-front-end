@@ -16,6 +16,7 @@ import {
 import { addRoom } from 'src/redux/Room/roomActions'
 import axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux'
+import { toast } from 'react-hot-toast'
 const FormControl = () => {
   let loggedInUser = useSelector((state) => state.auth.user.Role.name)
   const { register, handleSubmit, watch, reset } = useForm()
@@ -33,9 +34,11 @@ const FormControl = () => {
       .post('http://206.81.29.111:80/api/v1/room/add', data)
       .then((res) => {
         console.log(res.data)
+        toast.success('Room created')
       })
       .catch((err) => {
         console.log('err creating room room', err.message)
+        toast.error('Room  create failed')
       })
     reset()
   }

@@ -18,10 +18,23 @@ import { Link } from 'react-router-dom'
 import axios from 'axios'
 import { useDispatch } from 'react-redux'
 import { selectItem } from 'src/redux/Select/selectionActions'
+import { toast } from 'react-hot-toast'
 
 const Reservation = () => {
   const dispatch = useDispatch()
   const [reservations, setReservations] = useState([])
+  const confirmReservation = async (data) => {
+    const res = await axios
+      .put('http://206.81.29.111:80/api/v1/reservation/update', data)
+      .then((res) => {
+        console.log(res.data)
+        toast.success('Reservation updated')
+      })
+      .catch((err) => {
+        //console.log('err updating reservation', err.message)
+        toast.error('Reservation update failed')
+      })
+  }
   useEffect(() => {
     const getReservations = async () => {
       const res = await axios
@@ -53,9 +66,10 @@ const Reservation = () => {
                   <CTableHeaderCell scope="col"> Names </CTableHeaderCell>
                   <CTableHeaderCell scope="col"> Phone </CTableHeaderCell>
                   <CTableHeaderCell scope="col"> Room/Hall </CTableHeaderCell>
-                  <CTableHeaderCell scope="col"> Done By </CTableHeaderCell>
+                  <CTableHeaderCell scope="col"> User </CTableHeaderCell>
                   <CTableHeaderCell scope="col"> Check in </CTableHeaderCell>
                   <CTableHeaderCell scope="col"> Check out </CTableHeaderCell>
+                  <CTableHeaderCell scope="col"> Status </CTableHeaderCell>
                   <CTableHeaderCell scope="col"> Options </CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
@@ -94,16 +108,40 @@ const Reservation = () => {
                           {new Date(reserv.checkOut).toLocaleString()}{' '}
                         </CTableDataCell>
                         <CTableDataCell>
-                          <span className="badge badge-primary  text-secondary">
-                            Print
-                          </span>
+                          {reserv.status ? reserv.status : 'in progress'}{' '}
+                        </CTableDataCell>
+                        <CTableDataCell>
                           <Link
                             to="/booking/reservations/info"
-                            className="badge badge-primary text-primary"
+                            className="badge badge-primary text-primary text-decoration-none"
                             onClick={() => dispatch(selectItem(reserv))}
                           >
                             {' '}
                             View{' '}
+                          </Link>
+                          <Link
+                            className="badge badge-warning text-primary text-decoration-none"
+                            onClick={() =>
+                              confirmReservation({
+                                id: reserv.id,
+                                status: 'confirmed',
+                              })
+                            }
+                          >
+                            {' '}
+                            Confirm{' '}
+                          </Link>
+                          <Link
+                            className="badge badge-danger text-primary text-decoration-none"
+                            onClick={() =>
+                              confirmReservation({
+                                id: reserv.id,
+                                status: 'canceled',
+                              })
+                            }
+                          >
+                            {' '}
+                            Cancel{' '}
                           </Link>
                         </CTableDataCell>
                       </CTableRow>

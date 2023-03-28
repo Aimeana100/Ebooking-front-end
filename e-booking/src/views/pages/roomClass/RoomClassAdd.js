@@ -17,6 +17,7 @@ import { cilArrowRight, cilClone } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
+import { toast } from 'react-hot-toast'
 
 const RoomClassAdd = () => {
   const [formData, setformData] = useState({})
@@ -37,11 +38,14 @@ const RoomClassAdd = () => {
       .post('http://206.81.29.111:80/api/v1/roomclass/add', data)
       .then((res) => {
         console.log(res.data)
+        toast.success('Room class created')
+        reset()
       })
       .catch((err) => {
         console.log('err creating room class', err.message)
+        toast.error('Room class creation failed')
+        reset()
       })
-    reset()
   }
 
   useEffect(() => {
@@ -77,12 +81,12 @@ const RoomClassAdd = () => {
                   />
                 </div>
                 <div className="mb-3">
-                  <CFormLabel htmlFor="price"> Class Price $ </CFormLabel>
+                  <CFormLabel htmlFor="price"> Class Price in USD </CFormLabel>
                   <CFormInput
                     type="number"
                     name="price"
                     id="price"
-                    placeholder=" 70 "
+                    placeholder="price in USD"
                     size="md"
                     required
                     {...register('price')}
