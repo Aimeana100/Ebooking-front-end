@@ -9,6 +9,7 @@ const authReducer = (state = { isAuth: false }, { type, payload }) => {
       return {
         ...state,
         isAuth: payload.isAuth,
+        jwt: payload.jwt,
         user: payload.user,
         role: payload.role,
         access: payload.access,

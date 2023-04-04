@@ -9,17 +9,17 @@ export const AppSidebarNav = ({ items }) => {
   /*Get role accessTabs, authentication state, and permissions from the redux store  */
 
   let isAuth = useSelector((state) => state.auth.isAuth)
-  let role = useSelector((state) => state.auth.role) || ''
-  let access = useSelector((state) => state.auth.access) || []
-  let permission = useSelector((state) => state.auth.permission) || []
+  let role = useSelector((state) => state.auth.user.Role) || ''
 
   /*filter through items check if item name is included in access of the role
   if yes show the item in the nav else remove it from the nav*/
 
   items =
-    isAuth && items && role !== 'admin'
+    isAuth && items && role.name !== 'admin'
       ? items.filter((item) =>
-          access.includes(item.name.toLowerCase()) ? item : '',
+          Object.keys(role.access).includes(item.name.toLowerCase())
+            ? item
+            : '',
         )
       : items
 
@@ -29,18 +29,24 @@ export const AppSidebarNav = ({ items }) => {
   /*if the sub item starts with All and view is not included in permissions remove the sub-item else keep the sub-item*/
 
   items = items.map((item) => {
-    if (isAuth && item.items && item.items.length !== 0) {
+    if (
+      isAuth &&
+      role.name !== 'admin' &&
+      item.items &&
+      item.items.length !== 0
+    ) {
       let subs = item.items
+      let head = item.name.toLowerCase()
+      console.log(head)
       subs = subs.filter((sub) => {
-        if (!permission.includes('view') && sub.name.startsWith('All')) {
-          return ''
+        if (role.access && role.access[head].includes(sub.name)) {
+          return sub
         }
-        if (!permission.includes('add') && sub.name.startsWith('add')) {
-          return ''
-        }
-        return sub
+        return ''
       })
+      item.items = subs
     }
+
     return item
   })
 

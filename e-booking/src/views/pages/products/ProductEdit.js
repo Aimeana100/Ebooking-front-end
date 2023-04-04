@@ -13,6 +13,8 @@ import {
 } from '@coreui/react'
 import { useForm } from 'react-hook-form'
 import { useSelector } from 'react-redux'
+import instance from 'src/API/AxiosInstance'
+import { toast } from 'react-hot-toast'
 
 function ProductEdit() {
   const { register, handleSubmit, watch, reset } = useForm()
@@ -29,10 +31,11 @@ function ProductEdit() {
   }
   useEffect(() => {
     const getAllCategories = async () => {
-      const res = await axios
-        .get('http://206.81.29.111:80/api/v1/products/category/all')
+      const res = await instance
+        .get('/products/category/all')
+        .then(() => {})
         .catch((err) => {
-          console.log('error getting categories')
+          toast.error(err.message)
         })
       if (res.status === 200) {
         setAllDataCategories(res.data.data)

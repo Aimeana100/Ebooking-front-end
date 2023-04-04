@@ -10,11 +10,12 @@ import {
   CFormLabel,
   CRow,
 } from '@coreui/react'
-import axios from 'axios'
 import React, { useEffect } from 'react'
+import { FormCheck } from 'react-bootstrap'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 import { useSelector } from 'react-redux'
+import instance from 'src/API/AxiosInstance'
 
 function UserRolesEdit() {
   const { register, handleSubmit, watch, reset } = useForm()
@@ -33,20 +34,32 @@ function UserRolesEdit() {
   ]
   const permissionArray = ['view', 'add', 'edit', 'comment', 'delete']
   const onSubmit = async (data) => {
-    //console.log(data)
-    if (data.access) {
-      data.access = [...data.access, 'Dashboard']
+    data.access = data.access.reduce((obj, e) => {
+      obj[e] = data[e].permission
+      return obj
+    }, {})
+    let arr = Object.keys(data.access)
+    let arr2 = Object.keys(data)
+    for (let i = 0; i < arr2.length; i++) {
+      if (arr.includes(arr2[i])) {
+        delete data[arr2[i]]
+      }
     }
+
+    console.log(data)
+    // if (data.access) {
+    //   data.access = [...data.access, 'Dashboard']
+    // }
     data = { ...data, id: role.id }
     console.log(data)
-    const res = await axios
-      .put('http://206.81.29.111:80/api/v1/roles/update', data)
+    const res = await instance
+      .put('/roles/update', data)
       .then((res) => {
         toast.success('user role updated')
         reset()
       })
       .catch((err) => {
-        toast.error('user role not updated')
+        toast.error('user role not updated', err.message)
         reset()
       })
   }
@@ -86,35 +99,37 @@ function UserRolesEdit() {
                 <p className="fw-bolder"> Role Access</p>
                 <div>
                   {accessArray && accessArray.length !== 0
-                    ? accessArray.map((e) => {
+                    ? accessArray.map((job) => {
                         return (
-                          <CFormCheck
-                            key={e}
-                            id="Access 1"
-                            value={e}
-                            defaultChecked={role.access.includes(e)}
-                            label={e.charAt(0).toUpperCase() + e.slice(1)}
-                            {...register(`access`)}
-                          />
-                        )
-                      })
-                    : null}
-                </div>
-              </CCol>
-              <CCol>
-                <p className="fw-bolder"> Role permissions</p>
-                <div>
-                  {permissionArray && permissionArray.length !== 0
-                    ? permissionArray.map((e, i) => {
-                        return (
-                          <CFormCheck
-                            key={e}
-                            id={`permission ${i}`}
-                            defaultChecked={role.permission.includes(e)}
-                            value={e}
-                            label={e.charAt(0).toUpperCase() + e.slice(1)}
-                            {...register(`permission`)}
-                          />
+                          <div>
+                            <CFormCheck
+                              key={job}
+                              id="Access 1"
+                              value={job}
+                              defaultChecked={Object.keys(role.access).includes(
+                                job,
+                              )}
+                              label={job.charAt(0).toUpperCase() + job.slice(1)}
+                              {...register(`access`)}
+                            />
+                            {permissionArray.map((perm, i) => (
+                              <div key={i} className="ms-3">
+                                <CFormCheck
+                                  id="Access 1"
+                                  value={perm}
+                                  defaultChecked={
+                                    Object.keys(role.access).includes(job)
+                                      ? role.access[job].includes(perm)
+                                        ? true
+                                        : false
+                                      : false
+                                  }
+                                  label={perm}
+                                  {...register(`${job}.permission`)}
+                                />
+                              </div>
+                            ))}
+                          </div>
                         )
                       })
                     : null}
@@ -138,3 +153,23 @@ function UserRolesEdit() {
 }
 
 export default UserRolesEdit
+
+// <CCol>
+//                 <p className="fw-bolder"> Role permissions</p>
+//                 <div>
+//                   {permissionArray && permissionArray.length !== 0
+//                     ? permissionArray.map((e, i) => {
+//                         return (
+//                           <CFormCheck
+//                             key={e}
+//                             id={`permission ${i}`}
+//                             defaultChecked={role.permission.includes(e)}
+//                             value={e}
+//                             label={e.charAt(0).toUpperCase() + e.slice(1)}
+//                             {...register(`permission`)}
+//                           />
+//                         )
+//                       })
+//                     : null}
+//                 </div>
+//               </CCol>

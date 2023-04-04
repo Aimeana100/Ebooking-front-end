@@ -1,302 +1,29 @@
 import React, { useState, useEffect, useRef } from 'react'
 import {
   CCard,
-  CCardBody,
   CCardHeader,
   CCol,
+  CFormInput,
+  CFormLabel,
   CRow,
-  CTable,
-  CTableBody,
-  CTableDataCell,
-  CTableHead,
-  CTableHeaderCell,
-  CTableRow,
 } from '@coreui/react'
 import { useForm } from 'react-hook-form'
-import axios from 'axios'
 import DatePicker from 'react-datepicker'
 import CalendarContainer from 'src/utils/CalendarContainer'
-import {
-  datesInRange,
-  datesInRangeWithUnix,
-  getUTCDateWithoutHours,
-} from 'src/utils/functions'
+import { datesInRangeWithUnix } from 'src/utils/functions'
 import ReactToPrint from 'react-to-print'
-import PrintTemplate1 from '../PrintTemplate1'
-// import { useDispatch } from 'react-redux'
-// import { selectItem } from 'src/redux/Select/selectionActions'
+import PrintTemplate1 from '../Printing/PrintTemplate1'
+import ReservationsTable from './ReservationsTable'
+import instance from 'src/API/AxiosInstance'
+import { toast } from 'react-hot-toast'
 
-const ReservationsTable = (props, ref) => {
-  const { reservations, filter_condition, filter_condition2, time, myDates } =
-    props
-
-  return (
-    <CCardBody>
-      <CTable bordered>
-        <CTableHead>
-          <CTableRow>
-            <CTableHeaderCell scope="col">Names</CTableHeaderCell>
-            <CTableHeaderCell scope="col"> Check In </CTableHeaderCell>
-            <CTableHeaderCell scope="col"> Check Out</CTableHeaderCell>
-            <CTableHeaderCell scope="col"> Room/Hall </CTableHeaderCell>
-            <CTableHeaderCell scope="col"> Booked On </CTableHeaderCell>
-            <CTableHeaderCell scope="col"> Status </CTableHeaderCell>
-            <CTableHeaderCell scope="col"> Price </CTableHeaderCell>
-          </CTableRow>
-        </CTableHead>
-        <CTableBody>
-          {reservations && reservations.length !== 0
-            ? reservations.map((reserv, i) => {
-                if (filter_condition === 'All' && filter_condition2 === 'All') {
-                  if (time && time === 'all-time') {
-                    return (
-                      <CTableRow key={reserv.id}>
-                        <CTableHeaderCell scope="row">
-                          {reserv.Customer.names}
-                        </CTableHeaderCell>
-                        <CTableDataCell>
-                          {new Date(reserv.checkIn).toLocaleDateString()}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {new Date(reserv.checkOut).toLocaleDateString()}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {reserv.Room ? reserv.Room.name : reserv.Hall.name}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {new Date(reserv.createdAt).toLocaleDateString()}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {' '}
-                          {reserv.status !== null ? reserv.status : 'active'}
-                        </CTableDataCell>
-                        <CTableDataCell>{reserv.amount}</CTableDataCell>
-                      </CTableRow>
-                    )
-                  } else if (
-                    myDates &&
-                    myDates.length !== 0 &&
-                    myDates.includes(getUTCDateWithoutHours(reserv.createdAt))
-                  ) {
-                    return (
-                      <CTableRow key={reserv.id}>
-                        <CTableHeaderCell scope="row">
-                          {reserv.Customer.names}
-                        </CTableHeaderCell>
-                        <CTableDataCell>
-                          {new Date(reserv.checkIn).toLocaleDateString()}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {new Date(reserv.checkOut).toLocaleDateString()}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {reserv.Room ? reserv.Room.name : reserv.Hall.name}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {new Date(reserv.createdAt).toLocaleDateString()}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {' '}
-                          {reserv.status !== null ? reserv.status : 'active'}
-                        </CTableDataCell>
-                        <CTableDataCell>{reserv.amount}</CTableDataCell>
-                      </CTableRow>
-                    )
-                  }
-                } else if (
-                  filter_condition2 === 'All' &&
-                  filter_condition !== 'All'
-                ) {
-                  if (time && time === 'all-time') {
-                    return reserv.status === filter_condition ? (
-                      <CTableRow key={reserv.id}>
-                        <CTableHeaderCell scope="row">
-                          {reserv.Customer.names}
-                        </CTableHeaderCell>
-                        <CTableDataCell>
-                          {new Date(reserv.checkIn).toLocaleDateString()}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {new Date(reserv.checkOut).toLocaleDateString()}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {reserv.Room ? reserv.Room.name : reserv.Hall.name}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {new Date(reserv.createdAt).toLocaleDateString()}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {' '}
-                          {reserv.status !== null ? reserv.status : 'active'}
-                        </CTableDataCell>
-                        <CTableDataCell>{reserv.amount}</CTableDataCell>
-                      </CTableRow>
-                    ) : null
-                  } else if (
-                    myDates &&
-                    myDates.length !== 0 &&
-                    myDates.includes(getUTCDateWithoutHours(reserv.createdAt))
-                  ) {
-                    return reserv.status === filter_condition ? (
-                      <CTableRow key={reserv.id}>
-                        <CTableHeaderCell scope="row">
-                          {reserv.Customer.names}
-                        </CTableHeaderCell>
-                        <CTableDataCell>
-                          {new Date(reserv.checkIn).toLocaleDateString()}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {new Date(reserv.checkOut).toLocaleDateString()}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {reserv.Room ? reserv.Room.name : reserv.Hall.name}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {new Date(reserv.createdAt).toLocaleDateString()}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {' '}
-                          {reserv.status !== null ? reserv.status : 'active'}
-                        </CTableDataCell>
-                        <CTableDataCell>{reserv.amount}</CTableDataCell>
-                      </CTableRow>
-                    ) : null
-                  }
-                } else if (filter_condition2 === 'room') {
-                  if (time && time === 'all-time') {
-                    return (reserv.status === filter_condition ||
-                      filter_condition === 'All') &&
-                      reserv.roomId ? (
-                      <CTableRow key={reserv.id}>
-                        <CTableHeaderCell scope="row">
-                          {reserv.Customer.names}
-                        </CTableHeaderCell>
-                        <CTableDataCell>
-                          {new Date(reserv.checkIn).toLocaleDateString()}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {new Date(reserv.checkOut).toLocaleDateString()}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {reserv.Room ? reserv.Room.name : reserv.Hall.name}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {new Date(reserv.createdAt).toLocaleDateString()}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {' '}
-                          {reserv.status !== null ? reserv.status : 'active'}
-                        </CTableDataCell>
-                        <CTableDataCell>{reserv.amount}</CTableDataCell>
-                      </CTableRow>
-                    ) : null
-                  } else if (
-                    myDates &&
-                    myDates.length !== 0 &&
-                    myDates.includes(getUTCDateWithoutHours(reserv.createdAt))
-                  ) {
-                    return (reserv.status === filter_condition ||
-                      filter_condition === 'All') &&
-                      reserv.roomId ? (
-                      <CTableRow key={reserv.id}>
-                        <CTableHeaderCell scope="row">
-                          {reserv.Customer.names}
-                        </CTableHeaderCell>
-                        <CTableDataCell>
-                          {new Date(reserv.checkIn).toLocaleDateString()}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {new Date(reserv.checkOut).toLocaleDateString()}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {reserv.Room ? reserv.Room.name : reserv.Hall.name}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {new Date(reserv.createdAt).toLocaleDateString()}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {' '}
-                          {reserv.status !== null ? reserv.status : 'active'}
-                        </CTableDataCell>
-                        <CTableDataCell>{reserv.amount}</CTableDataCell>
-                      </CTableRow>
-                    ) : null
-                  }
-                } else {
-                  if (time && time === 'all-time') {
-                    return (reserv.status === filter_condition ||
-                      filter_condition === 'All') &&
-                      reserv.hallId ? (
-                      <CTableRow key={reserv.id}>
-                        <CTableHeaderCell scope="row">
-                          {reserv.Customer.names}
-                        </CTableHeaderCell>
-                        <CTableDataCell>
-                          {new Date(reserv.checkIn).toLocaleDateString()}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {new Date(reserv.checkOut).toLocaleDateString()}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {reserv.Room ? reserv.Room.name : reserv.Hall.name}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {new Date(reserv.createdAt).toLocaleDateString()}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {' '}
-                          {reserv.status !== null ? reserv.status : 'active'}
-                        </CTableDataCell>
-                        <CTableDataCell>{reserv.amount}</CTableDataCell>
-                      </CTableRow>
-                    ) : null
-                  } else if (
-                    myDates &&
-                    myDates.length !== 0 &&
-                    myDates.includes(getUTCDateWithoutHours(reserv.createdAt))
-                  ) {
-                    return (reserv.status === filter_condition ||
-                      filter_condition === 'All') &&
-                      reserv.hallId ? (
-                      <CTableRow key={reserv.id}>
-                        <CTableHeaderCell scope="row">
-                          {reserv.Customer.names}
-                        </CTableHeaderCell>
-                        <CTableDataCell>
-                          {new Date(reserv.checkIn).toLocaleDateString()}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {new Date(reserv.checkOut).toLocaleDateString()}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {reserv.Room ? reserv.Room.name : reserv.Hall.name}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {new Date(reserv.createdAt).toLocaleDateString()}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {' '}
-                          {reserv.status !== null ? reserv.status : 'active'}
-                        </CTableDataCell>
-                        <CTableDataCell>{reserv.amount}</CTableDataCell>
-                      </CTableRow>
-                    ) : null
-                  }
-                }
-              })
-            : null}
-        </CTableBody>
-      </CTable>
-    </CCardBody>
-  )
-}
-
-const Reservation = React.forwardRef((props, ref) => {
+const ReservationReport = React.forwardRef((props, ref) => {
   const componentRef = useRef()
-  const { register, handleSubmit, watch, reset } = useForm()
+  const { register, watch } = useForm()
   const filter_condition = watch('filter_condition') || 'All'
   const filter_condition2 = watch('filter_condition2') || 'All'
   const time = watch('time') || 'all-time'
+  const query = watch('query') || ''
   const [startDate, setStartDate] = useState(new Date())
   const [endDate, setEndDate] = useState(new Date())
 
@@ -306,24 +33,18 @@ const Reservation = React.forwardRef((props, ref) => {
     setEndDate(end)
   }
   let myDates = datesInRangeWithUnix(startDate, endDate)
-  console.log(time)
-  console.log(myDates)
-  const onSubmit = (data) => {
-    console.log(data)
-    reset()
-  }
+
   const [reservations, setReservations] = useState([])
   useEffect(() => {
     const getReservations = async () => {
-      const res = await axios
-        .get('http://206.81.29.111:80/api/v1/reservation/all')
+      const res = await instance
+        .get('/reservation/all')
         .then((res) => {
           setReservations(res.data.data)
-          console.log(new Date(res.data.data[0].checkIn).getUTCDate())
-          console.log('All reservation', res.data.data)
         })
         .catch((err) => {
           console.log('error getting reservations', err.message)
+          toast.error(err.message)
         })
     }
     getReservations()
@@ -351,10 +72,20 @@ const Reservation = React.forwardRef((props, ref) => {
 
             <div className="col row py-2 ">
               <div className="form-control d-flex flex-row py-2 my-2 align align-content-center">
-                <label className="col-2 d-flex align-items-center ">
-                  Filter by{' '}
-                </label>
                 <form className="col d-flex flex-wrap gap-2">
+                  <div className="col-3">
+                    <CFormLabel className="text-center">Search</CFormLabel>
+                    <CFormInput
+                      className="mb-1"
+                      type="text"
+                      name="customerName"
+                      id="customerName"
+                      size="md"
+                      placeholder="by customer ..."
+                      {...register('query')}
+                    />
+                  </div>
+
                   <div className="col-3">
                     <label className="text-center py-1">Status </label>
                     <select
@@ -418,13 +149,17 @@ const Reservation = React.forwardRef((props, ref) => {
           </CCardHeader>
 
           <div style={{ display: 'none' }}>
-            <PrintTemplate1 ref={ref || componentRef}>
+            <PrintTemplate1
+              ref={ref || componentRef}
+              title="Reservations report"
+            >
               <ReservationsTable
                 reservations={reservations}
                 filter_condition={filter_condition}
                 filter_condition2={filter_condition2}
                 time={time}
                 myDates={myDates}
+                query={query}
               />
             </PrintTemplate1>
           </div>
@@ -434,6 +169,7 @@ const Reservation = React.forwardRef((props, ref) => {
             filter_condition2={filter_condition2}
             time={time}
             myDates={myDates}
+            query={query}
           />
         </CCard>
       </CCol>
@@ -441,4 +177,4 @@ const Reservation = React.forwardRef((props, ref) => {
   )
 })
 
-export default Reservation
+export default ReservationReport

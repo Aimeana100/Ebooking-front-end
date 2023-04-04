@@ -13,25 +13,24 @@ import {
   CTableRow,
 } from '@coreui/react'
 import { Link } from 'react-router-dom'
-import axios from 'axios'
 import { useDispatch } from 'react-redux'
 import { selectItem } from 'src/redux/Select/selectionActions'
+import instance from 'src/API/AxiosInstance'
+import { toast } from 'react-hot-toast'
 
 function Hall() {
   const dispatch = useDispatch()
   const [halls, setHalls] = useState([])
   useEffect(() => {
     const getHalls = async () => {
-      const res = await axios
-        .get('http://206.81.29.111:80/api/v1/halls/all')
+      const res = await instance
+        .get('/halls/all')
         .then((res) => {
-          console.log(res.data)
           setHalls(res.data.data)
         })
         .catch((err) => {
-          console.log('err getting halls')
+          toast.error(err.message)
         })
-      console.log('halls async to get halls')
     }
 
     getHalls()

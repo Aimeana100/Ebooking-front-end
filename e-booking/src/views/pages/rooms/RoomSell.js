@@ -14,20 +14,18 @@ import {
   CFormSelect,
   CRow,
 } from '@coreui/react'
-import { useSelector } from 'react-redux'
-import axios from 'axios'
+ from 'react-redux'
+
+import instance from 'src/API/AxiosInstance'
+import { toast } from 'react-hot-toast'
 
 export default function RoomSell() {
   const [rooms, setRooms] = useState([])
   const { register, handleSubmit, watch, reset } = useForm()
   const [singleSelections, setSingleSelections] = useState([])
   const price = 0
-  //console.log('This is selected', singleSelections)
-  // const options = useSelector((state) => state.products) || []
-
   const onServiceSell = (data) => {
     console.log(data)
-    //roomClass.push(formData);
   }
   const onProductSell = (data) => {
     console.log(data)
@@ -38,14 +36,14 @@ export default function RoomSell() {
   const inputState = { minLength: 2 }
   useEffect(() => {
     const getRoomClasses = async () => {
-      const res = await axios
-        .get('http://206.81.29.111:80/api/v1/roomclass/all')
+      const res = await instance
+        .get('/roomclass/all')
         .then((res) => {
           console.log(res.data)
           setRoom(res.data.data)
         })
         .catch((err) => {
-          console.log('err getting room classes')
+          toast.error(err.message)
         })
     }
     getRoomClasses()

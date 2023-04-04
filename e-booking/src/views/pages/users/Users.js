@@ -21,7 +21,7 @@ import { selectItem } from 'src/redux/Select/selectionActions'
 
 const Users = () => {
   let users = useSelector((state) => state.systemUsers.users) || []
-  let loggedInUser = useSelector((state) => state.auth.user.Role.name)
+  let role = useSelector((state) => state.auth.user.Role.name)
   users = users ? users : []
   const dispatch = useDispatch()
   useEffect(() => {
@@ -64,12 +64,12 @@ const Users = () => {
                       </CTableDataCell>
                       <CTableDataCell>{user.phone} </CTableDataCell>
                       <CTableDataCell> {user.email} </CTableDataCell>
-                      <CTableDataCell> {user.role}</CTableDataCell>
+                      <CTableDataCell> {user.Role.name}</CTableDataCell>
                       <CTableDataCell>
                         <Link
                           to="/booking/user/edit"
                           className={`${
-                            loggedInUser === 'controller' ? 'disabled' : ''
+                            role === 'controller' ? 'disabled' : ''
                           } btn btn-sm btn-warning`}
                           onClick={() => {
                             console.log('this is user', user)
@@ -81,7 +81,7 @@ const Users = () => {
                         </Link>
                         <button
                           className={`${
-                            loggedInUser === 'controller' ? 'disabled' : ''
+                            role === 'controller' ? 'disabled' : ''
                           } btn btn-sm btn-danger`}
                           onClick={() => {
                             return dispatch(deleteUser(user, users))

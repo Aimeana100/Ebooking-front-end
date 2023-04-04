@@ -33,15 +33,6 @@ const UserAdd = () => {
     dispatch(registerUser(data))
     reset()
   }
-  // const hundleSubmit = async (e) => {
-  //   e.preventDefault()
-  //   console.log(formData)
-  //   roomClass.push(formData)
-  //   const addUser = async () => {
-  //     dispatch(registerUser(formData))
-  //   }
-  //   addUser()
-  // }
 
   useEffect(() => {
     dispatch(getRoles())
@@ -144,7 +135,7 @@ const UserAdd = () => {
                   <CFormLabel htmlFor="password"> Password </CFormLabel>
                   <CFormInput
                     className="mb-1"
-                    type="text"
+                    type="password"
                     name="password"
                     id="password"
                     size="md"

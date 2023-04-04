@@ -9,15 +9,10 @@ import { auth, login } from 'src/redux/Auth/authActions'
 import { showSuccess } from 'src/redux/UI/ui-actions'
 import { success } from 'src/redux/Notifications/notificationActions'
 import { toast } from 'react-hot-toast'
-toast
-function generateRandomRole() {
-  let roles = ['admin', 'manager', 'cashier', 'receiptionist', 'waiter']
-  let randomNumber = Math.floor(Math.random() * 5)
-  return roles[randomNumber]
-}
-function saveUserToGeneralStore() {}
+
 function Login() {
   const navigate = useNavigate()
+  const [loading, setLoading] = useState(false)
   const isAuth = useSelector((state) => state.auth.isAuth)
   //const [isAuth, setIsAuth] = useState(auth);
   const dispatch = useDispatch()
@@ -31,21 +26,10 @@ function Login() {
   }
 
   const handleSubmit = async (e) => {
+    setLoading(true)
     e.preventDefault()
-    // let role = generateRandomRole()
-
-    // dispatch(
-    //   auth({
-    //     isAuth: true,
-    //     user: {
-    //       email: formState.email,
-    //       role: 'admin',
-    //     },
-    //   }),
-    // )
-
     dispatch(login(formState))
-
+    setLoading(false)
     navigate('/')
   }
 
@@ -103,7 +87,9 @@ function Login() {
               )}
 
               {formState?.email && formState?.password && (
-                <CButton type="submit">Login</CButton>
+                <CButton type="submit" disable={loading}>
+                  Login
+                </CButton>
               )}
             </form>
           </div>
@@ -114,14 +100,3 @@ function Login() {
 }
 
 export default Login
-
-// {
-//   formState?.email && formState?.password && (
-//     <Link to="/">
-//       <CButton type="submit" color="info" shape="rounded-0">
-//         Login
-//       </CButton>
-//     </Link>
-//   )
-// }
-//  <form onSubmit={(e) => handleSubmit(e)} method="POST">

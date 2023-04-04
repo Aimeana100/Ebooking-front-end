@@ -13,14 +13,10 @@ import {
   CTableRow,
 } from '@coreui/react'
 import { Link } from 'react-router-dom'
-import { deleteUser, getUsers } from 'src/redux/User/userActions'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectUser } from 'src/redux/User/userActions'
-import { getRoles } from 'src/redux/Roles/RolesActions'
 import { selectItem } from 'src/redux/Select/selectionActions'
-import axios from 'axios'
 import { toast } from 'react-hot-toast'
-
+import instance from 'src/API/AxiosInstance'
 const UserRoles = () => {
   let users = useSelector((state) => state.systemUsers.users) || []
   let loggedInUser = useSelector((state) => state.auth.user.Role.name)
@@ -29,20 +25,19 @@ const UserRoles = () => {
   users = users ? users : []
   const dispatch = useDispatch()
   const deleteUserRole = async (id) => {
-    const res = await axios
-      .delete(`http://206.81.29.111:80/api/v1/roles/delete/${id}`)
+    const res = await instance
+      .delete(`/roles/delete/${id}`)
       .then((res) => {
         toast.success('User role deleted')
-        console.log(res)
       })
       .catch((err) => {
-        console.log('role delete error', err.message)
+        toast.error(err.message)
       })
   }
   useEffect(() => {
     const getAllRoles = async () => {
-      const res = await axios
-        .get('http://206.81.29.111:80/api/v1/roles/all')
+      const res = await instance
+        .get('/roles/all')
         .then((res) => {
           setRoles(res.data.roles)
           toast.success('all roles available')
@@ -83,20 +78,25 @@ const UserRoles = () => {
                       <CTableDataCell> {role.name} </CTableDataCell>
                       <CTableDataCell>
                         {' '}
-                        {role.access && role.access.length !== 0
-                          ? role.access.map((acces) => <p>{acces}</p>)
+                        {role.access && Object.keys(role.access).length !== 0
+                          ? Object.keys(role.access).map((acces) => (
+                              <div className="">
+                                <p className="fw-bolder text-capitalize py-1">
+                                  {acces}
+                                </p>
+
+                                <div className="ms-3">
+                                  {role.access[acces].map((perm) => (
+                                    <p className="text-capitalize">{perm}</p>
+                                  ))}
+                                </div>
+                              </div>
+                            ))
                           : role.name === 'admin'
                           ? 'all'
                           : ''}{' '}
                       </CTableDataCell>
-                      <CTableDataCell>
-                        {' '}
-                        {role.permission && role.permission.length !== 0
-                          ? role.permission.map((perm) => <p>{perm}</p>)
-                          : role.name === 'admin'
-                          ? 'all'
-                          : ''}{' '}
-                      </CTableDataCell>
+                      <CTableDataCell>all</CTableDataCell>
                       <CTableDataCell className="d-flex gap-2">
                         <Link
                           to="/booking/user/roles/edit"
@@ -138,3 +138,7 @@ const UserRoles = () => {
 }
 
 export default UserRoles
+
+//  {
+//    role.access[acces].map((e) => <p>{e}</p>)
+//  }

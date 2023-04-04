@@ -10,21 +10,63 @@ import {
   CFormLabel,
   CRow,
 } from '@coreui/react'
-import axios from 'axios'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
+import instance from 'src/API/AxiosInstance'
+import _nav from 'src/_nav'
 
 function UserRolesAdd() {
   const { register, handleSubmit, watch, reset } = useForm()
+
+  console.log('items', _nav)
+  let items = _nav
+  const [loading, setLoading] = useState(false)
+  let access = watch('access')
+  items = items.filter((item) => item.name !== 'Dashboard')
+  const accessArray = items.map((e) => e.name.toLowerCase())
+  let itemsWithSubs = items.map((item) =>
+    item.items ? item.name.toLowerCase() : null,
+  )
+  itemsWithSubs = itemsWithSubs.filter(Boolean)
+  let itemsForAccess =
+    items.map((item) =>
+      itemsWithSubs.includes(item.name.toLowerCase()) ? item : null,
+    ) || []
+  itemsForAccess = itemsForAccess.filter(Boolean)
+  console.log('okay', accessArray)
+
+  const permissionArray = ['view', 'add', 'edit', 'comment', 'delete']
   const onSubmit = async (data) => {
-    console.log(data)
-    if (data.access) {
-      data.access = [...data.access, 'Dashboard']
+    console.log('data12', data)
+    data.access = data.access.reduce((obj, e) => {
+      obj[e] = data[e].permission ? data[e].permission : data[e]
+      return obj
+    }, {})
+    let arr = Object.keys(data.access)
+    let arr2 = Object.keys(data)
+    for (let i = 0; i < arr2.length; i++) {
+      if (arr.includes(arr2[i])) {
+        delete data[arr2[i]]
+      }
     }
 
-    const res = await axios
-      .post('http://206.81.29.111:80/api/v1/roles/add', data)
+    for (let key in data.access) {
+      if (
+        data.access.hasOwnProperty(key) &&
+        data.access[key].permission === false
+      ) {
+        delete data.access[key]
+      }
+    }
+    // if (data.access) {
+    //   data.access = [...data.access, 'Dashboard']
+    // }
+    data = { name: data.name, access: data.access }
+    console.log('this user role add', data)
+    setLoading(true)
+    const res = await instance
+      .post('/roles/add', data)
       .then((res) => {
         toast.success('role created')
         reset()
@@ -32,6 +74,9 @@ function UserRolesAdd() {
       .catch((err) => {
         toast.error('role not created')
         reset()
+      })
+      .finally(() => {
+        setLoading(false)
       })
   }
   useEffect(() => {}, [])
@@ -51,7 +96,7 @@ function UserRolesAdd() {
             encType="multipart/form"
           >
             <CCol md={6}>
-              <CFormLabel htmlFor="Role name">Name </CFormLabel>
+              <CFormLabel htmlFor="Role name"> Name </CFormLabel>
               <CFormInput
                 className="mb-1"
                 type="text"
@@ -67,109 +112,55 @@ function UserRolesAdd() {
               <CCol>
                 <p className="fw-bolder"> Role Access</p>
                 <div>
-                  <CFormCheck
-                    id="Access 1"
-                    value="halls"
-                    label="Halls"
-                    {...register(`access`)}
-                  />
-                  <CFormCheck
-                    id="Access 2"
-                    value="room class"
-                    label="Room class"
-                    {...register(`access`)}
-                  />
-                  <CFormCheck
-                    id="access 3"
-                    value="room"
-                    label="Rooms"
-                    {...register(`access`)}
-                  />
-                  <CFormCheck
-                    id="access 4"
-                    value="reservations"
-                    label="Reservations"
-                    {...register(`access`)}
-                  />
-                  <CFormCheck
-                    id="access 5"
-                    value="products"
-                    label="Products"
-                    {...register(`access`)}
-                  />
-                  <CFormCheck
-                    id="access 6"
-                    value="customers"
-                    label="Customers"
-                    {...register(`access`)}
-                  />
-                  <CFormCheck
-                    id="access 7"
-                    value="stock"
-                    label="Stock"
-                    {...register(`access`)}
-                  />
-                  <CFormCheck
-                    id="access 7"
-                    value="services"
-                    label="Services"
-                    {...register(`access`)}
-                  />
-                  <CFormCheck
-                    id="access 7"
-                    value="stock items"
-                    label="Stock items"
-                    {...register(`access`)}
-                  />
-
-                  <CFormCheck
-                    id="access 6"
-                    value="reports"
-                    label="Reports"
-                    {...register(`access`)}
-                  />
-                </div>
-              </CCol>
-
-              <CCol>
-                <p className="fw-bolder"> Role permissions</p>
-                <div>
-                  <CFormCheck
-                    id="permission 1"
-                    value="view"
-                    label="View"
-                    {...register(`permission`)}
-                  />
-                  <CFormCheck
-                    id="permission 2"
-                    value="add"
-                    label="Add"
-                    {...register(`permission`)}
-                  />
-                  <CFormCheck
-                    id="permission 2"
-                    value="edit"
-                    label="Edit"
-                    {...register(`permission`)}
-                  />
-                  <CFormCheck
-                    id="permission 2"
-                    value="comment"
-                    label="Comment"
-                    {...register(`permission`)}
-                  />
-                  <CFormCheck
-                    id="permission 3"
-                    value="delete"
-                    label="Delete"
-                    {...register(`permission`)}
-                  />
+                  {accessArray && accessArray.length !== 0
+                    ? accessArray.map((role, i) => (
+                        <div>
+                          <CFormCheck
+                            id={`Access${i + 1}`}
+                            value={role}
+                            label={role}
+                            className="text-capitalize"
+                            {...register(`access`)}
+                          />
+                          {access &&
+                          access.length !== 0 &&
+                          access.includes(role) ? (
+                            <div>
+                              {itemsWithSubs.includes(role) ? (
+                                <div className="ps-3 pb-3">
+                                  <p className="fw-bolder">Permissions</p>
+                                  {itemsForAccess
+                                    .filter(
+                                      (item) =>
+                                        item.name.toLowerCase() === role,
+                                    )[0]
+                                    .items.map((item, i) => (
+                                      <CFormCheck
+                                        id={`"permission${i + 1}`}
+                                        value={item.name}
+                                        label={item.name}
+                                        className="text-capitalize"
+                                        {...register(`${role}.permission`)}
+                                      />
+                                    ))}
+                                </div>
+                              ) : null}
+                            </div>
+                          ) : null}
+                        </div>
+                      ))
+                    : null}
                 </div>
               </CCol>
             </CRow>
             <CRow xs={12} className="my-3">
               <CCol md={6}>
-                <CButton component="input" type="submit" value="Create role" />
+                <CButton
+                  component="input"
+                  type="submit"
+                  value="Create role"
+                  disabled={loading}
+                />
               </CCol>
             </CRow>
           </CForm>

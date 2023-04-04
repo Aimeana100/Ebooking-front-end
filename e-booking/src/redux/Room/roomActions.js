@@ -1,6 +1,7 @@
 //jshint esversion:9
 
 import { getData, postData, updateData } from 'src/API'
+import instance from 'src/API/AxiosInstance'
 import { ROOM_ACTION_TYPES } from './roomActionTypes'
 
 export const selectRoom = (payload) => {
@@ -29,7 +30,7 @@ export const getRooms = () => {
 }
 export const addRoom = (payload) => {
   return async function (dispatch) {
-    const res = await postData(`/rooms`, payload).catch((err) => {
+    const res = await instance.get(`/rooms`, payload).catch((err) => {
       console.log({ errMessage: err.message })
       dispatch({
         type: ROOM_ACTION_TYPES.ADD_ROOM,
@@ -43,15 +44,17 @@ export const addRoom = (payload) => {
 }
 export const bookRoom = (payload) => {
   return async function (dispatch) {
-    const res = await updateData(`/rooms/${payload.id}`, {
-      isBooked: true,
-    }).catch((err) => {
-      console.log({ errMessage: err.message })
-      dispatch({
-        type: ROOM_ACTION_TYPES.BOOK_ROOM,
-        payload: null,
+    const res = await instance
+      .put(`/rooms/${payload.id}`, {
+        isBooked: true,
       })
-    })
+      .catch((err) => {
+        console.log({ errMessage: err.message })
+        dispatch({
+          type: ROOM_ACTION_TYPES.BOOK_ROOM,
+          payload: null,
+        })
+      })
     if (res) {
       console.log(res.data.status)
     }
@@ -59,15 +62,17 @@ export const bookRoom = (payload) => {
 }
 export const releaseRoom = (payload) => {
   return async function (dispatch) {
-    const res = await updateData(`/rooms/${payload.id}`, {
-      isBooked: false,
-    }).catch((err) => {
-      console.log({ errMessage: err.message })
-      dispatch({
-        type: ROOM_ACTION_TYPES.RELEASE_ROOM,
-        payload: null,
+    const res = await instance
+      .put(`/rooms/${payload.id}`, {
+        isBooked: false,
       })
-    })
+      .catch((err) => {
+        console.log({ errMessage: err.message })
+        dispatch({
+          type: ROOM_ACTION_TYPES.RELEASE_ROOM,
+          payload: null,
+        })
+      })
     if (res) {
       console.log(res.data.status)
     }

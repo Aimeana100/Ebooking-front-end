@@ -1,8 +1,9 @@
 import { CCard, CCardBody, CImage, CRow } from '@coreui/react'
 import React from 'react'
 import { useSelector } from 'react-redux'
-import logo from '../../assets/images/olympic_hotel_logo.png'
+import logo from '../../../assets/images/olympic_hotel_logo.png'
 const PrintTemplate1 = React.forwardRef((props, ref) => {
+  const { title } = props
   const { firstName, lastName } = useSelector((state) => state.auth.user)
   const role = useSelector((state) => state.auth.role)
   return (
@@ -30,6 +31,8 @@ const PrintTemplate1 = React.forwardRef((props, ref) => {
             <p>TIN/VAT: 102556009</p>
           </div>
         </CRow>
+
+        <h2 className="text-center my-3">{title}</h2>
 
         <CCardBody>{props.children}</CCardBody>
         <div className="mt-2">

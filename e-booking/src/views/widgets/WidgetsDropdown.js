@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { CRow, CCol, CWidgetStatsF } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilUser, cilHome, cilHouse } from '@coreui/icons'
-import axios from 'axios'
+import instance from 'src/API/AxiosInstance'
+import { toast } from 'react-hot-toast'
 
 const WidgetsDropdown = () => {
   const [rooms, setRooms] = useState([])
@@ -12,68 +13,61 @@ const WidgetsDropdown = () => {
   let [customers, setCustomers] = useState([])
   useEffect(() => {
     const getCustomers = async () => {
-      const res = await axios
-        .get('http://206.81.29.111:80/api/v1/customers/all')
+      const res = await instance
+        .get('/customers/all')
         .then((res) => {
-          console.log(res.data)
           setCustomers(res.data.data)
         })
         .catch((err) => {
-          console.log('err getting halls')
+          toast.error(err.message)
         })
-      console.log('customers async to get halls')
     }
     const getRooms = async () => {
-      const res = await axios
-        .get('http://206.81.29.111:80/api/v1/room/all')
+      const res = await instance
+        .get('/room/all')
         .then((res) => {
-          console.log(res.data)
           setRooms(res.data.data)
         })
         .catch((err) => {
-          console.log('err getting rooms')
+          toast.error(err.message)
         })
     }
 
     const getHalls = async () => {
-      const res = await axios
-        .get('http://206.81.29.111:80/api/v1/halls/all')
+      const res = await instance
+        .get('/halls/all')
         .then((res) => {
-          console.log(res.data)
           setHalls(res.data.data)
         })
         .catch((err) => {
-          console.log('err getting halls')
+          toast.error(err.message)
         })
       console.log('halls async to get halls')
     }
     const getReservations = async () => {
-      const res = await axios
-        .get('http://206.81.29.111:80/api/v1/reservation/all')
+      const res = await instance
+        .get('/reservation/all')
         .then((res) => {
           setReservations(res.data.data)
-          console.log('All reservation', res.data.data)
         })
         .catch((err) => {
-          console.log('error getting reservations', err.message)
+          toast.error('error getting reservations', err.message)
         })
     }
 
     const getUsers = async () => {
-      const res = await axios
-        .get(`http://206.81.29.111:80/api/v1/users/all`)
+      const res = await instance
+        .get(`/users/all`)
         .then((res) => {
           setUsers(res.data.users)
         })
         .catch((err) => {
-          console.log('error getting users', { errMessage: err.message })
+          toast.error('error getting users', { errMessage: err.message })
         })
     }
 
     getUsers()
-
     getReservations()
-
     getHalls()
     getRooms()
     getCustomers()

@@ -4,6 +4,8 @@ import {
   CCardBody,
   CCardHeader,
   CCol,
+  CFormInput,
+  CFormLabel,
   CRow,
   CTable,
   CTableBody,
@@ -13,28 +15,36 @@ import {
   CTableRow,
 } from '@coreui/react'
 import { Link } from 'react-router-dom'
-import axios from 'axios'
 import { selectItem } from 'src/redux/Select/selectionActions'
 import { useDispatch } from 'react-redux'
-
+import instance from 'src/API/AxiosInstance'
+import { toast } from 'react-hot-toast'
+import { useForm } from 'react-hook-form'
+import CustomersTable from './CustomersTable'
 function Customers() {
+  const { watch, register } = useForm()
+  const query = watch('query') || ''
   const dispatch = useDispatch()
-  const [customers, setCustomers] = useState([])
+  let [customers, setCustomers] = useState([])
   useEffect(() => {
     const getCustomers = async () => {
-      const res = await axios
-        .get('http://206.81.29.111:80/api/v1/customers/all')
+      const res = await instance
+        .get('/customers/all')
         .then((res) => {
-          console.log(res.data)
           setCustomers(res.data.data)
         })
         .catch((err) => {
-          console.log('err getting halls')
+          toast.error(err.message)
         })
-      console.log('customers async to get halls')
     }
     getCustomers()
   }, [])
+
+  if (query && query !== '') {
+    customers = customers.filter((customer) =>
+      customer.names.toLowerCase().includes(query.toLowerCase()),
+    )
+  }
 
   return (
     <CRow>
@@ -44,6 +54,20 @@ function Customers() {
             <h2>
               <strong> Registered customers </strong>
             </h2>
+            <form className="col d-flex flex-wrap gap-2">
+              <div className="col-3">
+                <CFormLabel className="text-center">Search</CFormLabel>
+                <CFormInput
+                  className="mb-1"
+                  type="text"
+                  name="customerName"
+                  id="customerName"
+                  size="md"
+                  placeholder="by customer ..."
+                  {...register('query')}
+                />
+              </div>
+            </form>
           </CCardHeader>
           <CCardBody>
             <CTable bordered>
@@ -56,30 +80,7 @@ function Customers() {
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {customers && customers.length !== 0
-                  ? customers.map((customer, i) => {
-                      return (
-                        <CTableRow key={customer.id}>
-                          <CTableHeaderCell scope="row">
-                            {i + 1}
-                          </CTableHeaderCell>
-                          <CTableDataCell>{`${customer.names}`}</CTableDataCell>
-                          <CTableDataCell>{`${customer.identification}`}</CTableDataCell>
-                          <CTableDataCell>
-                            {' '}
-                            <Link
-                              to="/customers/info"
-                              onClick={() => {
-                                return dispatch(selectItem(customer))
-                              }}
-                            >
-                              view
-                            </Link>{' '}
-                          </CTableDataCell>
-                        </CTableRow>
-                      )
-                    })
-                  : null}
+                <CustomersTable customers={customers} />
               </CTableBody>
             </CTable>
           </CCardBody>

@@ -13,7 +13,7 @@ import { useForm } from 'react-hook-form'
 import { useSelector } from 'react-redux'
 
 import ReactToPrint from 'react-to-print'
-import PrintTemplate1 from '../PrintTemplate1'
+import PrintTemplate1 from '../Printing/PrintTemplate1'
 
 const ReservationReceipt = (props) => {
   const { register, handleSubmit, watch, reset } = useForm()
@@ -74,11 +74,21 @@ const ReservationReceipt = (props) => {
                   Reservation details
                 </CFormLabel>
                 <div>
-                  <p className="font-weight-bold">
-                    {reservation.Room
-                      ? 'Room : ' + reservation.Room.name
-                      : 'Hall : ' + reservation.Hall.name}
-                  </p>
+                  {reservation.Customer.customerType === 'company' ? (
+                    <div>
+                      {Object.keys(reservation.details).map((e) => (
+                        <p>
+                          {e} rooms : {reservation.details[e].people}
+                        </p>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="font-weight-bold">
+                      {reservation.Room
+                        ? 'Room : ' + reservation.Room.name
+                        : 'Hall : ' + reservation.Hall.name}
+                    </p>
+                  )}
 
                   <p className="font-weight-bold">
                     Check in : {new Date(reservation.checkIn).toLocaleString()}
@@ -88,14 +98,36 @@ const ReservationReceipt = (props) => {
                     {new Date(reservation.checkOut).toLocaleString()}
                   </p>
                   <p className="font-weight-bold">
-                    Total : {Number(reservation.amount)}
+                    Total :{' '}
+                    {Object.keys(reservation.amount).map((curr) => (
+                      <p>
+                        {curr} :{' '}
+                        {Number(
+                          Math.ceil(reservation.amount[curr]),
+                        ).toLocaleString()}
+                      </p>
+                    ))}
                   </p>
                   <p className="font-weight-bold">
-                    Paid : {Number(reservation.payment)}
+                    Paid :{' '}
+                    {Object.keys(reservation.payment).map((curr) => (
+                      <p>
+                        {curr} :{' '}
+                        {Number(
+                          Math.ceil(Number(reservation.payment[curr])),
+                        ).toLocaleString()}
+                      </p>
+                    ))}
                   </p>
                   <p className="font-weight-bold">
                     Debt :{' '}
-                    {Number(reservation.amount) - Number(reservation.payment)}
+                    {Number(
+                      Math.ceil(
+                        Number(reservation.amount['RWF']) -
+                          Number(reservation.payment['RWF']),
+                      ),
+                    ).toLocaleString()}{' '}
+                    RWF
                   </p>
                 </div>
               </CCol>
@@ -121,10 +153,11 @@ const ReservationView = React.forwardRef((props, ref) => {
                 <strong>
                   {' '}
                   Reservation by {' ' + reservation.Customer.names + ' '}
-                  for{' '}
-                  {reservation.Room
-                    ? reservation.Room.name
-                    : reservation.Hall.name}
+                  {reservation.Customer.customerType !== 'company'
+                    ? reservation.Room
+                      ? reservation.Room.name
+                      : reservation.Hall.name
+                    : null}
                 </strong>
               </h5>
               <div>
@@ -139,7 +172,7 @@ const ReservationView = React.forwardRef((props, ref) => {
           </CCardHeader>
         </CCard>
         <div style={{ display: 'none' }}>
-          <PrintTemplate1 ref={ref || componentRef}>
+          <PrintTemplate1 ref={ref || componentRef} title={`Reservation`}>
             <ReservationReceipt reservation={reservation} />
           </PrintTemplate1>
         </div>

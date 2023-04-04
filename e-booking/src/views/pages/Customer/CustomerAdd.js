@@ -12,14 +12,12 @@ import {
   CFormSelect,
   CRow,
 } from '@coreui/react'
-import { useDispatch, useSelector } from 'react-redux'
-import axios from 'axios'
-import { success } from 'src/redux/Notifications/notificationActions'
+import { useSelector } from 'react-redux'
 import { toast } from 'react-hot-toast'
+import instance from 'src/API/AxiosInstance'
 
 function CustomerAdd() {
   let loggedInUser = useSelector((state) => state.auth.user.Role.name)
-  const dispatch = useDispatch()
   const { register, handleSubmit, watch, reset } = useForm()
   const customerType = watch('customerType') || 'individual'
 
@@ -27,16 +25,14 @@ function CustomerAdd() {
     if (customerType && customerType === 'company') {
       delete data['gender']
     }
-    const res = await axios
-      .post('http://206.81.29.111:80/api/v1/customers/add', data)
+    const res = await instance
+      .post('/customers/add', data)
       .then((res) => {
-        console.log(res.data)
         toast.success('customer created')
       })
       .catch((err) => {
         toast.error('customer creation failed')
       })
-    console.log(data)
     reset()
   }
   return (

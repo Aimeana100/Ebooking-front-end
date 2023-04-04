@@ -15,8 +15,9 @@ import {
 } from '@coreui/react'
 import { useForm } from 'react-hook-form'
 import { useSelector, useDispatch } from 'react-redux'
-import axios, { all } from 'axios'
 import { createProduct } from 'src/redux/Product/productActions'
+import instance from 'src/API/AxiosInstance'
+import { toast } from 'react-hot-toast'
 
 const ProductAdd = () => {
   const [success, setSuccess] = useState(false)
@@ -75,42 +76,48 @@ const ProductAdd = () => {
   //           : null
   //       )
   //     : null;
-  console.log('this is trhe role', role)
+  console.log('this is the role', role)
   console.log(category)
   console.log(allDataPackages)
   console.log(allDataCategories)
 
   useEffect(() => {
     const getAllPacks = async () => {
-      const res = await axios
-        .get('http://206.81.29.111:80/api/v1/packages/all')
-        .catch((err) => {
-          console.log('error getting packages')
+      const res = await instance
+        .get('/packages/all')
+        .then((res) => {
+          if (res.status === 200) {
+            setAllDataPackages(res.data.data)
+          }
         })
-      if (res.status === 200) {
-        setAllDataPackages(res.data.data)
-      }
+        .catch((err) => {
+          toast.error(err.message)
+        })
     }
     const getAllCategories = async () => {
-      const res = await axios
-        .get('http://206.81.29.111:80/api/v1/products/category/all')
+      const res = await instance
+        .get('/products/category/all')
+        .then((res) => {
+          if (res.status === 200) {
+            setAllDataCategories(res.data.data)
+          }
+        })
         .catch((err) => {
           console.log('error getting categories')
         })
-      if (res.status === 200) {
-        setAllDataCategories(res.data.data)
-      }
     }
     const getAllProducts = async () => {
-      const res = await axios
-        .get('http://206.81.29.111:80/api/v1/products/all')
-        .catch((err) => {
-          console.log('error getting all products')
+      const res = await instance
+        .get('/products/all')
+        .then((res) => {
+          if (res.status === 200) {
+            setAllProducts(res.data.data)
+            setSuccess(true)
+          }
         })
-      if (res.status === 200) {
-        setAllProducts(res.data.data)
-        setSuccess(true)
-      }
+        .catch((err) => {
+          toast.error(err.message)
+        })
     }
     getAllCategories()
     getAllPacks()
@@ -177,7 +184,6 @@ const ProductAdd = () => {
                       value=" Save product details"
                     />
                   </CCol>
-
                   <CCol>
                     {category && category !== '-- Select -- '
                       ? allDataPackages.map((packageSet) =>

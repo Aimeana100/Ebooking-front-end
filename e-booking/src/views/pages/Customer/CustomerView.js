@@ -23,6 +23,7 @@ import { useSelector } from 'react-redux'
 function CustomerView() {
   const selectedCustomer =
     useSelector((state) => state.selection.selected) || {}
+  console.log(selectedCustomer)
   const onSubmit = (data) => {
     console.log(data)
 
@@ -64,6 +65,8 @@ function CustomerView() {
                       <CTableHeaderCell scope="col">Name</CTableHeaderCell>
                       <CTableHeaderCell scope="col"> Dates </CTableHeaderCell>
                       <CTableHeaderCell scope="col"> Status </CTableHeaderCell>
+                      <CTableHeaderCell scope="col"> Payment </CTableHeaderCell>
+                      <CTableHeaderCell scope="col"> Amount </CTableHeaderCell>
                     </CTableRow>
                   </CTableHead>
                   <CTableBody>
@@ -75,11 +78,32 @@ function CustomerView() {
                               <CTableHeaderCell scope="row">
                                 {i + 1}
                               </CTableHeaderCell>
-                              <CTableDataCell>{`${
-                                reservation.Hall
-                                  ? reservation.Hall.name
-                                  : reservation.Room.name
-                              }`}</CTableDataCell>
+
+                              {selectedCustomer.customerType === 'company' ? (
+                                <CTableDataCell>
+                                  {reservation.details
+                                    ? Object.keys(reservation.details).map(
+                                        (detail, i) => (
+                                          <div key={i}>
+                                            <p>
+                                              {detail} rooms :{' '}
+                                              {
+                                                reservation.details[detail]
+                                                  .people
+                                              }{' '}
+                                            </p>
+                                          </div>
+                                        ),
+                                      )
+                                    : reservation.Hall.name}
+                                </CTableDataCell>
+                              ) : (
+                                <CTableDataCell>{`${
+                                  reservation.Hall
+                                    ? reservation.Hall.name
+                                    : reservation.Room.name
+                                }`}</CTableDataCell>
+                              )}
                               <CTableDataCell>
                                 {`${
                                   reservation
@@ -94,16 +118,31 @@ function CustomerView() {
                                 }`}
                               </CTableDataCell>
                               <CTableDataCell>
-                                {Number(reservation.payment) &&
-                                Number(reservation.amount)
-                                  ? Number(reservation.payment) <
-                                    Number(reservation.amount)
-                                    ? `Debt of ${
-                                        Number(reservation.amount) -
-                                        Number(reservation.payment)
-                                      } USD`
+                                {Number(reservation.payment['RWF']) &&
+                                Number(reservation.amount['RWF'])
+                                  ? Number(reservation.payment['RWF']) <
+                                    Number(reservation.amount['RWF'])
+                                    ? `Debt of ${Number(
+                                        Math.ceil(
+                                          Number(reservation.amount['RWF']) -
+                                            Number(reservation.payment['RWF']),
+                                        ),
+                                      ).toLocaleString()} 
+                                     RWF`
                                     : 'Completed'
                                   : ''}
+                              </CTableDataCell>
+                              <CTableDataCell>
+                                {Number(
+                                  Math.ceil(Number(reservation.payment['RWF'])),
+                                ).toLocaleString()}
+                                {' RWF'}
+                              </CTableDataCell>
+                              <CTableDataCell>
+                                {Number(
+                                  Math.ceil(Number(reservation.amount['RWF'])),
+                                ).toLocaleString()}
+                                {' RWF'}
                               </CTableDataCell>
                             </CTableRow>
                           )

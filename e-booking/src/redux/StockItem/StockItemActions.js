@@ -1,50 +1,68 @@
 //jshint esversion:9
 
-import { getData, postData, updateData, getDataEndPoint } from 'src/API'
+import axios from 'axios'
+import { toast } from 'react-hot-toast'
+import { getData, postData, getDataEndPoint } from 'src/API'
+import instance from 'src/API/AxiosInstance'
 import { STOCK_ITEM_ACTIONS_TYPES } from './StockItemActionTypes'
+
+const baseUrlLive = 'http://206.81.29.111:80/api/v1'
 
 export const getStockItems = () => {
   return async function (dispatch) {
-    let res = await getDataEndPoint('stock/item/all').catch((err) => {
-      console.log({ errorMessage: err.message, customMessage: 'error fetching stock items' })
-      dispatch({
-        type: STOCK_ITEM_ACTIONS_TYPES.GET_ITEMS,
-        payload: [],
+    let res = await instance
+      .get('stock/item/all')
+      .then((res) => {
+        dispatch({
+          type: STOCK_ITEM_ACTIONS_TYPES.GET_ITEMS,
+          payload: res.data.data,
+        })
       })
-      // console.log(res)
-    })
-    if (res) {
-      console.log(res)
-      dispatch({
-        type: STOCK_ITEM_ACTIONS_TYPES.GET_ITEMS,
-        payload: res.data,
+      .catch((err) => {
+        console.log({
+          errorMessage: err.message,
+          customMessage: 'error fetching stock items',
+        })
+        dispatch({
+          type: STOCK_ITEM_ACTIONS_TYPES.GET_ITEMS,
+          payload: [],
+        })
+
+        toast.error(err.message)
       })
-    }
   }
 }
 export const addStockItem = (payload) => {
+  console.log('ITEM ADD', payload)
   return async function (dispatch) {
-    const res = await postData(`stock/item/add`, payload).catch((err) => {
-      console.log({ errMessage: err.message })
-      dispatch({
-        type: STOCK_ITEM_ACTIONS_TYPES.CREATE_ITEMS,
-        payload,
+    const res = await instance
+      .post(`/stock/item/add`, payload)
+      .then((res) => {
+        dispatch({
+          type: STOCK_ITEM_ACTIONS_TYPES.CREATE_ITEMS,
+          payload,
+        })
+
+        toast.success('Item added to stock')
       })
-    })
-    if (res) {
-      dispatch(addStockItem(payload))
-    }
+      .catch((err) => {
+        console.log({ errMessage: err.message })
+      })
   }
 }
 export const bookRoom = (payload) => {
   return async function (dispatch) {
-    const res = await updateData(`/rooms/${payload.id}`, { isBooked: true }).catch((err) => {
-      console.log({ errMessage: err.message })
-      dispatch({
-        type: STOCK_ITEM_ACTIONS_TYPES.BOOK_ROOM,
-        payload: null,
+    const res = await instance
+      .put(`/rooms/${payload.id}`, {
+        isBooked: true,
       })
-    })
+      .catch((err) => {
+        console.log({ errMessage: err.message })
+        dispatch({
+          type: STOCK_ITEM_ACTIONS_TYPES.BOOK_ROOM,
+          payload: null,
+        })
+      })
     if (res) {
       console.log(res.data.status)
     }
@@ -52,13 +70,17 @@ export const bookRoom = (payload) => {
 }
 export const releaseRoom = (payload) => {
   return async function (dispatch) {
-    const res = await updateData(`/rooms/${payload.id}`, { isBooked: false }).catch((err) => {
-      console.log({ errMessage: err.message })
-      dispatch({
-        type: STOCK_ITEM_ACTIONS_TYPES.RELEASE_ROOM,
-        payload: null,
+    const res = await instance
+      .put(`/rooms/${payload.id}`, {
+        isBooked: false,
       })
-    })
+      .catch((err) => {
+        console.log({ errMessage: err.message })
+        dispatch({
+          type: STOCK_ITEM_ACTIONS_TYPES.RELEASE_ROOM,
+          payload: null,
+        })
+      })
     if (res) {
       console.log(res.data.status)
     }

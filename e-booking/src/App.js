@@ -4,7 +4,7 @@ import toast, { Toaster } from 'react-hot-toast'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import './scss/style.scss'
 import { getRoles } from './redux/Roles/RolesActions'
-
+import Cookies from 'js-cookie'
 const loading = (
   <div className="pt-3 text-center">
     <div className="sk-spinner sk-spinner-pulse"></div>
@@ -35,7 +35,7 @@ function App() {
     }
   }, [])
   console.log('App component', isAuth)
-
+  console.log(Cookies)
   return (
     <BrowserRouter>
       <Suspense fallback={loading}>

@@ -14,13 +14,13 @@ import {
   CFormCheck,
 } from '@coreui/react'
 import { useForm } from 'react-hook-form'
-import { useSelector, useDispatch } from 'react-redux'
-import axios from 'axios'
+import { useSelector } from 'react-redux'
+import instance from 'src/API/AxiosInstance'
+import { toast } from 'react-hot-toast'
 
 const ServiceAdd = () => {
   const { register, handleSubmit, watch, reset } = useForm()
   const role = useSelector((state) => state.auth.user.role) || ''
-  const dispatch = useDispatch()
   const [categories, setCategories] = useState([
     { name: 'Sauna', id: 5001209 },
     { name: 'Gym', id: 69560 },
@@ -30,211 +30,115 @@ const ServiceAdd = () => {
   const price = watch('price', '---')
   console.log(role)
   const onSubmit = async (data) => {
-    const res = await axios
-      .post('http://206.81.29.111:80/api/v1/services/add', data)
+    const res = await instance
+      .post('/services/add', data)
       .then((res) => {
-        console.log(res.data)
+        toast.success('service added')
       })
       .catch((err) => {
-        console.log('error adding service', err.message)
+        toast.error(err.message)
       })
   }
   const onManagerSubmit = async (data) => {
-    const res = await axios
-      .post('http://206.81.29.111:80/api/v1/services/add', data)
+    const res = await instance
+      .post('/services/add', data)
       .then((res) => {
         console.log(res.data)
+        toast.success('service created, price to added by admin')
       })
       .catch((err) => {
-        console.log('error adding service', err.message)
+        toast.error(err.message)
       })
   }
   useEffect(() => {
     const getServiceCategories = async () => {
-      const res = await axios
-        .get('http://206.81.29.111:80/api/v1/services/category/all')
+      const res = await instance
+        .get('/services/category/all')
         .then((res) => {
           setCategories(res.data.data)
         })
         .catch((err) => {
-          console.log('error getting categories')
+          toast.error(err.message)
         })
     }
     getServiceCategories()
   }, [])
-
-  if (role === 'admin') {
-    return (
-      <>
-        <CRow>
-          <CCol xs={12}>
-            <CCard className="mb-4">
-              <CCardHeader>
-                <h2 className="text-center">
-                  <strong> Add Service </strong>
-                </h2>
-              </CCardHeader>
-              <CCardBody>
-                <CForm
-                  className="row"
-                  name="roomClassAddFrm"
-                  encType="multipart/form"
-                  onSubmit={handleSubmit(onSubmit)}
-                >
-                  <CCol md={6}>
-                    <CFormLabel htmlFor="category"> Select service</CFormLabel>
-                    <CFormSelect
-                      name="category"
-                      id="category"
-                      size="md"
-                      className="mb-3"
-                      aria-label="Room class"
-                      {...register('category', { required: true })}
-                    >
-                      <option>-- Select -- </option>
-                      {categories && categories.length !== 0
-                        ? categories.map((category) => (
-                            <option value={category.id} key={category.id}>
-                              {category.name}
-                            </option>
-                          ))
-                        : null}
-                    </CFormSelect>
-                  </CCol>
-                  <CCol md={6}>
-                    <CFormLabel htmlFor="title"> Service title </CFormLabel>
-                    <CFormInput
-                      className="mb-1"
-                      type="text"
-                      name="title"
-                      id="title"
-                      size="md"
-                      required
-                      {...register('name')}
-                    />
-                  </CCol>
-
-                  <CCol xs={12} className="text-center my-3">
-                    <CButton
-                      component="input"
-                      type="submit"
-                      value=" Save product details"
-                    />
-                  </CCol>
-
-                  <CCol>
-                    {category && category !== '---'
-                      ? categories.map((cat) =>
-                          cat.id == category ? (
-                            <div>
-                              <CCol md={6}>
-                                <CFormLabel
-                                  htmlFor="price1"
-                                  className="col-form-label"
-                                >
-                                  Set price for
-                                  <span className="strong"> {cat.name} </span>
-                                  package
-                                </CFormLabel>
-                              </CCol>
-                              <CCol md="6">
-                                <CFormInput
-                                  type="Number"
-                                  min="1"
-                                  id="price1"
-                                  aria-describedby={cat.name}
-                                  {...register('price', {
-                                    required: true,
-                                  })}
-                                />
-                              </CCol>
-                            </div>
-                          ) : null,
-                        )
+  return (
+    <div>
+      <CRow>
+        <CCol xs={12}>
+          <CCard className="mb-4">
+            <CCardHeader>
+              <h2 className="text-center">
+                <strong> Add Service </strong>
+              </h2>
+            </CCardHeader>
+            <CCardBody>
+              <CForm
+                className="row"
+                name="roomClassAddFrm"
+                encType="multipart/form"
+                onSubmit={handleSubmit(onSubmit)}
+              >
+                <CCol md={6}>
+                  <CFormLabel htmlFor="category"> Select service</CFormLabel>
+                  <CFormSelect
+                    name="category"
+                    id="category"
+                    size="md"
+                    className="mb-3"
+                    aria-label="Room class"
+                    {...register('category', { required: true })}
+                  >
+                    <option>-- Select -- </option>
+                    {categories && categories.length !== 0
+                      ? categories.map((category) => (
+                          <option value={category.id} key={category.id}>
+                            {category.name}
+                          </option>
+                        ))
                       : null}
-                    {price && price !== '---' ? (
-                      <CCol xs={12} className="text-center my-3">
-                        <CButton
-                          component="input"
-                          type="submit"
-                          value=" Save product"
-                        />
-                      </CCol>
-                    ) : null}
-                  </CCol>
-                </CForm>
-              </CCardBody>
-            </CCard>
-          </CCol>
-        </CRow>
-      </>
-    )
-  } else {
-    return (
-      <>
-        <CRow>
-          <CCol xs={12}>
-            <CCard className="mb-4">
-              <CCardHeader>
-                <h2 className="text-center">
-                  <strong> Add Service </strong>
-                </h2>
-              </CCardHeader>
-              <CCardBody>
-                <CForm
-                  className="row"
-                  name="roomClassAddFrm"
-                  encType="multipart/form"
-                  onSubmit={handleSubmit(onManagerSubmit)}
-                >
-                  <CCol md={6}>
-                    <CFormLabel htmlFor="category"> Select service</CFormLabel>
-                    <CFormSelect
-                      name="category"
-                      id="category"
-                      size="md"
-                      className="mb-3"
-                      aria-label="Room class"
-                      {...register('category', { required: true })}
-                    >
-                      <option>-- Select -- </option>
-                      {categories && categories.length !== 0
-                        ? categories.map((category) => (
-                            <option value={category.id} key={category.id}>
-                              {category.name}
-                            </option>
-                          ))
-                        : null}
-                    </CFormSelect>
-                  </CCol>
-                  <CCol md={6}>
-                    <CFormLabel htmlFor="title"> Service title </CFormLabel>
-                    <CFormInput
-                      className="mb-1"
-                      type="text"
-                      name="title"
-                      id="title"
-                      size="md"
-                      required
-                      {...register('name')}
-                    />
-                  </CCol>
+                  </CFormSelect>
+                </CCol>
+                <CCol md={6}>
+                  <CFormLabel htmlFor="title"> Service title </CFormLabel>
+                  <CFormInput
+                    className="mb-1"
+                    type="text"
+                    name="title"
+                    id="title"
+                    size="md"
+                    required
+                    {...register('name')}
+                  />
+                </CCol>
+                <CCol md={6}>
+                  <CFormLabel htmlFor="title"> Price </CFormLabel>
+                  <CFormInput
+                    className="mb-1"
+                    type="text"
+                    name="price"
+                    id="title"
+                    size="md"
+                    required
+                    {...register('price')}
+                  />
+                </CCol>
 
-                  <CCol xs={12} className="text-center my-3">
-                    <CButton
-                      component="input"
-                      type="submit"
-                      value=" Save product details"
-                    />
-                  </CCol>
-                </CForm>
-              </CCardBody>
-            </CCard>
-          </CCol>
-        </CRow>
-      </>
-    )
-  }
+                <CCol xs={12} className="text-center my-3">
+                  <CButton
+                    component="input"
+                    type="submit"
+                    value="Add Service"
+                  />
+                </CCol>
+              </CForm>
+            </CCardBody>
+          </CCard>
+        </CCol>
+      </CRow>
+    </div>
+  )
 }
 
 export default ServiceAdd

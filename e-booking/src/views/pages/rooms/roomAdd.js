@@ -13,45 +13,36 @@ import {
   CFormTextarea,
   CRow,
 } from '@coreui/react'
-import { addRoom } from 'src/redux/Room/roomActions'
-import axios from 'axios'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { toast } from 'react-hot-toast'
+import instance from 'src/API/AxiosInstance'
+
 const FormControl = () => {
   let loggedInUser = useSelector((state) => state.auth.user.Role.name)
   const { register, handleSubmit, watch, reset } = useForm()
   const [roomClasses, setRoomClasses] = useState([])
-  const [formState, setFormState] = useState({})
-  const [rooms, setRooms] = useState([])
-  const dispatch = useDispatch()
-  const handleChange = (event) => {
-    event.preventDefault()
-    setFormState({ ...formState, [event.target.name]: event.target.value })
-  }
 
   const onSubmit = async (data) => {
-    const res = await axios
-      .post('http://206.81.29.111:80/api/v1/room/add', data)
+    const res = await instance
+      .post('/room/add', data)
       .then((res) => {
-        console.log(res.data)
         toast.success('Room created')
       })
       .catch((err) => {
-        console.log('err creating room room', err.message)
+        toast.error(err.message)
         toast.error('Room  create failed')
       })
     reset()
   }
   useEffect(() => {
     const getRoomClasses = async () => {
-      const res = await axios
-        .get('http://206.81.29.111:80/api/v1/roomclass/all')
+      const res = await instance
+        .get('/roomclass/all')
         .then((res) => {
-          console.log(res.data)
           setRoomClasses(res.data.data)
         })
         .catch((err) => {
-          console.log('err getting room classes')
+          toast.error(err.message)
         })
     }
     getRoomClasses()

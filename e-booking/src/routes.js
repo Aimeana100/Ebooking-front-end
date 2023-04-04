@@ -9,6 +9,12 @@ const Cards = React.lazy(() => import('./views/base/cards/Cards'))
 const addRoomClass = React.lazy(() =>
   import('./views/pages/roomClass/RoomClassAdd'),
 )
+const RoomClasses = React.lazy(() =>
+  import('./views/pages/roomClass/RoomClasses'),
+)
+const RoomClassEdit = React.lazy(() =>
+  import('./views/pages/roomClass/RoomClassEdit.js'),
+)
 
 //roomms
 const addRoom = React.lazy(() => import('./views/pages/rooms/roomAdd'))
@@ -34,8 +40,8 @@ const HallServices = React.lazy(() =>
 const ReservationAdd = React.lazy(() =>
   import('./views/pages/reservation/ReservationAdd'),
 )
-const Reservation = React.lazy(() =>
-  import('./views/pages/reservation/Reservation'),
+const Reservations = React.lazy(() =>
+  import('./views/pages/reservation/Reservations'),
 )
 
 const ReservationView = React.lazy(() =>
@@ -50,6 +56,31 @@ const UserEditRolesAdd = React.lazy(() =>
 )
 const UserRolesEdit = React.lazy(() =>
   import('./views/pages/users/UserRolesEdit'),
+)
+
+//Bar
+
+const AllBarItems = React.lazy(() => import('./views/pages/Bar/AllBarItems'))
+const RequestBarItem = React.lazy(() =>
+  import('./views/pages/Bar/RequestBarItem'),
+)
+const AddBarItem = React.lazy(() => import('./views/pages/Bar/AddBarItem'))
+const AllBarRequest = React.lazy(() =>
+  import('./views/pages/Bar/AllBarRequest'),
+)
+
+//sauna
+const AllSaunaItems = React.lazy(() =>
+  import('./views/pages/Sauna/AllSaunaItems'),
+)
+const RequestSaunaItem = React.lazy(() =>
+  import('./views/pages/Sauna/RequestSaunaItem'),
+)
+const AddSaunaItem = React.lazy(() =>
+  import('./views/pages/Sauna/AddSaunaItem'),
+)
+const AllSaunaRequest = React.lazy(() =>
+  import('./views/pages/Sauna/AllSaunaRequest'),
 )
 
 // products
@@ -78,9 +109,29 @@ const ServiceEdit = React.lazy(() =>
   import('./views/pages/services/ServiceEdit.js'),
 )
 
-// stock
+//requests
+const RequestToCashier = React.lazy(() =>
+  import('./views/pages/Requests/RequestToCashier'),
+)
+const RequestToStock = React.lazy(() =>
+  import('./views/pages/Requests/RequestToStock'),
+)
+//stock
+
+const AddStock = React.lazy(() => import('./views/pages/stock/AddStock'))
+const ReceiveVouchers = React.lazy(() =>
+  import('./views/pages/stock/ReceiveVouchers'),
+)
+const AvailableStock = React.lazy(() =>
+  import('./views/pages/stock/AvailableStock'),
+)
+
+// stock-item
 const StockItemAdd = React.lazy(() =>
   import('./views/pages/stockItems/StockItemAdd'),
+)
+const StockItems = React.lazy(() =>
+  import('./views/pages/stockItems/StockItems'),
 )
 // customers
 
@@ -122,8 +173,20 @@ const routes = [
   {
     path: 'booking/rooms/class/add',
     exact: true,
-    name: 'Add room',
+    name: 'Add room class',
     element: addRoomClass,
+  },
+  {
+    path: 'booking/rooms/class/all',
+    exact: true,
+    name: 'All room class',
+    element: RoomClasses,
+  },
+  {
+    path: 'booking/rooms/class/edit',
+    exact: true,
+    name: 'All room class',
+    element: RoomClassEdit,
   },
   {
     path: 'booking/halls/',
@@ -197,7 +260,7 @@ const routes = [
     path: '/booking/reservations/all',
     exact: true,
     name: 'All Reservation',
-    element: Reservation,
+    element: Reservations,
   },
   {
     path: '/booking/rooms/available',
@@ -211,7 +274,7 @@ const routes = [
     exact: true,
     name: 'Free rooms',
     keyword: 'available',
-    element: Reservation,
+    element: Reservations,
   },
   {
     path: '/booking/rooms/occupied',
@@ -251,6 +314,54 @@ const routes = [
     element: UserRolesEdit,
   },
   { path: '/booking/users', exact: true, name: 'User', element: Users },
+  {
+    path: '/booking/bar/add',
+    exact: true,
+    name: 'Add Bar Item',
+    element: AddBarItem,
+  },
+  {
+    path: '/booking/bar/all',
+    exact: true,
+    name: 'All Bar items',
+    element: AllBarItems,
+  },
+  {
+    path: '/booking/bar/request',
+    exact: true,
+    name: 'Request Bar Item',
+    element: RequestBarItem,
+  },
+  {
+    path: '/booking/bar/request/all',
+    exact: true,
+    name: 'All Bar Requests',
+    element: AllBarRequest,
+  },
+  {
+    path: '/booking/sauna/add',
+    exact: true,
+    name: 'Add Bar Item',
+    element: AddSaunaItem,
+  },
+  {
+    path: '/booking/sauna/all',
+    exact: true,
+    name: 'All Bar items',
+    element: AllSaunaItems,
+  },
+  {
+    path: '/booking/sauna/request',
+    exact: true,
+    name: 'Request Bar Item',
+    element: RequestSaunaItem,
+  },
+  {
+    path: '/booking/sauna/request/all',
+    exact: true,
+    name: 'All Bar Requests',
+    element: AllSaunaRequest,
+  },
   {
     path: '/booking/products/sell',
     exact: true,
@@ -301,10 +412,47 @@ const routes = [
     element: Services,
   },
   {
+    path: '/booking/stock/add',
+    exact: true,
+    name: 'Stock Items',
+    element: AddStock,
+  },
+  {
+    path: '/booking/stock/available',
+    exact: true,
+    name: 'Stock Items',
+    element: AvailableStock,
+  },
+  {
     path: '/booking/stock/item/add',
     exact: true,
     name: 'Stock Items',
     element: StockItemAdd,
+  },
+
+  {
+    path: '/booking/stock/items',
+    exact: true,
+    name: 'Stock Items',
+    element: StockItems,
+  },
+  {
+    path: '/booking/stock/received',
+    exact: true,
+    name: 'Stock Items',
+    element: ReceiveVouchers,
+  },
+  {
+    path: '/booking/requests/cashier',
+    exact: true,
+    name: 'Cashier request',
+    element: RequestToCashier,
+  },
+  {
+    path: '/booking/requests/stock',
+    exact: true,
+    name: 'Stock request',
+    element: RequestToStock,
   },
   {
     path: '/customers',

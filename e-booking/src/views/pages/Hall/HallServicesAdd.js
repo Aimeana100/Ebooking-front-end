@@ -10,23 +10,25 @@ import {
   CFormTextarea,
   CRow,
 } from '@coreui/react'
-import axios from 'axios'
+
 import React from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'react-hot-toast'
 import { useSelector } from 'react-redux'
+import instance from 'src/API/AxiosInstance'
 
 function HallServicesAdd() {
   let loggedInUser = useSelector((state) => state.auth.role)
   const { register, handleSubmit, reset } = useForm()
   const onSubmit = async (data) => {
     console.log(data)
-    const res = await axios
-      .post('http://206.81.29.111:80/api/v1/hall/services/add', data)
+    const res = await instance
+      .post('/hall/services/add', data)
       .then((res) => {
-        console.log(res.data)
+        toast.success('hall service create')
       })
       .catch((err) => {
-        console.log('err creating Hall product', err.message)
+        toast.error(err.message)
       })
     reset()
   }
@@ -85,7 +87,7 @@ function HallServicesAdd() {
                       : ''
                   }`}
                   type="submit"
-                  value="Add Hall"
+                  value="Add Hall Service"
                 />
               </CCol>
             </CForm>

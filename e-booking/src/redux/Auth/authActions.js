@@ -1,13 +1,7 @@
-import { api, getData } from 'src/API/'
 import { IS_AUTH } from './AuthActionTypes'
-import { errorFunction } from '../errorFunction'
-import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-hot-toast'
-
-const baseUrl = 'http://localhost:5000/api/v1/'
-//const baseUrl = 'http://206.81.29.111/api/v1';
-const baseUrlLive = 'http://206.81.29.111:80/api/v1'
+import instance from 'src/API/AxiosInstance'
+//import axios from 'axios'
 
 export const auth = function (payload) {
   return {
@@ -17,8 +11,24 @@ export const auth = function (payload) {
 }
 export const login = function (payload) {
   return async function (dispatch) {
-    const res1 = await axios
-      .post(`${baseUrl}users/login`, payload)
+    const res1 = await instance
+      .post(`/login`, payload)
+      .then((res1) => {
+        console.log('RES1 ---RES1', res1)
+        dispatch({
+          type: IS_AUTH.LOGIN,
+          payload: {
+            isAuth: true,
+            jwt: res1.data.accessToken,
+            user: res1.data.user,
+            role: res1.data.user.Role.name,
+            access: res1.data.user.Role.access,
+            permission: res1.data.user.Role.permission,
+          },
+        })
+        toast.success('User Logged in')
+        localStorage.setItem('token', res1.data.accessToken)
+      })
       .catch((err) => {
         toast.error(err.message)
         console.log({ err })
@@ -30,53 +40,29 @@ export const login = function (payload) {
           },
         })
       })
-
-    dispatch({
-      type: IS_AUTH.LOGIN,
-      payload: {
-        isAuth: true,
-        jwt: res1.data.accessToken,
-        user: res1.data.user,
-        role: res1.data.user.Role.name,
-        access: res1.data.user.Role.access,
-        permission: res1.data.user.Role.permission,
-      },
-    })
-    toast.success('User Logged in')
-    // dispatch({
-    //   type: IS_AUTH.LOGIN,
-    //   payload: {
-    //     isAuth: true,
-    //     jwt: res1.data.accessToken,
-    //     user: res1.data.user,
-    //     role: res1.data.user.Role.name,
-    //   },
-    // });
   }
 }
 export const registerUser = function (payload) {
   //payload.role = Number(payload.role);
   console.log(payload)
   return async function (dispatch) {
-    const res = await axios
-      .post(`${baseUrl}users/register`, payload)
+    const res = await instance
+      .post(`users/add`, payload)
+      .then((res) => {
+        if (res.data.user) {
+          dispatch({
+            type: IS_AUTH.REGISTER,
+            payload: {
+              isAuth: true,
+              status: res.status,
+            },
+          })
+          toast.success('User created')
+        }
+      })
       .catch((err) => {
-        errorFunction(dispatch, err)
+        toast.error(err.message)
       })
-    if (res.data.user) {
-      dispatch({
-        type: IS_AUTH.REGISTER,
-        payload: {
-          isAuth: true,
-          status: res.status,
-        },
-      })
-      toast.success('User created')
-      dispatch({
-        type: notificationTypes.SUCCESS,
-        payload: { text: 'User added successfuly', color: 'primary' },
-      })
-    }
   }
 }
 
@@ -87,18 +73,21 @@ export const logout = function () {
     isAuth: false,
   }
 }
-//206.81.29.111/api/v1/auth/login
+
 export const getUsers = function () {
-  //'http://206.81.29.111/api/v1/users/all
   return async function (dispatch) {
-    const res = await axios
-      .get('http://206.81.29.111/api/v1/users/all')
+    const res = await instance
+      .get('/users/all')
+      .then(() => {
+        if (res.users) {
+          dispatch({ type: IS_AUTH.GET_USERS, payload: res.data.users })
+        }
+        toast.success('users fetched')
+      })
       .catch((err) => {
         console.log('error getting users', { errMessage: err.message })
         dispatch({ type: IS_AUTH.GET_USERS, payload: [] })
+        toast.error(err.message)
       })
-    if (res.users) {
-      dispatch({ type: IS_AUTH.GET_USERS, payload: res.data.users })
-    }
   }
 }

@@ -15,7 +15,8 @@ import {
 import { Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { selectProduct, getProducts } from 'src/redux/Product/productActions'
-import axios from 'axios'
+import instance from 'src/API/AxiosInstance'
+import { toast } from 'react-hot-toast'
 
 const Products = () => {
   const dispatch = useDispatch()
@@ -25,14 +26,16 @@ const Products = () => {
   console.log(products)
   useEffect(() => {
     const getAllProducts = async () => {
-      const res = await axios
-        .get('http://206.81.29.111:80/api/v1/products/all')
-        .catch((err) => {
-          console.log('error getting products')
+      const res = await instance
+        .get('/products/all')
+        .then((res) => {
+          if (res.status === 200) {
+            setProducts(res.data.data)
+          }
         })
-      if (res.status === 200) {
-        setProducts(res.data.data)
-      }
+        .catch((err) => {
+          toast.error(err.message)
+        })
     }
     getAllProducts()
   }, [])

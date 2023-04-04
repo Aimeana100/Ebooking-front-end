@@ -16,34 +16,22 @@ import {
 import { cilArrowRight, cilClone } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import { useForm } from 'react-hook-form'
-import axios from 'axios'
 import { toast } from 'react-hot-toast'
+import instance from 'src/API/AxiosInstance'
 
 const RoomClassAdd = () => {
-  const [formData, setformData] = useState({})
   const [roomClass, setroomClass] = useState([])
-  const { register, handleSubmit, watch, reset } = useForm()
-
-  const handleChange = (e) => {
-    setformData({ ...formData, [e.target.name]: e.target.value })
-    console.log(formData)
-  }
-  const handleFileChange = (e) => {
-    setformData({ ...formData, [e.target.name]: e.target.files[0] })
-    console.log(formData)
-  }
+  const { register, handleSubmit, reset } = useForm()
 
   const onSubmit = async (data) => {
-    const res = await axios
-      .post('http://206.81.29.111:80/api/v1/roomclass/add', data)
+    const res = await instance
+      .post('/roomclass/add', data)
       .then((res) => {
-        console.log(res.data)
         toast.success('Room class created')
         reset()
       })
       .catch((err) => {
-        console.log('err creating room class', err.message)
-        toast.error('Room class creation failed')
+        toast.error(err.message, 'Room class creation failed')
         reset()
       })
   }

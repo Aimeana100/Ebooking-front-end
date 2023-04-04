@@ -15,7 +15,8 @@ import {
   CRow,
 } from '@coreui/react'
 import { useSelector } from 'react-redux'
-import axios from 'axios'
+import instance from 'src/API/AxiosInstance'
+import { toast } from 'react-hot-toast'
 
 function getPrice(elements, PItem, PackId) {
   elements = elements.filter((e) => (e.Packages.length !== 0 ? e : ''))
@@ -53,7 +54,6 @@ function ProductSell() {
   const noProducts = [{ name: 'product1' }, { name: 'product2' }]
   const onServiceSell = (data) => {
     console.log(data)
-    //roomClass.push(formData);
   }
   const onProductSell = (data) => {
     console.log(data)
@@ -61,14 +61,16 @@ function ProductSell() {
 
   useEffect(() => {
     const getAllProducts = async () => {
-      const res = await axios
-        .get('http://206.81.29.111:80/api/v1/products/all')
-        .catch((err) => {
-          console.log('error getting products')
+      const res = await instance
+        .get('/products/all')
+        .then((res) => {
+          if (res.status === 200) {
+            setProducts(res.data.data)
+          }
         })
-      if (res.status === 200) {
-        setProducts(res.data.data)
-      }
+        .catch((err) => {
+          toast.error(err.message)
+        })
     }
     getAllProducts()
   }, [])
@@ -90,6 +92,17 @@ function ProductSell() {
                 onSubmit={handleSubmit(onProductSell)}
               >
                 <CCol md={6}>
+                  <CFormLabel htmlFor="title"> Table </CFormLabel>
+                  <CFormInput
+                    className="mb-1"
+                    type="Number"
+                    name="title"
+                    id="title"
+                    size="md"
+                    {...register('table')}
+                  />
+                </CCol>
+                <CCol md={6}>
                   <CFormLabel htmlFor="title"> Client name </CFormLabel>
                   <CFormInput
                     className="mb-1"
@@ -97,7 +110,6 @@ function ProductSell() {
                     name="title"
                     id="title"
                     size="md"
-                    required
                     {...register('client-name')}
                   />
                 </CCol>
@@ -109,7 +121,6 @@ function ProductSell() {
                     name="title"
                     id="title"
                     size="md"
-                    required
                     {...register('client-phone')}
                   />
                 </CCol>

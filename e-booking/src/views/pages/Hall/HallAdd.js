@@ -14,8 +14,8 @@ import {
   CRow,
 } from '@coreui/react'
 import { useSelector } from 'react-redux'
-import axios from 'axios'
 import { toast } from 'react-hot-toast'
+import instance from 'src/API/AxiosInstance'
 
 function HallAdd() {
   let loggedInUser = useSelector((state) => state.auth.role)
@@ -23,16 +23,14 @@ function HallAdd() {
   const { register, handleSubmit, reset } = useForm()
   const onSubmit = async (data) => {
     console.log(data)
-    const res = await axios
-      .post('http://206.81.29.111:80/api/v1/halls/add', data)
+    const res = await instance
+      .post('/halls/add', data)
       .then((res) => {
-        console.log(res.data)
         toast.success('Hall created')
         reset()
       })
       .catch((err) => {
-        console.log('err creating Hall', err.message)
-        toast.error('Hall create failed')
+        toast.error('Hall create failed', err.message)
         reset()
       })
   }

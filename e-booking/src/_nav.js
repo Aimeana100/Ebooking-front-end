@@ -2,6 +2,7 @@ import React from 'react'
 import CIcon from '@coreui/icons-react'
 import {
   cilBook,
+  cilCart,
   cilHouse,
   cilPeople,
   cilSatelite,
@@ -9,9 +10,10 @@ import {
   cilSpeedometer,
   cilStorage,
   cilUser,
+  cilFastfood,
 } from '@coreui/icons'
 import { CNavGroup, CNavItem } from '@coreui/react'
-
+import massageIcon from 'src/assets/icons/massage-icon.svg'
 const _nav = [
   {
     component: CNavItem,
@@ -23,10 +25,22 @@ const _nav = [
     },
   },
   {
-    component: CNavItem,
+    component: CNavGroup,
     name: 'Room class',
-    to: '/booking/rooms/class/add',
+    to: '/booking/rooms/class/',
     icon: <CIcon icon={cilBook} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Add Room Class ',
+        to: '/booking/rooms/class/add',
+      },
+      {
+        component: CNavItem,
+        name: 'All Room Class ',
+        to: '/booking/rooms/class/all',
+      },
+    ],
   },
   {
     component: CNavGroup,
@@ -82,7 +96,7 @@ const _nav = [
     items: [
       {
         component: CNavItem,
-        name: 'Create a Reservation',
+        name: 'Add Reservation',
         to: '/booking/reservations/add',
       },
       {
@@ -92,31 +106,60 @@ const _nav = [
       },
     ],
   },
+
   {
     component: CNavGroup,
-    name: 'User',
-    to: '/users',
-    icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
+    name: 'Bar',
+    to: '/bar',
+    icon: <CIcon icon={cilFastfood} customClassName="nav-icon" />,
     items: [
       {
         component: CNavItem,
-        name: 'Add User ',
-        to: '/booking/user/add',
+        name: 'Add item',
+        to: '/booking/bar/add',
       },
       {
         component: CNavItem,
-        name: 'All Users',
-        to: '/booking/users',
+        name: 'Request item',
+        to: '/booking/bar/request',
       },
       {
         component: CNavItem,
-        name: 'Add user roles',
-        to: '/booking/user/roles/add',
+        name: 'All items',
+        to: '/booking/bar/all',
       },
       {
         component: CNavItem,
-        name: 'User roles ',
-        to: '/booking/user/roles',
+        name: 'All requests',
+        to: '/booking/bar/request/all',
+      },
+    ],
+  },
+  {
+    component: CNavGroup,
+    name: 'Sauna',
+    to: '/sauna',
+    icon: <CIcon icon={massageIcon} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Add item',
+        to: '/booking/sauna/add',
+      },
+      {
+        component: CNavItem,
+        name: 'Request item',
+        to: '/booking/sauna/request',
+      },
+      {
+        component: CNavItem,
+        name: 'All items',
+        to: '/booking/sauna/all',
+      },
+      {
+        component: CNavItem,
+        name: 'All requests',
+        to: '/booking/sauna/request/all',
       },
     ],
   },
@@ -168,6 +211,53 @@ const _nav = [
   },
   {
     component: CNavGroup,
+    name: 'User',
+    to: '/users',
+    icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Add User ',
+        to: '/booking/user/add',
+      },
+      {
+        component: CNavItem,
+        name: 'All Users',
+        to: '/booking/users',
+      },
+      {
+        component: CNavItem,
+        name: 'Add user roles',
+        to: '/booking/user/roles/add',
+      },
+      {
+        component: CNavItem,
+        name: 'User roles ',
+        to: '/booking/user/roles',
+      },
+    ],
+  },
+  {
+    component: CNavGroup,
+    name: 'Requests',
+    to: '/booking/requests',
+    icon: <CIcon icon={cilCart} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Stock request',
+        to: '/booking/requests/stock',
+      },
+      {
+        component: CNavItem,
+        name: 'Cashier request',
+        to: '/booking/requests/cashier',
+      },
+    ],
+  },
+
+  {
+    component: CNavGroup,
     name: 'Stock Items',
     to: '/stock/items',
     icon: <CIcon icon={cilStorage} customClassName="nav-icon" />,
@@ -197,13 +287,13 @@ const _nav = [
       },
       {
         component: CNavItem,
-        name: 'Available Stock',
+        name: 'All Stock',
         to: '/booking/stock/available',
       },
       {
         component: CNavItem,
-        name: 'Incoming Request',
-        to: '/booking/stock/request/in',
+        name: 'All Receive Vouchers',
+        to: '/booking/stock/received',
       },
       {
         component: CNavItem,
@@ -244,11 +334,6 @@ const _nav = [
     items: [
       {
         component: CNavItem,
-        name: 'Add reports',
-        to: '/reports/create',
-      },
-      {
-        component: CNavItem,
         name: 'Reservation reports',
         to: '/reports/reservations',
       },
@@ -271,3 +356,9 @@ const _nav = [
   },
 ]
 export default _nav
+
+//  {
+//         component: CNavItem,
+//         name: 'Add reports',
+//         to: '/reports/create',
+//       },

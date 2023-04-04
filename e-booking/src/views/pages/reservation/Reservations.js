@@ -14,37 +14,38 @@ import {
   CBadge,
 } from '@coreui/react'
 import { Link } from 'react-router-dom'
-
-import axios from 'axios'
 import { useDispatch } from 'react-redux'
 import { selectItem } from 'src/redux/Select/selectionActions'
 import { toast } from 'react-hot-toast'
+import instance from 'src/API/AxiosInstance'
+import AddPaymentModal from './AddPaymentModal'
 
 const Reservation = () => {
   const dispatch = useDispatch()
+  const [clicked, setClicked] = useState({})
   const [reservations, setReservations] = useState([])
+  const [open, setOpen] = useState(false)
   const confirmReservation = async (data) => {
-    const res = await axios
-      .put('http://206.81.29.111:80/api/v1/reservation/update', data)
+    const res = await instance
+      .put('/reservation/update', data)
       .then((res) => {
         console.log(res.data)
         toast.success('Reservation updated')
       })
       .catch((err) => {
-        //console.log('err updating reservation', err.message)
         toast.error('Reservation update failed')
       })
   }
   useEffect(() => {
     const getReservations = async () => {
-      const res = await axios
-        .get('http://206.81.29.111:80/api/v1/reservation/all')
+      const res = await instance
+        .get('/reservation/all')
         .then((res) => {
+          console.log(res.data.data)
           setReservations(res.data.data)
-          console.log('All reservation', res.data.data)
         })
         .catch((err) => {
-          console.log('error getting reservations', err.message)
+          toast.error(err.message)
         })
     }
     getReservations()
@@ -81,8 +82,20 @@ const Reservation = () => {
                         <CTableDataCell>
                           {' '}
                           {reserv.Customer.names}{' '}
-                          {Number(reserv.amount) > Number(reserv.payment) ? (
-                            <CBadge color="danger"> Debt</CBadge>
+                          {Number(reserv.amount['RWF']) >
+                          Number(reserv.payment['RWF']) ? (
+                            <CBadge
+                              type="button"
+                              color="danger"
+                              onClick={() => {
+                                console.log(open)
+                                setClicked({ id: reserv.id })
+                                return setOpen(true)
+                              }}
+                            >
+                              {' '}
+                              Debt
+                            </CBadge>
                           ) : null}
                         </CTableDataCell>
                         <CTableDataCell>
@@ -90,10 +103,16 @@ const Reservation = () => {
                           {reserv.Customer.phone}{' '}
                         </CTableDataCell>
                         <CTableDataCell>
-                          {' '}
-                          {reserv.Room
+                          {reserv.details
+                            ? Object.keys(reserv.details).map((e) => (
+                                <p>
+                                  {' '}
+                                  {e} rooms: {reserv.details[e].people}{' '}
+                                </p>
+                              ))
+                            : reserv.Room
                             ? reserv.Room.name
-                            : reserv.Hall.name}{' '}
+                            : reserv.Hall.name}
                         </CTableDataCell>
                         <CTableDataCell>
                           {' '}
@@ -147,6 +166,11 @@ const Reservation = () => {
                       </CTableRow>
                     ))
                   : null}
+                <AddPaymentModal
+                  open={open}
+                  reservation={clicked}
+                  setOpen={setOpen}
+                />
               </CTableBody>
             </CTable>
           </CCardBody>

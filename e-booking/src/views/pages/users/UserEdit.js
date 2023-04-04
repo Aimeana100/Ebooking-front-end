@@ -13,20 +13,18 @@ import {
   CFormSelect,
   CRow,
 } from '@coreui/react'
-import { registerUser } from 'src/redux/Auth/authActions'
 import { getRoles } from 'src/redux/Roles/RolesActions'
-import { updateUser } from 'src/redux/User/userActions'
 import { useForm } from 'react-hook-form'
-import axios from 'axios'
 import { toast } from 'react-hot-toast'
+import instance from 'src/API/AxiosInstance'
 
 const UserEdit = () => {
-  const { register, handleSubmit, reset } = useForm()
+  const { register, handleSubmit, watch } = useForm()
   let users = useSelector((state) => state.systemUsers.users)
   const selectedUser = useSelector((state) => state.selection.selected) || {}
   const roles = useSelector((state) => state.roles.userRoles) || []
   let [formData, setformData] = useState({ ...selectedUser })
-
+  let role = watch('role') || selectedUser.Role.name
   const dispatch = useDispatch()
 
   const onSubmit = async (data) => {
@@ -38,16 +36,14 @@ const UserEdit = () => {
     )
     data.role = selectedUser.Role.name
 
-    const updateUser = await axios
-      .put('http://206.81.29.111:80/api/v1/users/update', data)
+    const updateUser = await instance
+      .put('/users/update', data)
       .then((res) => {
         toast.success('user updated')
       })
       .catch((err) => {
-        console.log(err)
         toast.error('user updated failed')
       })
-    dispatch(updateUser(data, users))
   }
 
   useEffect(() => {
@@ -136,7 +132,7 @@ const UserEdit = () => {
                     size="md"
                     className="mb-3"
                     aria-label="update user role"
-                    defaultValue={formData.role}
+                    defaultValue={role}
                     {...register('role')}
                   >
                     <option>-- Select -- </option>

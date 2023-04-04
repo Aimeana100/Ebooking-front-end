@@ -12,25 +12,24 @@ import {
   CTableHeaderCell,
   CTableRow,
 } from '@coreui/react'
-import { Link, useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import { Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { selectRoom } from 'src/redux/Room/roomActions'
+import instance from 'src/API/AxiosInstance'
+import { toast } from 'react-hot-toast'
 
 const Room = (prop) => {
-  const navigate = useNavigate()
   const dispatch = useDispatch()
   const [rooms, setRooms] = useState([])
   useEffect(() => {
     const getRooms = async () => {
-      const res = await axios
-        .get('http://206.81.29.111:80/api/v1/room/all')
+      const res = await instance
+        .get('/room/all')
         .then((res) => {
-          console.log(res.data)
           setRooms(res.data.data)
         })
         .catch((err) => {
-          console.log('err getting rooms')
+          toast.error(err.message)
         })
     }
     getRooms()
@@ -55,7 +54,7 @@ const Room = (prop) => {
                     {' '}
                     Name | N <sup>o</sup>{' '}
                   </CTableHeaderCell>
-                  <CTableHeaderCell scope="col"> Release ON </CTableHeaderCell>
+                  <CTableHeaderCell scope="col"> Action </CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody>

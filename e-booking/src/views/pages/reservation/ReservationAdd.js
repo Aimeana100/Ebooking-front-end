@@ -16,17 +16,18 @@ import {
 } from '@coreui/react'
 import { useSelector } from 'react-redux'
 import { useForm } from 'react-hook-form'
-//import DatePicker from 'react-multi-date-picker'
 import DatePicker from 'react-datepicker'
-import axios from 'axios'
 import { getAllRemoveDates } from 'src/utils/functions'
 import CalendarContainer from 'src/utils/CalendarContainer'
 import { toast } from 'react-hot-toast'
+import instance from 'src/API/AxiosInstance'
+import { currencies } from 'src/utils/constants'
 
 //import TimePicker from 'react-multi-date-picker/plugins/time_picker'
 
 const ReservationAdd = () => {
   const { register, handleSubmit, watch, reset } = useForm()
+
   const [roomClass, setroomClass] = useState([])
   const [customer, setCustomer] = useState([])
   const [service, setService] = useState([])
@@ -34,10 +35,7 @@ const ReservationAdd = () => {
   const [halls, setHalls] = useState([])
   const [hallServices, setHallServices] = useState([])
   const [RoomClasses, setRoomClasses] = useState([])
-  const [dateIn, setDateIn] = useState({})
-  const [dateOut, setDateOut] = useState({})
   let [customers, setCustomers] = useState([])
-
   const [startDate, setStartDate] = useState(new Date())
   const [endDate, setEndDate] = useState(new Date())
 
@@ -46,19 +44,12 @@ const ReservationAdd = () => {
   const inputState = { minLength: 2 }
   let priceHall = 0
   let priceRoom = 0
+
   const type = watch('booking_type') || '---'
   const additional = watch('additionalServices') || {}
   const roomK = watch('roomClass') || null
   const details = watch('details') || null
-  let roomClassesWithPrices =
-    RoomClasses.length !== 0
-      ? RoomClasses.map((e) => {
-          return { name: e.name, price: e.price }
-        })
-      : []
-
-  console.log(customer)
-  console.log('this is roomK', roomK)
+  const paymentMethod = watch('paymentMethod') || null
 
   const additionalTotal =
     Object.keys(additional).length !== 0
@@ -71,12 +62,9 @@ const ReservationAdd = () => {
   all = type && type === 'room' ? [...rooms] : [...halls]
 
   if (type === 'hall' && service.length !== 0) {
-    console.log('service', service[0].price)
     priceHall = service[0].price
   } else if (type === 'room' && service.length !== 0 && service[0].RoomClass) {
-    console.log(service[0])
     priceRoom = service[0].RoomClass.price
-    console.log(priceRoom)
   }
   const time =
     new Date(startDate).getTime() !== 0 && new Date(endDate).getTime() !== 0
@@ -84,8 +72,6 @@ const ReservationAdd = () => {
       : null
   const days = Math.ceil(time / (1000 * 3600 * 24)) || 1
 
-  const currentDate = new Date()
-  const format = 'DD/MM/YY/HH'
   let totalPrice = []
   const removeDates =
     service && service.length !== 0 ? getAllRemoveDates(service[0]) : []
@@ -121,19 +107,15 @@ const ReservationAdd = () => {
     data = { ...data, status: 'in progress' }
     console.log('THIS IS DATA BEFORE RESERVATION ADD', data)
     const createReservation = async () => {
-      console.log(data)
-      const res = await axios
-        .post('http://206.81.29.111:80/api/v1/reservation/add', data)
+      console.log('before create reservation', data)
+      const res = await instance
+        .post('/reservation/add', data)
         .then((res) => {
-          console.log(res.data)
           toast.success('Reservation added')
         })
         .catch((err) => {
-          console.log('message', err.message)
-          console.log('err creating reservation')
           toast.error('Rerservation add failed')
         })
-      console.log(res)
     }
     createReservation()
     reset()
@@ -143,81 +125,60 @@ const ReservationAdd = () => {
   console.log(priceRoom)
   useEffect(() => {
     const getCustomers = async () => {
-      const res = await axios
-        .get('http://206.81.29.111:80/api/v1/customers/all')
+      const res = await instance
+        .get('/customers/all')
         .then((res) => {
-          console.log(res.data)
           setCustomers(res.data.data)
         })
         .catch((err) => {
-          console.log('err getting halls')
+          toast.error(err.message)
         })
-      console.log('customers async to get halls')
     }
     const getRooms = async () => {
-      const res = await axios
-        .get('http://206.81.29.111:80/api/v1/room/all')
+      const res = await instance
+        .get('/room/all')
         .then((res) => {
-          console.log(res.data)
           setRooms(res.data.data)
         })
         .catch((err) => {
-          console.log('err getting rooms')
+          toast.error(err.message)
         })
-      const getHallServices = async () => {
-        const res = await axios
-          .get('http://206.81.29.111:80/api/v1/hall/services/all')
-          .then((res) => {
-            console.log(res.data)
-            setHallServices(res.data.data)
-          })
-          .catch((err) => {
-            console.log('err getting halls')
-          })
-        console.log('halls async to get halls')
-      }
-      getHallServices()
     }
-
-    const getHalls = async () => {
-      const res = await axios
-        .get('http://206.81.29.111:80/api/v1/halls/all')
+    const getHallServices = async () => {
+      const res = await instance
+        .get('/hall/services/all')
         .then((res) => {
-          console.log(res.data)
+          setHallServices(res.data.data)
+        })
+        .catch((err) => {
+          toast.error(err.message)
+        })
+    }
+    const getHalls = async () => {
+      const res = await instance
+        .get('/halls/all')
+        .then((res) => {
           setHalls(res.data.data)
         })
         .catch((err) => {
-          console.log('err getting halls')
-        })
-      console.log('halls async to get halls')
-    }
-    const getHallServices = async () => {
-      const res = await axios
-        .get('http://206.81.29.111:80/api/v1/hall/services/all')
-        .then((res) => {
-          console.log(res.data)
-          //setHallServices()
-        })
-        .catch((err) => {
-          console.log('error getting hall services', err.message)
+          console.log(err.message)
         })
     }
+
     const getRoomClasses = async () => {
-      const res = await axios
-        .get('http://206.81.29.111:80/api/v1/roomclass/all')
+      const res = await instance
+        .get('/roomclass/all')
         .then((res) => {
-          console.log(res.data)
           setRoomClasses(res.data.data)
         })
         .catch((err) => {
-          console.log('err getting room classes')
+          toast.error(err.message)
         })
     }
     getRoomClasses()
-
+    getRooms()
     getHalls()
     getHallServices()
-    getRooms()
     getCustomers()
   }, [roomClass])
 
@@ -517,30 +478,44 @@ const ReservationAdd = () => {
                         {...register('payment')}
                       />
                     </CCol>
-                    <CCol md={6}>
-                      <CFormLabel htmlFor="paymentMethod">
-                        Payment method
-                      </CFormLabel>
-                      <CFormSelect
-                        name="paymentMethod"
-                        id="paymentMethod"
-                        size="md"
-                        className="mb-3"
-                        {...register('paymentMethod')}
-                      >
-                        <option value="Mobile Money">Mobile Money</option>
-                        <option value="Cash(Rwf)">Cash(Rwf)</option>
-                        <option value="Cash(USD)">Cash(USD)</option>
-                        <option value="Credit card(Rwf)">
-                          Credit card(Rwf)
-                        </option>
-                        <option value="Credit card(USD)">
-                          Credit card(USD)
-                        </option>
-                        <option value="Credit">Credit</option>
-                        <option value="Cheque">Cheque</option>
-                        <option value="other">Other</option>
-                      </CFormSelect>
+                    <CCol md={6} className="d-flex gap-2">
+                      <div className="col">
+                        <CFormLabel htmlFor="paymentMethod">
+                          Payment method
+                        </CFormLabel>
+                        <CFormSelect
+                          name="paymentMethod"
+                          id="paymentMethod"
+                          size="md"
+                          className="mb-3"
+                          {...register('paymentMethod')}
+                        >
+                          <option value="Cash">Cash</option>
+                          <option value="Mobile Money">Mobile Money</option>
+                          <option value="Credit card">Credit card</option>
+                          <option value="Credit">Credit</option>
+                          <option value="Cheque">Cheque</option>
+                        </CFormSelect>
+                      </div>
+                      <div className="col">
+                        <CFormLabel htmlFor="paymentCurrency">
+                          Currency
+                        </CFormLabel>
+                        <CFormSelect
+                          name="paymentMethod"
+                          id="currency"
+                          size="md"
+                          className="mb-3"
+                          defaultValue={'RWF'}
+                          {...register('currency')}
+                        >
+                          {Object.keys(currencies).map((curr, i) => (
+                            <option value={curr} key={i + 1}>
+                              {curr} :{currencies[curr]}{' '}
+                            </option>
+                          ))}
+                        </CFormSelect>
+                      </div>
                     </CCol>
                   </CCardBody>
                 </div>
