@@ -116,6 +116,9 @@ const RequestToCashier = React.lazy(() =>
 const RequestToStock = React.lazy(() =>
   import('./views/pages/Requests/RequestToStock'),
 )
+const AllRequestToCashier = React.lazy(() =>
+  import('./views/pages/Requests/AllRequestToCashier'),
+)
 //stock
 
 const AddStock = React.lazy(() => import('./views/pages/stock/AddStock'))
@@ -456,6 +459,12 @@ const routes = [
     exact: true,
     name: 'Cashier request',
     element: RequestToCashier,
+  },
+  {
+    path: '/booking/requests/cashier/all',
+    exact: true,
+    name: 'All Cashier request',
+    element: AllRequestToCashier,
   },
   {
     path: '/booking/requests/stock',

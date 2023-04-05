@@ -26,7 +26,7 @@ import StockOrder from './StockOrder'
 const RequestBarItem = React.forwardRef((props, ref) => {
   const componentRef = useRef()
   const { register, handleSubmit, getValues, reset } = useForm()
-  const [stockItems, setStockItems] = useState([])
+  let [stockItems, setStockItems] = useState([])
   const [visible, setVisible] = useState(false)
   let [items, setItems] = useState(stockItems)
   const [item, setItem] = useState(null)
@@ -47,21 +47,34 @@ const RequestBarItem = React.forwardRef((props, ref) => {
   }
   console.log(item)
   const onAdd = (data) => {
-    data = { ...data, name: item[0].name, id: item[0].id }
+    data = {
+      ...data,
+      name: item[0].name,
+      id: item[0].id,
+      price: item[0].price,
+      itemValueId: item[0].itemValueId,
+    }
     setRequestItems([...requestItems, data])
     reset()
   }
   const submitRequest = () => {
-    const data = { order: requestItems }
+    const data = { data: requestItems }
+    console.log(data)
     createPurchaseOrder(data)
   }
   useEffect(() => {
     const getStockItems = async () => {
       const res = await instance
-        .get('/stock/item/all')
+        .get('/stock/item/balance')
         .then((res) => {
           console.log(res)
-          setStockItems(res.data.data)
+          const items = res.data.data.map((item) => ({
+            name: item.StockItem.name,
+            quantity: item.quantity,
+            price: item.price,
+            itemValueId: item.id,
+          }))
+          setStockItems(items)
         })
         .catch((err) => {
           toast.error(err.message)
@@ -120,7 +133,7 @@ const RequestBarItem = React.forwardRef((props, ref) => {
                         size="md"
                         className="mb-3"
                         aria-label="item quantity unit"
-                        {...register('bar', { required: true })}
+                        {...register('petitStock', { required: true })}
                       >
                         <option value="main-bar"> Main Bar</option>
                         <option value="swimming-pool-bar">
@@ -133,11 +146,6 @@ const RequestBarItem = React.forwardRef((props, ref) => {
                     <CCol md={6}>
                       <div className="d-flex justify-content-between">
                         <CFormLabel htmlFor="name"> Item name </CFormLabel>
-                        {items && items.length === 0 ? (
-                          <Link to="/stock/item/add" className="d-block">
-                            Add item to list
-                          </Link>
-                        ) : null}
                       </div>
                       <Typeahead
                         id="basic-typeahead-single"
@@ -151,7 +159,12 @@ const RequestBarItem = React.forwardRef((props, ref) => {
                     </CCol>
 
                     <CCol md={6}>
-                      <CFormLabel htmlFor="quantity"> Quantity </CFormLabel>
+                      <div className="d-flex justify-content-between">
+                        <CFormLabel htmlFor="quantity"> Quantity </CFormLabel>
+                        {item && item.length !== 0 ? (
+                          <p>Available quantity : {item[0].quantity}</p>
+                        ) : null}
+                      </div>
                       <CFormInput
                         type="number"
                         name="quantity"
@@ -176,18 +189,6 @@ const RequestBarItem = React.forwardRef((props, ref) => {
                         <option value="l"> ltr </option>
                         <option value="piece"> piece </option>
                       </CFormSelect>
-                    </CCol>
-                    <CCol md={6}>
-                      <CFormLabel htmlFor="price"> Price / unit </CFormLabel>
-                      <CFormInput
-                        type="number"
-                        name="price"
-                        id="price"
-                        placeholder="item price in RWF"
-                        size="md"
-                        required
-                        {...register('price')}
-                      />
                     </CCol>
                   </CRow>
                   <CCol xs={12}>

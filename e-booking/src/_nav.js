@@ -115,13 +115,18 @@ const _nav = [
     items: [
       {
         component: CNavItem,
-        name: 'Add item',
-        to: '/booking/bar/add',
+        name: 'Sell',
+        to: '/booking/products/sell',
       },
       {
         component: CNavItem,
         name: 'Request item',
         to: '/booking/bar/request',
+      },
+      {
+        component: CNavItem,
+        name: 'Add item',
+        to: '/booking/bar/add',
       },
       {
         component: CNavItem,
@@ -169,11 +174,6 @@ const _nav = [
     to: '/Products',
     icon: <CIcon icon={cilSave} customClassName="nav-icon" />,
     items: [
-      {
-        component: CNavItem,
-        name: 'Sell product',
-        to: '/booking/products/sell',
-      },
       {
         component: CNavItem,
         name: 'Add products',
@@ -252,6 +252,11 @@ const _nav = [
         component: CNavItem,
         name: 'Cashier request',
         to: '/booking/requests/cashier',
+      },
+      {
+        component: CNavItem,
+        name: 'All Cashier request',
+        to: '/booking/requests/cashier/all',
       },
     ],
   },

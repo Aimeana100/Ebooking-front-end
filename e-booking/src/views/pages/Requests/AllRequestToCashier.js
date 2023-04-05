@@ -13,27 +13,28 @@ import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import instance from 'src/API/AxiosInstance'
 
-function AvailableStock() {
+function AllRequestToCashier() {
   const [items, setItems] = useState([])
   useEffect(() => {
-    const getItems = async () => {
+    const getPurchaseOrders = async () => {
       const res = await instance
-        .get('/stock/item/balance')
+        .get('/purchase/order/all')
         .then((res) => {
+          console.log(res.data)
           setItems(res.data.data)
         })
         .catch((err) => {
           toast.error(err.message)
         })
     }
-    getItems()
+    getPurchaseOrders()
   }, [])
 
   return (
     <div>
       <CCardHeader>
         <h2>
-          <strong> Available stock </strong>
+          <strong> All Purchase orders </strong>
         </h2>
       </CCardHeader>
       <CCardBody>
@@ -42,28 +43,28 @@ function AvailableStock() {
             <CTableRow>
               <CTableHeaderCell scope="col">#</CTableHeaderCell>
               <CTableHeaderCell scope="col">Name</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Quantity</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Unit price</CTableHeaderCell>
             </CTableRow>
           </CTableHead>
-          <CTableBody>
-            {items && items.length !== 0
-              ? items.map((item, i) => {
-                  return (
-                    <CTableRow key={item.id}>
-                      <CTableDataCell scope="row">{i + 1}</CTableDataCell>
-                      <CTableDataCell>{item.StockItem.name}</CTableDataCell>
-                      <CTableDataCell>{item.quantity}</CTableDataCell>
-                      <CTableDataCell>{item.price}</CTableDataCell>
-                    </CTableRow>
-                  )
-                })
-              : null}
-          </CTableBody>
+          <CTableBody></CTableBody>
         </CTable>
       </CCardBody>
     </div>
   )
 }
 
-export default AvailableStock
+export default AllRequestToCashier
+
+///
+
+// {
+//   items && items.length !== 0
+//     ? items.map((item, i) => {
+//         return (
+//           <CTableRow key={item.id}>
+//             <CTableHeaderCell scope="row">{i + 1}</CTableHeaderCell>
+//             <CTableDataCell>{`${item.name}`}</CTableDataCell>
+//           </CTableRow>
+//         )
+//       })
+//     : null
+// }

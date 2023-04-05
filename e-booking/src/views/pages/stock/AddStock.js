@@ -146,7 +146,7 @@ const AddStock = React.forwardRef((props, ref) => {
       ? {
           itemName: item2[0].name,
           item_id: item2[0].StockItem.id,
-          stockPurchaseOrderId: item2[0].id,
+          stockPurchaseOrderId: order[0].id,
         }
       : item2
     data = { ...data, ...item2 }

@@ -28,7 +28,7 @@ const StockOrderPrint = React.forwardRef((props, ref) => {
       : 0
 
   return (
-    <CCard>
+    <CCard ref={ref}>
       <div className="m-3 p-3">
         <div className="d-flex flex-col my-3">
           <p className="col">
@@ -53,15 +53,10 @@ const StockOrderPrint = React.forwardRef((props, ref) => {
           </div>
         </CRow>
 
-        <h2 className="text-center my-3">{title}</h2>
+        <h2 className="text-center my-3 text-capitalize">{title}</h2>
 
         <CCardBody className="d-flex justify-content-around">
-          <div className="col">
-            <div className="d-flex">
-              <p className="fw-bolder">Stock order</p>
-            </div>
-            {props.children}
-          </div>
+          <div className="col">{props.children}</div>
         </CCardBody>
 
         <div className="my-4 d-flex justify-content-between">

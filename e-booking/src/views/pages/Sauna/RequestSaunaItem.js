@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
-
 import {
   CButton,
   CCard,
@@ -12,63 +11,137 @@ import {
   CFormSelect,
   CFormLabel,
   CRow,
+  CTable,
+  CTableHead,
+  CTableRow,
+  CTableHeaderCell,
+  CTableBody,
+  CTableDataCell,
   CCollapse,
 } from '@coreui/react'
-import { Typeahead } from 'react-bootstrap-typeahead'
-import { Link } from 'react-router-dom'
+import { Highlighter, Typeahead } from 'react-bootstrap-typeahead'
 import { toast } from 'react-hot-toast'
 import ReactToPrint from 'react-to-print'
-import PrintTemplate1 from '../Printing/PrintTemplate1'
-import PurchaseOrder from '../stock/PurchaseOrder'
 import instance from 'src/API/AxiosInstance'
 import StockOrder from './StockOrder'
+import StockOrderPrint from '../Printing/StockOrderPrint'
 
-const RequestBarItem = React.forwardRef((props, ref) => {
+const AddStockToTable = (props) => {
+  const { receivedItems } = props
+  return (
+    <div>
+      <CCardBody>
+        <CTable bordered>
+          <CTableHead>
+            <CTableRow>
+              <CTableHeaderCell scope="col">#</CTableHeaderCell>
+              <CTableHeaderCell scope="col"> Item </CTableHeaderCell>
+              <CTableHeaderCell scope="col"> Qty </CTableHeaderCell>
+              <CTableHeaderCell scope="col"> Price/unit </CTableHeaderCell>
+              <CTableHeaderCell scope="col"> Total </CTableHeaderCell>
+            </CTableRow>
+          </CTableHead>
+          <CTableBody>
+            {receivedItems && receivedItems.length !== 0 ? (
+              <React.Fragment>
+                {receivedItems.map((item, index) => {
+                  let total = Number(item.price) * Number(item.quantity)
+                  return (
+                    <CTableRow key={index + 1}>
+                      <CTableHeaderCell scope="row">
+                        {' '}
+                        {index + 1}{' '}
+                      </CTableHeaderCell>
+                      <CTableDataCell> {item.itemName} </CTableDataCell>
+                      <CTableDataCell>
+                        {' '}
+                        {item.quantity} {item.unit}{' '}
+                      </CTableDataCell>
+                      <CTableDataCell> {item.price} </CTableDataCell>
+                      <CTableDataCell>{total.toLocaleString()}</CTableDataCell>
+                    </CTableRow>
+                  )
+                })}
+                <CTableRow key={receivedItems.length}>
+                  <CTableHeaderCell scope="row"></CTableHeaderCell>
+                  <CTableHeaderCell> Total </CTableHeaderCell>
+                  <CTableDataCell />
+                  <CTableDataCell />
+                  <CTableDataCell>
+                    {receivedItems
+                      .reduce(
+                        (acc, b) => acc + Number(b.price) * Number(b.quantity),
+                        0,
+                      )
+                      .toLocaleString()}
+                  </CTableDataCell>
+                </CTableRow>
+              </React.Fragment>
+            ) : (
+              <div className="text-center"> No items added</div>
+            )}
+          </CTableBody>
+        </CTable>
+      </CCardBody>
+    </div>
+  )
+}
+
+const RequestSaunaItem = React.forwardRef((props, ref) => {
+  const { register, getValues, reset } = useForm()
   const componentRef = useRef()
-  const { register, handleSubmit, getValues, reset } = useForm()
-  const [stockItems, setStockItems] = useState([])
+  let [purchaseOrders, setPurchaseOrders] = useState([])
   const [visible, setVisible] = useState(false)
-  let [items, setItems] = useState(stockItems)
-  const [item, setItem] = useState(null)
+
+  const [order, setOrder] = useState([])
+
+  let stockItems =
+    order && order.length !== 0
+      ? order[0].StockPurchaseOrderDetails.map((e) => {
+          return { name: e.StockItem.name, ...e }
+        })
+      : order
+
   const [requestItems, setRequestItems] = useState([])
-  const clearPurchaseOrder = () => {
-    setRequestItems([])
+  purchaseOrders =
+    purchaseOrders.length !== 0
+      ? purchaseOrders.map((e) => {
+          let id = e.id.toString()
+          return { ...e, uuid: id }
+        })
+      : purchaseOrders
+  const onAdd = (data) => {
+    setRequestItems([...requestItems, data])
+    reset()
   }
 
-  const createPurchaseOrder = async (data) => {
+  let isDisabled = false
+  if (order && order.length !== 0) {
+    isDisabled = !isDisabled
+  }
+  const onAddItemToStock = async (data) => {
+    console.log('data to add to stock', data)
     const res = await instance
-      .post('/purchase/order/add', data)
-      .then((res) => {
-        toast.success('purchase order created')
-      })
+      .post('/purchase/order/data', data)
+      .then(toast.success('items added to stock'))
       .catch((err) => {
         toast.error(err.message)
       })
   }
-  console.log(item)
-  const onAdd = (data) => {
-    data = { ...data, name: item[0].name, id: item[0].id }
-    setRequestItems([...requestItems, data])
-    reset()
-  }
-  const submitRequest = () => {
-    const data = { order: requestItems }
-    createPurchaseOrder(data)
-  }
+
   useEffect(() => {
-    const getStockItems = async () => {
+    const getPurchaseOrders = async () => {
       const res = await instance
-        .get('/stock/item/all')
+        .get('/purchase/order/all')
         .then((res) => {
           console.log(res)
-          setStockItems(res.data.data)
+          setPurchaseOrders(res.data.data)
         })
         .catch((err) => {
           toast.error(err.message)
         })
     }
-
-    getStockItems()
+    getPurchaseOrders()
   }, [])
   return (
     <div>
@@ -78,8 +151,9 @@ const RequestBarItem = React.forwardRef((props, ref) => {
             <CCardHeader>
               <div className="d-flex justify-content-between">
                 <h3>
-                  <strong>Request to stock </strong>
+                  <strong> Request item in stock </strong>
                 </h3>
+
                 <CButton
                   component="input"
                   value="Add items to list "
@@ -88,16 +162,6 @@ const RequestBarItem = React.forwardRef((props, ref) => {
                   }}
                 />
 
-                {requestItems && requestItems.length !== 0 ? (
-                  <CButton
-                    className="btn-danger"
-                    component="input"
-                    value="Clear table"
-                    onClick={() => {
-                      return clearPurchaseOrder()
-                    }}
-                  />
-                ) : null}
                 {requestItems && requestItems.length !== 0 ? (
                   <ReactToPrint
                     trigger={() => (
@@ -111,27 +175,19 @@ const RequestBarItem = React.forwardRef((props, ref) => {
             <CCollapse visible={visible}>
               <CCardBody>
                 <CForm name="roomClassAddFrm" encType="multipart/form">
-                  <CRow>
+                  <CRow className="mb-3">
                     <CCol md={6}>
-                      <div className="d-flex justify-content-between">
-                        <CFormLabel htmlFor="name"> Item name </CFormLabel>
-                        {items && items.length === 0 ? (
-                          <Link to="/stock/item/add" className="d-block">
-                            Add item to list
-                          </Link>
-                        ) : null}
-                      </div>
-                      <Typeahead
-                        id="basic-typeahead-single"
-                        filterBy={['name']}
-                        labelKey="name"
-                        onChange={setItem}
-                        options={stockItems}
-                        placeholder="item name ..."
-                        selected={item}
+                      <CFormLabel htmlFor="name"> Item name </CFormLabel>
+                      <CFormInput
+                        type="text"
+                        name="name"
+                        id="name"
+                        placeholder="...name"
+                        size="md"
+                        required
+                        {...register('name')}
                       />
                     </CCol>
-
                     <CCol md={6}>
                       <CFormLabel htmlFor="quantity"> Quantity </CFormLabel>
                       <CFormInput
@@ -154,8 +210,6 @@ const RequestBarItem = React.forwardRef((props, ref) => {
                         aria-label="item quantity unit"
                         {...register('unit', { required: true })}
                       >
-                        <option value="Kg"> Kg </option>
-                        <option value="l"> ltr </option>
                         <option value="piece"> piece </option>
                       </CFormSelect>
                     </CCol>
@@ -165,13 +219,14 @@ const RequestBarItem = React.forwardRef((props, ref) => {
                         type="number"
                         name="price"
                         id="price"
-                        placeholder="item price in RWF"
+                        placeholder="1000"
                         size="md"
                         required
                         {...register('price')}
                       />
                     </CCol>
                   </CRow>
+
                   <CCol xs={12}>
                     <CButton
                       component="input"
@@ -185,24 +240,43 @@ const RequestBarItem = React.forwardRef((props, ref) => {
                 </CForm>
               </CCardBody>
             </CCollapse>
-            <div style={{ display: 'none' }}>
-              <PrintTemplate1 ref={ref || componentRef}>
-                <StockOrder requestItems={requestItems} />
-              </PrintTemplate1>
-            </div>
-            <StockOrder requestItems={requestItems} />
-            {requestItems && requestItems.length !== 0 ? (
+            <CRow>
               <CCol xs={12}>
-                <CButton
-                  component="input"
-                  value="Submit request"
-                  onClick={() => {
-                    submitRequest()
-                    setVisible(false)
-                  }}
-                />
+                <CCard className="mb-4">
+                  <div style={{ display: 'none' }}>
+                    <StockOrderPrint
+                      ref={ref || componentRef}
+                      title="SAUNA AND MASSAGE "
+                    >
+                      <StockOrder
+                        requestItems={requestItems}
+                        setRequestItems={setRequestItems}
+                      />
+                    </StockOrderPrint>
+                  </div>
+                  <StockOrder
+                    requestItems={requestItems}
+                    setRequestItems={setRequestItems}
+                  />
+
+                  {requestItems && requestItems.length !== 0 ? (
+                    <CCol xs={12}>
+                      <CButton
+                        component="input"
+                        value="Submit voucher"
+                        onClick={() => {
+                          console.log(requestItems)
+                          setRequestItems([])
+                          setVisible(!visible)
+                          setOrder([])
+                          return onAddItemToStock(requestItems)
+                        }}
+                      />
+                    </CCol>
+                  ) : null}
+                </CCard>
               </CCol>
-            ) : null}
+            </CRow>
           </CCard>
         </CCol>
       </CRow>
@@ -210,4 +284,4 @@ const RequestBarItem = React.forwardRef((props, ref) => {
   )
 })
 
-export default RequestBarItem
+export default RequestSaunaItem

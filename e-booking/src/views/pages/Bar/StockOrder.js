@@ -17,7 +17,9 @@ import CIcon from '@coreui/icons-react'
 import { cilXCircle } from '@coreui/icons'
 function StockOrder(props, ref) {
   const { requestItems, removeItem } = props
+  console.log('requests', requestItems)
   const [style, setStyle] = useState({ display: 'none' })
+
   return (
     <CRow>
       <CCol xs={12}>
@@ -50,9 +52,15 @@ function StockOrder(props, ref) {
                         <CTableDataCell> {item.name} </CTableDataCell>
                         <CTableDataCell>
                           {' '}
-                          {item.quantity} {item.unit}{' '}
+                          {item.quantity}{' '}
+                          {item.quantity && item.quantity > 1
+                            ? item.unit + 's'
+                            : item.unit}{' '}
                         </CTableDataCell>
-                        <CTableDataCell> {item.price} </CTableDataCell>
+                        <CTableDataCell>
+                          {' '}
+                          {Number(item.price).toLocaleString()}{' '}
+                        </CTableDataCell>
                         <CTableDataCell
                           onMouseEnter={(e) => {
                             setStyle({ display: 'block' })
@@ -62,7 +70,9 @@ function StockOrder(props, ref) {
                           }}
                         >
                           {' '}
-                          {Number(item.price) * Number(item.quantity)}{' '}
+                          {Number(
+                            Number(item.price) * Number(item.quantity),
+                          ).toLocaleString()}{' '}
                           <CIcon icon={cilXCircle} size="sm" style={style} />
                         </CTableDataCell>
                       </CTableRow>

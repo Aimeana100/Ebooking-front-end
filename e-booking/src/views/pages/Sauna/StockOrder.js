@@ -29,7 +29,7 @@ function StockOrder(props) {
       <CCol xs={12}>
         <CCard className="mb-4">
           <CCardHeader>
-            <h3>
+            <h3 className="text-center">
               <strong> Stock order </strong>
             </h3>
           </CCardHeader>

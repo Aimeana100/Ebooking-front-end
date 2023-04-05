@@ -14,10 +14,13 @@ import {
 } from '@coreui/react'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
+import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import instance from 'src/API/AxiosInstance'
+import { selectItem } from 'src/redux/Select/selectionActions'
 
 function ReceiveVouchers() {
+  const dispatch = useDispatch()
   const [receiveVauchers, setReceiveVauchers] = useState([])
   useEffect(() => {
     const getVauchers = async () => {
@@ -64,6 +67,7 @@ function ReceiveVouchers() {
                         <Link
                           to="/booking/stock/received/view"
                           className="btn btn-warning "
+                          onClick={() => dispatch(selectItem(vaucher))}
                         >
                           view
                         </Link>
