@@ -122,6 +122,9 @@ const AddStock = React.lazy(() => import('./views/pages/stock/AddStock'))
 const ReceiveVouchers = React.lazy(() =>
   import('./views/pages/stock/ReceiveVouchers'),
 )
+const ReceiveVaucherView = React.lazy(() =>
+  import('./views/pages/stock/ReceiveVaucherView'),
+)
 const AvailableStock = React.lazy(() =>
   import('./views/pages/stock/AvailableStock'),
 )
@@ -441,6 +444,12 @@ const routes = [
     exact: true,
     name: 'Stock Items',
     element: ReceiveVouchers,
+  },
+  {
+    path: '/booking/stock/received/view',
+    exact: true,
+    name: 'Stock Items',
+    element: ReceiveVaucherView,
   },
   {
     path: '/booking/requests/cashier',

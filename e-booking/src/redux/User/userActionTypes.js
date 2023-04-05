@@ -3,4 +3,4 @@ export const USER_ACTIONS = {
   UPDATE: 'UPDATE',
   DELETE: 'DELETE',
   GET_USERS: 'GET_USERS',
-};
+}

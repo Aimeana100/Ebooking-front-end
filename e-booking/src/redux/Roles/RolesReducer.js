@@ -5,7 +5,7 @@ const rolesReducer = (state = { userRoles: [] }, { type, payload }) => {
     case ROLE_ACTIONS.GET_ROLES:
       return { ...state, userRoles: payload }
     case ROLE_ACTIONS.CREATE_ROLE:
-      return { ...state, userRoles: [...userRoles, payload] }
+      return { ...state, userRoles: [...state, payload] }
     default:
       return { ...state }
   }

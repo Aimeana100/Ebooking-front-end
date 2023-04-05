@@ -159,9 +159,9 @@ const AddStock = React.forwardRef((props, ref) => {
     isDisabled = !isDisabled
   }
   const onAddItemToStock = async (data) => {
-    console.log('data to add to stock', data)
+    console.log('data to add to stock', { data: data })
     const res = await instance
-      .post('/receive/voucher/add', data)
+      .post('/receive/voucher/add', { data: data })
       .then(toast.success('items added to stock'))
       .catch((err) => {
         toast.error(err.message)

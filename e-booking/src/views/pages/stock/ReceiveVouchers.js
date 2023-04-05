@@ -25,6 +25,7 @@ function ReceiveVouchers() {
         .get('/receive/voucher/all')
         .then((res) => {
           console.log(res)
+          setReceiveVauchers(res.data.data)
         })
         .catch((err) => {
           toast.error(err.message)
@@ -46,19 +47,18 @@ function ReceiveVouchers() {
             <CTable bordered>
               <CTableHead>
                 <CTableRow>
-                  <CTableHeaderCell scope="col">#</CTableHeaderCell>
                   <CTableHeaderCell scope="col"> id </CTableHeaderCell>
                   <CTableHeaderCell scope="col"> Date </CTableHeaderCell>
                   <CTableHeaderCell scope="col"> Action </CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {receiveVauchers && ReceiveVouchers.length !== 0 ? (
+                {receiveVauchers && receiveVauchers.length !== 0 ? (
                   receiveVauchers.map((vaucher, i) => (
                     <CTableRow key={i}>
-                      <CTableDataCell>{i + 1}</CTableDataCell>
+                      <CTableDataCell>{vaucher.id}</CTableDataCell>
                       <CTableDataCell>
-                        {new Date(vaucher.createdAt).toLocaleDateString()}
+                        {new Date(vaucher.date).toLocaleDateString()}
                       </CTableDataCell>
                       <CTableDataCell>
                         <Link
