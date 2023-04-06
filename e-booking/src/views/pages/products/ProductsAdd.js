@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState, useEffect } from 'react'
+
 import {
   CButton,
   CCard,
@@ -8,117 +9,342 @@ import {
   CForm,
   CFormInput,
   CFormLabel,
-  CFormTextarea,
+  CFormSelect,
   CRow,
+  CFormCheck,
 } from '@coreui/react'
+import { useForm } from 'react-hook-form'
+import { useSelector, useDispatch } from 'react-redux'
+import { createProduct } from 'src/redux/Product/productActions'
+import instance from 'src/API/AxiosInstance'
+import { toast } from 'react-hot-toast'
 
-const UserAdd = () => {
-  const [formData, setformData] = useState({})
-  const [roomClass, setroomClass] = useState([])
+const ProductAdd = () => {
+  const { register, handleSubmit, watch, reset } = useForm()
+  const [allDataPackages, setAllDataPackages] = useState([])
+  const [allDataCategories, setAllDataCategories] = useState([])
+  const [allProducts, setAllProducts] = useState([])
+  const dispatch = useDispatch()
 
-  const handleChange = (e) => {
-    setformData({ ...formData, [e.target.name]: e.target.value })
-    console.log(formData)
+  const role = useSelector((state) => state.auth.role)
+
+  const category = watch('category', '---')
+  const packs = watch('packs', '---')
+
+  const onSubmit = (data) => {
+    dispatch(createProduct(data, allProducts))
+    reset()
   }
-  const handleFileChange = (e) => {
-    setformData({ ...formData, [e.target.name]: e.target.files[0] })
-    console.log(formData)
+  const onManagerSubmit = (data) => {
+    reset()
   }
-
-  const hundleSubmit = (e) => {
-    e.preventDefault()
-    roomClass.push(formData)
-  }
-
   useEffect(() => {
-    console.log(roomClass)
-  }, [roomClass])
+    const getAllPacks = async () => {
+      await instance
+        .get('/packages/all')
+        .then((res) => {
+          if (res.status === 200) {
+            setAllDataPackages(res.data.data)
+          }
+        })
+        .catch((err) => {
+          toast.error(err.message)
+        })
+    }
+    const getAllCategories = async () => {
+      await instance
+        .get('/products/category/all')
+        .then((res) => {
+          if (res.status === 200) {
+            setAllDataCategories(res.data.data)
+          }
+        })
+        .catch((err) => {
+          toast.error(err.message)
+        })
+    }
+    const getAllProducts = async () => {
+      await instance
+        .get('/products/all')
+        .then((res) => {
+          if (res.status === 200) {
+            setAllProducts(res.data.data)
+          }
+        })
+        .catch((err) => {
+          toast.error(err.message)
+        })
+    }
+    getAllCategories()
+    getAllPacks()
+    getAllProducts()
+  }, [])
 
-  return (
-    <>
-      <CRow>
-        <CCol xs={12}>
-          <CCard className="mb-4">
-            <CCardHeader>
-              <h2>
-                <strong> Add Product </strong>
-              </h2>
-            </CCardHeader>
-            <CCardBody>
-              <CForm
-                className="row"
-                name="roomClassAddFrm"
-                onSubmit={hundleSubmit}
-                encType="multipart/form"
-              >
-                <CCol md={6}>
-                  <CFormLabel htmlFor="title"> Product title </CFormLabel>
-                  <CFormInput
-                    className="mb-1"
-                    type="text"
-                    name="title"
-                    id="title"
-                    size="md"
-                    required
-                    onChange={handleChange}
-                  />
-                </CCol>
-                <CCol md={6}>
-                  <CFormLabel htmlFor="size"> Product Size </CFormLabel>
-                  <CFormInput
-                    className="mb-1"
-                    type="text"
-                    name="size"
-                    id="size"
-                    size="md"
-                    onChange={handleChange}
-                  />
-                </CCol>
+  if (role === 'admin') {
+    return (
+      <>
+        <CRow>
+          <CCol xs={12}>
+            <CCard className="mb-4">
+              <CCardHeader>
+                <h2 className="text-center">
+                  <strong> Add Product </strong>
+                </h2>
+              </CCardHeader>
+              <CCardBody>
+                <CForm
+                  className="row"
+                  name="roomClassAddFrm"
+                  encType="multipart/form"
+                  onSubmit={handleSubmit(onSubmit)}
+                >
+                  <CCol md={6}>
+                    <CFormLabel htmlFor="title"> Product title </CFormLabel>
+                    <CFormInput
+                      className="mb-1"
+                      type="text"
+                      name="title"
+                      id="title"
+                      size="md"
+                      required
+                      {...register('name')}
+                    />
+                  </CCol>
+                  <CCol md={6}>
+                    <CFormLabel htmlFor="category">
+                      {' '}
+                      Product category{' '}
+                    </CFormLabel>
+                    <CFormSelect
+                      name="category"
+                      id="category"
+                      size="md"
+                      className="mb-3"
+                      aria-label="Room class"
+                      {...register('category', { required: true })}
+                    >
+                      <option>-- Select -- </option>
+                      {allDataCategories && allDataCategories.length !== 0
+                        ? allDataCategories.map((category) => (
+                            <option value={category.id} key={category.id}>
+                              {category.name}
+                            </option>
+                          ))
+                        : null}
+                    </CFormSelect>
+                  </CCol>
+                  <CCol xs={12} className="text-center my-3">
+                    <CButton
+                      component="input"
+                      type="submit"
+                      value=" Save product details"
+                    />
+                  </CCol>
+                  <CCol>
+                    {category && category !== '-- Select -- '
+                      ? allDataPackages.map((packageSet) =>
+                          packageSet.categoryId == category ? (
+                            <CCol md={6}>
+                              <CFormLabel htmlFor="package">
+                                Product packages{' '}
+                              </CFormLabel>
+                              <CFormCheck
+                                name={packageSet.name}
+                                id="check"
+                                size="md"
+                                label={packageSet.name}
+                                value={packageSet.id}
+                                className="mb-3"
+                                aria-label={packageSet.name}
+                                {...register('packs', { required: true })}
+                              />
+                            </CCol>
+                          ) : null,
+                        )
+                      : null}
 
-                <CCol md={6}>
-                  <CFormLabel htmlFor="price"> Price </CFormLabel>
-                  <CFormInput
-                    className="mb-1"
-                    type="number"
-                    name="price"
-                    id="price"
-                    size="md"
-                    required
-                    onChange={handleChange}
-                  />
-                </CCol>
+                    {category && category !== '---'
+                      ? allDataPackages.map((packageSet) =>
+                          packageSet.categoryId == category &&
+                          packs &&
+                          packs !== '---'
+                            ? packs.map((item) =>
+                                packageSet.id == item ? (
+                                  <div>
+                                    <CCol md={6}>
+                                      <CFormLabel
+                                        htmlFor="price1"
+                                        className="col-form-label"
+                                      >
+                                        Set price for
+                                        <span className="strong">
+                                          {' '}
+                                          {packageSet.name}
+                                        </span>{' '}
+                                        package
+                                      </CFormLabel>
+                                    </CCol>
+                                    <CCol md="6">
+                                      <CFormInput
+                                        type="Number"
+                                        min="1"
+                                        id="price1"
+                                        aria-describedby={packageSet.name}
+                                        {...register(
+                                          `package_${packageSet.id}`,
+                                          {
+                                            required: true,
+                                          },
+                                        )}
+                                      />
+                                    </CCol>
+                                  </div>
+                                ) : null,
+                              )
+                            : null,
+                        )
+                      : null}
 
-                <CCol md={6}>
-                  <CFormLabel htmlFor="quantity"> Quantity </CFormLabel>
-                  <CFormInput
-                    className="mb-1"
-                    type="number"
-                    name="quantity"
-                    id="quantity"
-                    size="md"
-                    required
-                    onChange={handleChange}
-                  />
-                </CCol>
-                <div className="mb-3">
-                  <CFormLabel htmlFor="description"> Description </CFormLabel>
-                  <CFormTextarea
-                    name="description"
-                    id="description"
-                    rows="3"
-                    onChange={handleChange}
-                  ></CFormTextarea>
-                </div>
-                <CCol xs={12}>
-                  <CButton component="input" type="submit" value="Add a product" />
-                </CCol>
-              </CForm>
-            </CCardBody>
-          </CCard>
-        </CCol>
-      </CRow>
-    </>
-  )
+                    {packs && packs !== '---' ? (
+                      <CCol xs={12} className="text-center my-3">
+                        <CButton
+                          component="input"
+                          type="submit"
+                          value=" Save product"
+                        />
+                      </CCol>
+                    ) : null}
+                  </CCol>
+                </CForm>
+              </CCardBody>
+            </CCard>
+          </CCol>
+        </CRow>
+      </>
+    )
+  } else {
+    return (
+      <>
+        <CRow>
+          <CCol xs={12}>
+            <CCard className="mb-4">
+              <CCardHeader>
+                <h2 className="text-center">
+                  <strong> Add Product </strong>
+                </h2>
+              </CCardHeader>
+              <CCardBody>
+                <CForm
+                  className="row"
+                  name="roomClassAddFrm"
+                  encType="multipart/form"
+                  onSubmit={handleSubmit(onManagerSubmit)}
+                >
+                  <CCol md={6}>
+                    <CFormLabel htmlFor="title"> Product title </CFormLabel>
+                    <CFormInput
+                      className="mb-1"
+                      type="text"
+                      name="title"
+                      id="title"
+                      size="md"
+                      required
+                      {...register('name')}
+                    />
+                  </CCol>
+                  <CCol md={6}>
+                    <CFormLabel htmlFor="category">
+                      {' '}
+                      Product category{' '}
+                    </CFormLabel>
+                    <CFormSelect
+                      name="category"
+                      id="category"
+                      size="md"
+                      className="mb-3"
+                      aria-label="Room class"
+                      {...register('category', { required: true })}
+                    >
+                      <option>-- Select -- </option>
+                      {allDataCategories && allDataCategories.length !== 0
+                        ? allDataCategories.map((category) => (
+                            <option value={category.id} key={category.id}>
+                              {category.name}
+                            </option>
+                          ))
+                        : null}
+                    </CFormSelect>
+                  </CCol>
+                  <CCol xs={12} className="text-center my-3">
+                    <CButton
+                      component="input"
+                      type="submit"
+                      value=" Save product details"
+                    />
+                  </CCol>
+                </CForm>
+              </CCardBody>
+            </CCard>
+          </CCol>
+        </CRow>
+      </>
+    )
+  }
 }
 
-export default UserAdd
+export default ProductAdd
+
+//product description keep for later
+
+//  <div className="mb-3">
+//                   <CFormLabel htmlFor="description"> Description </CFormLabel>
+//                   <CFormTextarea
+//                     name="description"
+//                     id="description"
+//                     rows="3"
+//
+//                   ></CFormTextarea>
+//                 </div>
+
+//  {formData && formData.category
+//     ? formData.category === 'food'
+//       ? foodPackages.map((itemPackage) => (
+
+//         ))
+//       : drinkPackages.map((itemPackage) => (
+//           <CCol md={6} key={itemPackage.id}>
+//             <CFormLabel htmlFor="package">
+//               Product packages{' '}
+//             </CFormLabel>
+
+//             <CFormCheck
+//               name={itemPackage.name}
+//               id="check"
+//               size="md"
+//               label={itemPackage.name}
+//               value={itemPackage.name}
+//               className="mb-3"
+//               aria-label={itemPackage.name}
+//
+//             />
+//           </CCol>
+//         ))
+//     : null}
+//   <CCol md={6}>
+//     <CFormLabel htmlFor="package"> Prices </CFormLabel>
+
+//</CCol>
+//   <CCol xs={12} className="text-center my-3">
+//     <CButton
+//       component="input"
+//       type="submit"
+//       className="btn-danger"
+//       value=" Save product "
+//     />
+//   </CCol>
+
+// {packs && packs.length !== 0
+//                   ? packs.filter((pack) =>
+
+//                   )
+//                   : null}

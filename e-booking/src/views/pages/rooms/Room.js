@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   CCard,
   CCardBody,
@@ -13,8 +13,28 @@ import {
   CTableRow,
 } from '@coreui/react'
 import { Link } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { selectRoom } from 'src/redux/Room/roomActions'
+import instance from 'src/API/AxiosInstance'
+import { toast } from 'react-hot-toast'
 
 const Room = (prop) => {
+  const dispatch = useDispatch()
+  const [rooms, setRooms] = useState([])
+  useEffect(() => {
+    const getRooms = async () => {
+      const res = await instance
+        .get('/room/all')
+        .then((res) => {
+          setRooms(res.data.data)
+        })
+        .catch((err) => {
+          toast.error(err.message)
+        })
+    }
+    getRooms()
+  }, [])
+
   return (
     <CRow>
       <CCol xs={12}>
@@ -34,28 +54,37 @@ const Room = (prop) => {
                     {' '}
                     Name | N <sup>o</sup>{' '}
                   </CTableHeaderCell>
-                  <CTableHeaderCell scope="col"> Release ON </CTableHeaderCell>
+                  <CTableHeaderCell scope="col"> Action </CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                <CTableRow>
-                  <CTableHeaderCell scope="row">1</CTableHeaderCell>
-                  <CTableDataCell> VIP </CTableDataCell>
-                  <CTableDataCell>#OH46</CTableDataCell>
-                  <CTableDataCell>
-                    {' '}
-                    <Link to={`book/rooom/${1}`}> Book now </Link>{' '}
-                  </CTableDataCell>
-                </CTableRow>
-                <CTableRow>
-                  <CTableHeaderCell scope="row">2</CTableHeaderCell>
-                  <CTableDataCell> VIP </CTableDataCell>
-                  <CTableDataCell> #OH18 </CTableDataCell>
-                  <CTableDataCell>
-                    {' '}
-                    <Link to={`book/rooom/${1}`}> Book now </Link>{' '}
-                  </CTableDataCell>
-                </CTableRow>
+                {rooms && rooms.length !== 0
+                  ? rooms.map((room, i) => {
+                      return (
+                        <CTableRow key={room.id}>
+                          <CTableHeaderCell scope="row">
+                            {i + 1}
+                          </CTableHeaderCell>
+                          <CTableDataCell>
+                            {' '}
+                            {room.RoomClass.name}{' '}
+                          </CTableDataCell>
+                          <CTableDataCell>{`#${room.name}`}</CTableDataCell>
+                          <CTableDataCell>
+                            {' '}
+                            <Link
+                              to="/booking/reservations/add"
+                              onClick={() => {
+                                return dispatch(selectRoom(room))
+                              }}
+                            >
+                              Book now
+                            </Link>{' '}
+                          </CTableDataCell>
+                        </CTableRow>
+                      )
+                    })
+                  : null}
               </CTableBody>
             </CTable>
           </CCardBody>

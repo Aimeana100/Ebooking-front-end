@@ -1,36 +1,45 @@
-import React, { useEffect, useState, useReff } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { CButton } from '@coreui/react'
-
+import axios from 'axios'
 import './login.scss'
 import Navigation from '../navigation/Navigation'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { login } from 'src/redux/Auth/authActions'
 
 function Login() {
+  const navigate = useNavigate()
+  const [loading, setLoading] = useState(false)
+  const isAuth = useSelector((state) => state.auth.isAuth)
+  //const [isAuth, setIsAuth] = useState(auth);
+  const dispatch = useDispatch()
   const [formState, setformState] = useState({})
+
   const handleChange = (event) => {
-    setformState({ ...formState, [event.target.name]: event.target.value })
+    setformState({
+      ...formState,
+      [event.target.name]: event.target.value,
+    })
   }
 
   const handleSubmit = async (e) => {
+    setLoading(true)
     e.preventDefault()
-    console.log(formState)
-
-    // await axios({})
+    dispatch(login(formState))
+    setLoading(false)
+    navigate('/')
   }
 
   return (
     <div className="App">
       <div className="App-container">
         <Navigation />
-        <div className="Login">
+        <div className="Login d-flex flex-column justify-content-center">
           <div className="Login__guides">
-            <h1 className="heading"> Olympic Hotel </h1>
-            <p>Customer management system</p>
-            <p>Hotel resources management </p>
-            <p>E-booking system</p>
+            <h1 className="heading my-0"> Olympic Hotel </h1>
           </div>
           <div className="Login__form">
-            <form onSubmit={handleSubmit} method="POST">
+            <form method="POST" onSubmit={(e) => handleSubmit(e)}>
               <h1 className="form__heading"> Login </h1>
               <div className="Form__row block">
                 <input
@@ -46,8 +55,9 @@ function Login() {
               <div className="Form__row block">
                 <input
                   type="password"
-                  value={formState.pasword}
+                  value={formState.password}
                   name="password"
+                  required
                   id="password"
                   className="form__control"
                   placeholder="*********"
@@ -64,20 +74,16 @@ function Login() {
                   Reset password
                 </Link>
               </div>
-
-              {formState?.email && formState?.pasword && (
+              {(!formState?.email || !formState?.password) && (
                 <CButton type="submit" color="info" shape="rounded-0">
                   Login
                 </CButton>
               )}
 
-              {(!formState?.email || !formState?.pasword) && (
-                <Link to="/">
-                  {' '}
-                  <CButton type="submit" color="info" shape="rounded-0">
-                    Login
-                  </CButton>{' '}
-                </Link>
+              {formState?.email && formState?.password && (
+                <CButton type="submit" disable={loading}>
+                  Login
+                </CButton>
               )}
             </form>
           </div>
@@ -88,3 +94,9 @@ function Login() {
 }
 
 export default Login
+
+// <div>
+//               <p>Customer management system</p>
+//               <p>Hotel resources management </p>
+//               <p>E-booking system</p>
+//             </div>

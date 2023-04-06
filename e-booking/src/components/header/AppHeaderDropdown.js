@@ -13,15 +13,22 @@ import CIcon from '@coreui/icons-react'
 
 import avatar8 from '../../assets/images/avatars/anathole.jpeg'
 import { Link } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { logout } from 'src/redux/Auth/authActions'
 
 const AppHeaderDropdown = () => {
+  const dispatch = useDispatch()
   return (
     <CDropdown variant="nav-item">
       <CDropdownToggle placement="bottom-end" className="py-0" caret={false}>
-        <CAvatar src={avatar8} size="md" />
+        <CAvatar size="md">
+          <CIcon icon={cilUser} />
+        </CAvatar>
       </CDropdownToggle>
       <CDropdownMenu className="pt-0" placement="bottom-end">
-        <CDropdownHeader className="bg-light fw-semibold py-2">Settings</CDropdownHeader>
+        <CDropdownHeader className="bg-light fw-semibold py-2">
+          Settings
+        </CDropdownHeader>
         <CDropdownItem href="#">
           <CIcon icon={cilUser} className="me-2" />
           Profile
@@ -33,7 +40,9 @@ const AppHeaderDropdown = () => {
         <CDropdownDivider />
         <CDropdownItem href="#">
           <CIcon icon={cilLockLocked} className="me-2" />
-          <Link to="/login">Logout</Link>
+          <Link to="/login" onClick={() => dispatch(logout())}>
+            Logout
+          </Link>
         </CDropdownItem>
       </CDropdownMenu>
     </CDropdown>

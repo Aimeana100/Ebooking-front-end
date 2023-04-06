@@ -1,4 +1,6 @@
+//jshint esversion:9
 import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   CButton,
   CCard,
@@ -11,28 +13,30 @@ import {
   CFormSelect,
   CRow,
 } from '@coreui/react'
+import { registerUser } from 'src/redux/Auth/authActions'
+import { getRoles } from 'src/redux/Roles/RolesActions'
+import { getUsers } from 'src/redux/User/userActions'
+import { useForm } from 'react-hook-form'
 
 const UserAdd = () => {
   const [formData, setformData] = useState({})
-  const [roomClass, setroomClass] = useState([])
 
-  const handleChange = (e) => {
-    setformData({ ...formData, [e.target.name]: e.target.value })
-    console.log(formData)
-  }
-  const handleFileChange = (e) => {
-    setformData({ ...formData, [e.target.name]: e.target.files[0] })
-    console.log(formData)
-  }
+  const { register, handleSubmit, watch, reset } = useForm()
 
-  const hundleSubmit = (e) => {
-    e.preventDefault()
-    roomClass.push(formData)
+  const dispatch = useDispatch()
+  const users = useSelector((state) => state.auth.users) || []
+  const roles = useSelector((state) => state.roles.userRoles) || []
+  // const handleChange = (e) => {
+  //   setformData({ ...formData, [e.target.name]: e.target.value })
+  // }
+  const onSubmit = (data) => {
+    dispatch(registerUser(data))
+    reset()
   }
 
   useEffect(() => {
-    console.log(roomClass)
-  }, [roomClass])
+    dispatch(getRoles())
+  }, [])
 
   return (
     <>
@@ -48,7 +52,7 @@ const UserAdd = () => {
               <CForm
                 className="row"
                 name="roomClassAddFrm"
-                onSubmit={hundleSubmit}
+                onSubmit={handleSubmit(onSubmit)}
                 encType="multipart/form"
               >
                 <CCol md={6}>
@@ -60,11 +64,11 @@ const UserAdd = () => {
                     id="firstName"
                     size="md"
                     required
-                    onChange={handleChange}
+                    {...register('firstName')}
                   />
                 </CCol>
                 <CCol md={6}>
-                  <CFormLabel htmlFor="lastName"> First name </CFormLabel>
+                  <CFormLabel htmlFor="lastName"> Last name </CFormLabel>
                   <CFormInput
                     className="mb-1"
                     type="text"
@@ -72,7 +76,7 @@ const UserAdd = () => {
                     id="lastName"
                     size="md"
                     required
-                    onChange={handleChange}
+                    {...register('lastName')}
                   />
                 </CCol>
 
@@ -85,13 +89,16 @@ const UserAdd = () => {
                     id="phone"
                     size="md"
                     required
-                    onChange={handleChange}
+                    {...register('phone')}
                   />
                 </CCol>
                 <CCol md={6}>
                   <CFormLabel htmlFor="email">
                     {' '}
-                    email <span className="text-warning"> use for login </span>{' '}
+                    email <span className="text-warning">
+                      {' '}
+                      use for login{' '}
+                    </span>{' '}
                   </CFormLabel>
                   <CFormInput
                     className="mb-1"
@@ -100,7 +107,7 @@ const UserAdd = () => {
                     id="email"
                     size="md"
                     required
-                    onChange={handleChange}
+                    {...register('email')}
                   />
                 </CCol>
 
@@ -112,29 +119,17 @@ const UserAdd = () => {
                     size="md"
                     className="mb-3"
                     aria-label="Room class"
-                    onChange={handleChange}
+                    {...register('role')}
                   >
                     <option>-- Select -- </option>
-                    <option value="1"> Admin </option>
-                    <option value="2"> Receptionist </option>
-                    <option value="3"> Cashier </option>
-                    <option value="4"> Manager </option>
-                    <option value="4"> Waiter </option>
+                    {roles && roles.length !== 0
+                      ? roles.map((role) => (
+                          <option value={role.id} key={role.id}>
+                            {role.name}
+                          </option>
+                        ))
+                      : null}
                   </CFormSelect>
-                </CCol>
-                <CCol md={6}>
-                  <CFormLabel htmlFor="password"> Password </CFormLabel>
-                  <CFormInput
-                    className="mb-1"
-                    type="text"
-                    name="password"
-                    id="password"
-                    size="md"
-                    required
-                    onChange={handleChange}
-                    value="12345678"
-                    readOnly
-                  />
                 </CCol>
                 <CCol xs={12}>
                   <CButton component="input" type="submit" value="Add a User" />

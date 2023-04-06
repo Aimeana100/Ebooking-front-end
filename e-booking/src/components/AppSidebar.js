@@ -1,7 +1,12 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
-import { CSidebar, CSidebarBrand, CSidebarNav, CSidebarToggler } from '@coreui/react'
+import {
+  CSidebar,
+  CSidebarBrand,
+  CSidebarNav,
+  CSidebarToggler,
+} from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 
 import { AppSidebarNav } from './AppSidebarNav'
@@ -19,18 +24,10 @@ const newLocal = 'Logo'
 const AppSidebar = () => {
   const dispatch = useDispatch()
   const unfoldable = useSelector((state) => state.sidebarUnfoldable)
-  const sidebarShow = useSelector((state) => state.sidebarShow)
+  const sidebarShow = useSelector((state) => state.sidebarShow.sidebarShow)
 
   return (
-    <CSidebar
-      className="primary"
-      position="fixed"
-      unfoldable={unfoldable}
-      visible={sidebarShow}
-      onVisibleChange={(visible) => {
-        dispatch({ type: 'TOGGLE_SIDEBAR', sidebarShow: visible })
-      }}
-    >
+    <CSidebar className="primary" position="fixed" visible={sidebarShow}>
       <CSidebarBrand className="d-none d-md-flex" to="/dashboard">
         {/* <CIcon className="sidebar-brand-full" icon={logoNegative} height={35} /> */}
         <CIcon className="sidebar-brand-narrow" icon={sygnet} height={40} />
@@ -46,7 +43,9 @@ const AppSidebar = () => {
       </CSidebarNav>
       <CSidebarToggler
         className="d-none d-lg-flex"
-        onClick={() => dispatch({ type: 'TOGGLE_SIDEBAR', sidebarUnfoldable: !unfoldable })}
+        onClick={() =>
+          dispatch({ type: 'TOGGLE_SIDEBAR', sidebarUnfoldable: !unfoldable })
+        }
       />
     </CSidebar>
   )

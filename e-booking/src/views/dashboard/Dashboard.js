@@ -1,15 +1,36 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { CCard, CCardBody } from '@coreui/react'
 import WidgetsDropdown from '../widgets/WidgetsDropdown'
+import { useDispatch } from 'react-redux'
+import { getProducts } from 'src/redux/Product/productActions'
+import {
+  getProductCategories,
+  getServiceCategories,
+} from 'src/redux/Categories/categoriesActions'
 
 const Dashboard = () => {
+  const dispatch = useDispatch()
+  const getInitialData = () => {
+    dispatch(getProductCategories())
+    dispatch(getServiceCategories())
+    dispatch(getProducts())
+  }
+  useEffect(() => {
+    getInitialData()
+  }, [])
+
   const progressExample = [
     { title: 'Visits', value: '29.703 Users', percent: 40, color: 'success' },
     { title: 'Rooms', value: '24.093 Users', percent: 20, color: 'info' },
     { title: 'Rooms', value: '78.706 Views', percent: 60, color: 'warning' },
     { title: 'Customers', value: '22.123 Users', percent: 80, color: 'danger' },
-    { title: 'Customers', value: 'Average Rate', percent: 40.15, color: 'primary' },
+    {
+      title: 'Customers',
+      value: 'Average Rate',
+      percent: 40.15,
+      color: 'primary',
+    },
   ]
 
   return (

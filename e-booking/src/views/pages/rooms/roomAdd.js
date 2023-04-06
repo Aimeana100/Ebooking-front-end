@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
 import {
   CButton,
   CCard,
@@ -12,24 +13,40 @@ import {
   CFormTextarea,
   CRow,
 } from '@coreui/react'
+import { useSelector } from 'react-redux'
+import { toast } from 'react-hot-toast'
+import instance from 'src/API/AxiosInstance'
 
 const FormControl = () => {
-  const [formState, setFormState] = useState({})
-  const [rooms, setRooms] = useState([])
+  let loggedInUser = useSelector((state) => state.auth.user.Role.name)
+  const { register, handleSubmit, watch, reset } = useForm()
+  const [roomClasses, setRoomClasses] = useState([])
 
-  const handleChange = (event) => {
-    event.preventDefault()
-    setFormState({ ...formState, [event.target.name]: event.target.value })
+  const onSubmit = async (data) => {
+    const res = await instance
+      .post('/room/add', data)
+      .then((res) => {
+        toast.success('Room created')
+      })
+      .catch((err) => {
+        toast.error(err.message)
+        toast.error('Room  create failed')
+      })
+    reset()
   }
-
-  const handleSubmit = (event) => {
-    event.preventDefault()
-    rooms.push(formState)
-  }
-
   useEffect(() => {
-    console.log(rooms)
-  }, [rooms])
+    const getRoomClasses = async () => {
+      const res = await instance
+        .get('/roomclass/all')
+        .then((res) => {
+          setRoomClasses(res.data.data)
+        })
+        .catch((err) => {
+          toast.error(err.message)
+        })
+    }
+    getRoomClasses()
+  }, [])
 
   return (
     <CRow>
@@ -41,7 +58,7 @@ const FormControl = () => {
             </h2>
           </CCardHeader>
           <CCardBody>
-            <CForm name="roomAddFrm" onSubmit={handleSubmit}>
+            <CForm name="roomAddFrm" onSubmit={handleSubmit(onSubmit)}>
               <div className="mb-3">
                 <CFormLabel htmlFor="roomNumber"> Room number </CFormLabel>
                 <CFormInput
@@ -50,7 +67,7 @@ const FormControl = () => {
                   id="roomNumber"
                   placeholder="V10MT"
                   size="md"
-                  onChange={handleChange}
+                  {...register('name')}
                 />
               </div>
               <div className="mb-3">
@@ -61,11 +78,19 @@ const FormControl = () => {
                   size="md"
                   className="mb-3"
                   aria-label="Room class"
-                  onChange={handleChange}
+                  {...register('roomClassId', { required: true })}
                 >
                   <option>-- Select -- </option>
-                  <option value="1"> Class 1 </option>
-                  <option value="2"> Class 2 </option>
+                  {roomClasses && roomClasses.length !== 0
+                    ? roomClasses.map((e) => {
+                        return (
+                          <option value={e.id} key={e.id}>
+                            {' '}
+                            {e.name}{' '}
+                          </option>
+                        )
+                      })
+                    : null}
                 </CFormSelect>
               </div>
               <div className="mb-3">
@@ -74,11 +99,18 @@ const FormControl = () => {
                   name="description"
                   id="description"
                   rows="3"
-                  onChange={handleChange}
+                  {...register('description')}
                 ></CFormTextarea>
               </div>
               <CCol xs={12}>
-                <CButton component="input" type="submit" value="Add room" />
+                <CButton
+                  component="input"
+                  className={`${
+                    loggedInUser === 'controller' ? 'disabled' : ''
+                  }`}
+                  type="submit"
+                  value="Add room"
+                />
               </CCol>
             </CForm>
           </CCardBody>

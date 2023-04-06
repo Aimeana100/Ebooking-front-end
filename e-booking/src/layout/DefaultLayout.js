@@ -1,7 +1,16 @@
-import React from 'react'
-import { AppContent, AppSidebar, AppFooter, AppHeader } from '../components/index'
+import { React } from 'react'
+import { useLocation } from 'react-router-dom'
+
+import {
+  AppContent,
+  AppSidebar,
+  AppFooter,
+  AppHeader,
+} from '../components/index'
 
 const DefaultLayout = () => {
+  const location = useLocation()
+  console.log(location)
   return (
     <div>
       <AppSidebar />

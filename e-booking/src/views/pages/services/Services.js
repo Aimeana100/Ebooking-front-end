@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   CCard,
   CCardBody,
@@ -13,8 +13,25 @@ import {
   CTableRow,
 } from '@coreui/react'
 import { Link } from 'react-router-dom'
+import instance from 'src/API/AxiosInstance'
+import { toast } from 'react-hot-toast'
 
-const Users = (prop) => {
+const Services = () => {
+  const [services, setServices] = useState([])
+  useEffect(() => {
+    const services = async () => {
+      const data = await instance
+        .get('/services/all')
+        .then((res) => {
+          setServices(res.data.data)
+        })
+        .catch((err) => {
+          toast.error(err.message)
+        })
+    }
+
+    services()
+  }, [])
   return (
     <CRow>
       <CCol xs={12}>
@@ -29,24 +46,37 @@ const Users = (prop) => {
               <CTableHead>
                 <CTableRow>
                   <CTableHeaderCell scope="col">#</CTableHeaderCell>
-                  <CTableHeaderCell scope="col"> Service title </CTableHeaderCell>
-                  <CTableHeaderCell scope="col"> Service Price </CTableHeaderCell>
+                  <CTableHeaderCell scope="col">
+                    {' '}
+                    Service title{' '}
+                  </CTableHeaderCell>
+                  <CTableHeaderCell scope="col">
+                    {' '}
+                    Service Price{' '}
+                  </CTableHeaderCell>
                   <CTableHeaderCell scope="col"> Description </CTableHeaderCell>
                   <CTableHeaderCell scope="col"> Option </CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                <CTableRow>
-                  <CTableHeaderCell scope="row">1</CTableHeaderCell>
-                  <CTableDataCell> Swimming pool </CTableDataCell>
-                  <CTableDataCell> 2000 </CTableDataCell>
-                  <CTableDataCell> Swimming pool access for a whole day once </CTableDataCell>
-                  <CTableDataCell>
-                    <Link to="" className="btn btn-sm btn-warning">
-                      Edit
-                    </Link>
-                  </CTableDataCell>
-                </CTableRow>
+                {services && services.length !== 0
+                  ? services.map((service, i) => (
+                      <CTableRow>
+                        <CTableHeaderCell scope="row">{i + 1}</CTableHeaderCell>
+                        <CTableDataCell> {service.name} </CTableDataCell>
+                        <CTableDataCell> {service.price} </CTableDataCell>
+                        <CTableDataCell>
+                          {' '}
+                          Swimming pool access for a whole day once{' '}
+                        </CTableDataCell>
+                        <CTableDataCell>
+                          <Link to="" className="btn btn-sm btn-warning">
+                            Edit
+                          </Link>
+                        </CTableDataCell>
+                      </CTableRow>
+                    ))
+                  : null}
               </CTableBody>
             </CTable>
           </CCardBody>
@@ -56,4 +86,4 @@ const Users = (prop) => {
   )
 }
 
-export default Users
+export default Services
