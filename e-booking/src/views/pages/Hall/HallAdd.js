@@ -22,8 +22,7 @@ function HallAdd() {
   const [hallServices, setHallServices] = useState([])
   const { register, handleSubmit, reset } = useForm()
   const onSubmit = async (data) => {
-    console.log(data)
-    const res = await instance
+    await instance
       .post('/halls/add', data)
       .then((res) => {
         toast.success('Hall created')

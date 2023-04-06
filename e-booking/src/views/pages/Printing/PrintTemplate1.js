@@ -32,7 +32,7 @@ const PrintTemplate1 = React.forwardRef((props, ref) => {
           </div>
         </CRow>
 
-        <h2 className="text-center my-3">{title}</h2>
+        {title ? <h2 className="text-center my-3">{title}</h2> : null}
 
         <CCardBody>{props.children}</CCardBody>
         <div className="mt-2">

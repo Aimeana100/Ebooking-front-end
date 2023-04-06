@@ -26,7 +26,7 @@ const Products = () => {
   console.log(products)
   useEffect(() => {
     const getAllProducts = async () => {
-      const res = await instance
+      await instance
         .get('/products/all')
         .then((res) => {
           if (res.status === 200) {

@@ -31,15 +31,16 @@ function ProductEdit() {
   }
   useEffect(() => {
     const getAllCategories = async () => {
-      const res = await instance
+      await instance
         .get('/products/category/all')
-        .then(() => {})
+        .then((res) => {
+          if (res.status === 200) {
+            setAllDataCategories(res.data.data)
+          }
+        })
         .catch((err) => {
           toast.error(err.message)
         })
-      if (res.status === 200) {
-        setAllDataCategories(res.data.data)
-      }
     }
     getAllCategories()
   }, [])

@@ -20,70 +20,27 @@ import instance from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
 
 const ProductAdd = () => {
-  const [success, setSuccess] = useState(false)
   const { register, handleSubmit, watch, reset } = useForm()
   const [allDataPackages, setAllDataPackages] = useState([])
   const [allDataCategories, setAllDataCategories] = useState([])
   const [allProducts, setAllProducts] = useState([])
   const dispatch = useDispatch()
-  const [categories, setCategories] = useState([
-    { name: 'food', id: 5001209 },
-    { name: 'drinks', id: 69560 },
-  ])
-  const [drinkPackages, setDrinkPackages] = useState({
-    id: '69560',
-    packs: [
-      { name: 'bottle', id: 500129 },
-      { name: 'shot', id: 6560 },
-      { name: 'glass', id: 6950 },
-    ],
-  })
-  const [foodPackages, setFoodPackages] = useState({
-    id: '5001209',
-    packs: [
-      { name: 'plate', id: 50129 },
-      { name: 'large-plate', id: 660 },
-      { name: 'piece', id: 650 },
-    ],
-  })
+
   const role = useSelector((state) => state.auth.role)
-  const packages = [drinkPackages, foodPackages]
+
   const category = watch('category', '---')
   const packs = watch('packs', '---')
-  console.log('packs', packs)
 
   const onSubmit = (data) => {
-    console.log(data)
     dispatch(createProduct(data, allProducts))
     reset()
   }
   const onManagerSubmit = (data) => {
-    console.log(data, { role })
     reset()
   }
-
-  //   category !== '---' && category !== '-- Select -- '
-  //     ? packages.map((packageSet) =>
-  //         packageSet.id === category && packs && packs !== '---'
-  //           ? packageSet.packs.map((pack) =>
-  //               packs.map((item) => {
-  //                 if (pack.id == item) {
-  //                   console.log('now now ' + pack.name);
-  //                 }
-  //                 return pack.id == item ? item : null;
-  //               })
-  //             )
-  //           : null
-  //       )
-  //     : null;
-  console.log('this is the role', role)
-  console.log(category)
-  console.log(allDataPackages)
-  console.log(allDataCategories)
-
   useEffect(() => {
     const getAllPacks = async () => {
-      const res = await instance
+      await instance
         .get('/packages/all')
         .then((res) => {
           if (res.status === 200) {
@@ -95,7 +52,7 @@ const ProductAdd = () => {
         })
     }
     const getAllCategories = async () => {
-      const res = await instance
+      await instance
         .get('/products/category/all')
         .then((res) => {
           if (res.status === 200) {
@@ -103,16 +60,15 @@ const ProductAdd = () => {
           }
         })
         .catch((err) => {
-          console.log('error getting categories')
+          toast.error(err.message)
         })
     }
     const getAllProducts = async () => {
-      const res = await instance
+      await instance
         .get('/products/all')
         .then((res) => {
           if (res.status === 200) {
             setAllProducts(res.data.data)
-            setSuccess(true)
           }
         })
         .catch((err) => {

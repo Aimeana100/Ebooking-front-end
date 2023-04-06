@@ -9,8 +9,7 @@ export const selectProduct = (payload) => {
 }
 export const updateProduct = (payloadApi, payloadLocal) => {
   return async function (dispatch) {
-    console.log(payloadApi.id)
-    const res = await instance
+    await instance
       .put(`/products/update`, { ...payloadApi })
       .then((res) => {
         dispatch({
@@ -65,7 +64,7 @@ export const updateProduct = (payloadApi, payloadLocal) => {
 // }
 export const getProducts = function () {
   return async function (dispatch) {
-    const res = await instance
+    await instance
       .get(`/products/all`)
       .then((res) => {
         dispatch({ type: PRODUCT_ACTIONS.GET_ALL, payload: res.data.data })
@@ -79,7 +78,7 @@ export const getProducts = function () {
 
 export const createProduct = (payload, products) => {
   return async function (dispatch) {
-    const res = await instance
+    await instance
       .post(`/products/add`, { ...payload })
       .then((res) => {
         dispatch({

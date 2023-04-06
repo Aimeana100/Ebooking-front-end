@@ -27,7 +27,6 @@ import { currencies } from 'src/utils/constants'
 
 const ReservationAdd = () => {
   const { register, handleSubmit, watch, reset } = useForm()
-
   const [roomClass, setroomClass] = useState([])
   const [customer, setCustomer] = useState([])
   const [service, setService] = useState([])
@@ -49,7 +48,6 @@ const ReservationAdd = () => {
   const additional = watch('additionalServices') || {}
   const roomK = watch('roomClass') || null
   const details = watch('details') || null
-  const paymentMethod = watch('paymentMethod') || null
 
   const additionalTotal =
     Object.keys(additional).length !== 0
@@ -77,8 +75,6 @@ const ReservationAdd = () => {
     service && service.length !== 0 ? getAllRemoveDates(service[0]) : []
 
   const onSubmit = (data) => {
-    console.log('this is dates', { startDate, endDate })
-
     if (type === 'room' && days && !roomK) {
       data.roomId = service[0].id
       data.amount = service[0].RoomClass.price * days
@@ -105,15 +101,14 @@ const ReservationAdd = () => {
       checkOut: new Date(endDate.toString()).getTime(),
     }
     data = { ...data, status: 'in progress' }
-    console.log('THIS IS DATA BEFORE RESERVATION ADD', data)
     const createReservation = async () => {
       console.log('before create reservation', data)
-      const res = await instance
+      await instance
         .post('/reservation/add', data)
-        .then((res) => {
+        .then(() => {
           toast.success('Reservation added')
         })
-        .catch((err) => {
+        .catch(() => {
           toast.error('Rerservation add failed')
         })
     }
@@ -121,11 +116,9 @@ const ReservationAdd = () => {
     reset()
   }
 
-  console.log({ startDate, endDate })
-  console.log(priceRoom)
   useEffect(() => {
     const getCustomers = async () => {
-      const res = await instance
+      await instance
         .get('/customers/all')
         .then((res) => {
           setCustomers(res.data.data)
@@ -135,7 +128,7 @@ const ReservationAdd = () => {
         })
     }
     const getRooms = async () => {
-      const res = await instance
+      await instance
         .get('/room/all')
         .then((res) => {
           setRooms(res.data.data)
@@ -145,7 +138,7 @@ const ReservationAdd = () => {
         })
     }
     const getHallServices = async () => {
-      const res = await instance
+      await instance
         .get('/hall/services/all')
         .then((res) => {
           setHallServices(res.data.data)
@@ -155,7 +148,7 @@ const ReservationAdd = () => {
         })
     }
     const getHalls = async () => {
-      const res = await instance
+      await instance
         .get('/halls/all')
         .then((res) => {
           setHalls(res.data.data)
@@ -166,7 +159,7 @@ const ReservationAdd = () => {
     }
 
     const getRoomClasses = async () => {
-      const res = await instance
+      await instance
         .get('/roomclass/all')
         .then((res) => {
           setRoomClasses(res.data.data)

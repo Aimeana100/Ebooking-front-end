@@ -133,10 +133,11 @@ const AddBarItem = React.forwardRef((props, ref) => {
     isDisabled = !isDisabled
   }
   const onAddItemToStock = async (data) => {
-    console.log('data to add to stock', data)
-    const res = await instance
+    await instance
       .post('/purchase/order/data', data)
-      .then(toast.success('items added to stock'))
+      .then(() => {
+        toast.success('items added to stock')
+      })
       .catch((err) => {
         toast.error(err.message)
       })
@@ -156,10 +157,9 @@ const AddBarItem = React.forwardRef((props, ref) => {
 
   useEffect(() => {
     const getPurchaseOrders = async () => {
-      const res = await instance
+      await instance
         .get('/purchase/order/all')
         .then((res) => {
-          console.log(res)
           setPurchaseOrders(res.data.data)
         })
         .catch((err) => {

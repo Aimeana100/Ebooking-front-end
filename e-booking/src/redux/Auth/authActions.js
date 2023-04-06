@@ -11,7 +11,7 @@ export const auth = function (payload) {
 }
 export const login = function (payload) {
   return async function (dispatch) {
-    const res1 = await instance
+    await instance
       .post(`/login`, payload)
       .then((res1) => {
         console.log('RES1 ---RES1', res1)
@@ -46,7 +46,7 @@ export const registerUser = function (payload) {
   //payload.role = Number(payload.role);
   console.log(payload)
   return async function (dispatch) {
-    const res = await instance
+    await instance
       .post(`users/add`, payload)
       .then((res) => {
         if (res.data.user) {
@@ -68,6 +68,7 @@ export const registerUser = function (payload) {
 
 export const logout = function () {
   toast.success('User logged out')
+  localStorage.setItem('token', null)
   return {
     type: IS_AUTH.LOGOUT,
     isAuth: false,
@@ -76,9 +77,9 @@ export const logout = function () {
 
 export const getUsers = function () {
   return async function (dispatch) {
-    const res = await instance
+    await instance
       .get('/users/all')
-      .then(() => {
+      .then((res) => {
         if (res.users) {
           dispatch({ type: IS_AUTH.GET_USERS, payload: res.data.users })
         }

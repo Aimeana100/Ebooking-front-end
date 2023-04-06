@@ -10,7 +10,7 @@ const baseUrlLive = 'http://206.81.29.111:80/api/v1'
 
 export const getStockItems = () => {
   return async function (dispatch) {
-    let res = await instance
+    await instance
       .get('stock/item/all')
       .then((res) => {
         dispatch({
@@ -33,28 +33,31 @@ export const getStockItems = () => {
   }
 }
 export const addStockItem = (payload) => {
-  console.log('ITEM ADD', payload)
   return async function (dispatch) {
-    const res = await instance
+    await instance
       .post(`/stock/item/add`, payload)
-      .then((res) => {
+      .then(() => {
         dispatch({
           type: STOCK_ITEM_ACTIONS_TYPES.CREATE_ITEMS,
           payload,
         })
-
         toast.success('Item added to stock')
       })
       .catch((err) => {
-        console.log({ errMessage: err.message })
+        toast.error(err.message)
       })
   }
 }
 export const bookRoom = (payload) => {
   return async function (dispatch) {
-    const res = await instance
+    await instance
       .put(`/rooms/${payload.id}`, {
         isBooked: true,
+      })
+      .then((res) => {
+        if (res) {
+          console.log(res.data.status)
+        }
       })
       .catch((err) => {
         console.log({ errMessage: err.message })
@@ -63,16 +66,18 @@ export const bookRoom = (payload) => {
           payload: null,
         })
       })
-    if (res) {
-      console.log(res.data.status)
-    }
   }
 }
 export const releaseRoom = (payload) => {
   return async function (dispatch) {
-    const res = await instance
+    await instance
       .put(`/rooms/${payload.id}`, {
         isBooked: false,
+      })
+      .then((res) => {
+        if (res) {
+          console.log(res.data.status)
+        }
       })
       .catch((err) => {
         console.log({ errMessage: err.message })
@@ -81,8 +86,5 @@ export const releaseRoom = (payload) => {
           payload: null,
         })
       })
-    if (res) {
-      console.log(res.data.status)
-    }
   }
 }

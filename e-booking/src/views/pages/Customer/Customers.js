@@ -14,9 +14,8 @@ import {
   CTableHeaderCell,
   CTableRow,
 } from '@coreui/react'
-import { Link } from 'react-router-dom'
-import { selectItem } from 'src/redux/Select/selectionActions'
-import { useDispatch } from 'react-redux'
+
+import { useSelector } from 'react-redux'
 import instance from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
 import { useForm } from 'react-hook-form'
@@ -24,11 +23,11 @@ import CustomersTable from './CustomersTable'
 function Customers() {
   const { watch, register } = useForm()
   const query = watch('query') || ''
-  const dispatch = useDispatch()
+  const role = useSelector((state) => state.auth.role)
   let [customers, setCustomers] = useState([])
   useEffect(() => {
     const getCustomers = async () => {
-      const res = await instance
+      await instance
         .get('/customers/all')
         .then((res) => {
           setCustomers(res.data.data)
@@ -76,7 +75,9 @@ function Customers() {
                   <CTableHeaderCell scope="col">#</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Name</CTableHeaderCell>
                   <CTableHeaderCell scope="col"> ID</CTableHeaderCell>
-                  <CTableHeaderCell scope="col"> action</CTableHeaderCell>
+                  {role && role === 'admin' ? (
+                    <CTableHeaderCell scope="col"> action</CTableHeaderCell>
+                  ) : null}
                 </CTableRow>
               </CTableHead>
               <CTableBody>

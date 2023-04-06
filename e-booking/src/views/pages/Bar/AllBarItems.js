@@ -22,7 +22,7 @@ function AllBarItems() {
   const [items, setItems] = useState([])
   useEffect(() => {
     const getItems = async () => {
-      const res = await instance
+      await instance
         .get('/stock/item/all')
         .then((res) => {
           setItems(res.data.data)

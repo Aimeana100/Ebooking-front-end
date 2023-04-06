@@ -25,7 +25,16 @@ import StockOrder from './StockOrder'
 
 const RequestBarItem = React.forwardRef((props, ref) => {
   const componentRef = useRef()
-  const { register, handleSubmit, getValues, reset } = useForm()
+  const {
+    register,
+    handleSubmit,
+    watch,
+    getValues,
+    formState: { errors },
+    reset,
+  } = useForm({ mode: 'onChange' })
+  let quantity = watch('quantity')
+
   let [stockItems, setStockItems] = useState([])
   const [visible, setVisible] = useState(false)
   let [items, setItems] = useState(stockItems)
@@ -34,18 +43,19 @@ const RequestBarItem = React.forwardRef((props, ref) => {
   const clearPurchaseOrder = () => {
     setRequestItems([])
   }
-
+  const maxValue = item && item.length !== 0 ? item[0].quantity : null
+  const dontAdd = quantity && maxValue && quantity > maxValue ? true : false
   const createPurchaseOrder = async (data) => {
-    const res = await instance
+    await instance
       .post('/purchase/order/add', data)
-      .then((res) => {
+      .then(() => {
         toast.success('purchase order created')
       })
       .catch((err) => {
         toast.error(err.message)
       })
   }
-  console.log(item)
+
   const onAdd = (data) => {
     data = {
       ...data,
@@ -64,7 +74,7 @@ const RequestBarItem = React.forwardRef((props, ref) => {
   }
   useEffect(() => {
     const getStockItems = async () => {
-      const res = await instance
+      await instance
         .get('/stock/item/balance')
         .then((res) => {
           console.log(res)
@@ -123,7 +133,11 @@ const RequestBarItem = React.forwardRef((props, ref) => {
             </CCardHeader>
             <CCollapse visible={visible}>
               <CCardBody>
-                <CForm name="roomClassAddFrm" encType="multipart/form">
+                <CForm
+                  name="roomClassAddFrm"
+                  encType="multipart/form"
+                  onSubmit={handleSubmit(onAdd)}
+                >
                   <CRow>
                     <CCol md={6}>
                       <CFormLabel htmlFor="unit"> Bar </CFormLabel>
@@ -171,9 +185,18 @@ const RequestBarItem = React.forwardRef((props, ref) => {
                         id="quantity"
                         placeholder="50  "
                         size="md"
-                        required
-                        {...register('quantity')}
+                        {...register('quantity', {
+                          min: 0,
+                          max: maxValue,
+                        })}
                       />
+
+                      {errors.quantity && <p>{errors.quantity.message}</p>}
+                      {quantity && maxValue && quantity > maxValue ? (
+                        <p className="text-danger">
+                          Quantity must be less than {maxValue}
+                        </p>
+                      ) : null}
                     </CCol>
                     <CCol md={6}>
                       <CFormLabel htmlFor="unit"> Unit </CFormLabel>
@@ -195,6 +218,7 @@ const RequestBarItem = React.forwardRef((props, ref) => {
                     <CButton
                       component="input"
                       value="Add item"
+                      disabled={dontAdd}
                       onClick={() => {
                         const data = getValues()
                         return onAdd(data)

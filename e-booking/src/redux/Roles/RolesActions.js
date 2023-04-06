@@ -8,14 +8,18 @@ import { ROLE_ACTIONS } from './RoleActionTypes'
 
 export const getRoles = function () {
   return async (dispatch) => {
-    const res = await instance.get(`/roles/all`).catch((err) => {
-      toast.error(err.message)
-    })
-    if (res.data) {
-      dispatch({
-        type: ROLE_ACTIONS.GET_ROLES,
-        payload: res.data.roles,
+    await instance
+      .get(`/roles/all`)
+      .then((res) => {
+        if (res.data) {
+          dispatch({
+            type: ROLE_ACTIONS.GET_ROLES,
+            payload: res.data.roles,
+          })
+        }
       })
-    }
+      .catch((err) => {
+        toast.error(err.message)
+      })
   }
 }

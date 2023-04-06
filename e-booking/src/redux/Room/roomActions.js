@@ -3,6 +3,7 @@
 import { getData, postData, updateData } from 'src/API'
 import instance from 'src/API/AxiosInstance'
 import { ROOM_ACTION_TYPES } from './roomActionTypes'
+import { toast } from 'react-hot-toast'
 
 export const selectRoom = (payload) => {
   return { type: ROOM_ACTION_TYPES.SELECT_ROOM, payload }
@@ -30,51 +31,59 @@ export const getRooms = () => {
 }
 export const addRoom = (payload) => {
   return async function (dispatch) {
-    const res = await instance.get(`/rooms`, payload).catch((err) => {
-      console.log({ errMessage: err.message })
-      dispatch({
-        type: ROOM_ACTION_TYPES.ADD_ROOM,
-        payload: null,
+    await instance
+      .get(`/rooms`, payload)
+      .then((res) => {
+        if (res) {
+          dispatch(addRoom(payload))
+        }
       })
-    })
-    if (res) {
-      dispatch(addRoom(payload))
-    }
+      .catch((err) => {
+        toast.error(err.message)
+        dispatch({
+          type: ROOM_ACTION_TYPES.ADD_ROOM,
+          payload: null,
+        })
+      })
   }
 }
 export const bookRoom = (payload) => {
   return async function (dispatch) {
-    const res = await instance
+    await instance
       .put(`/rooms/${payload.id}`, {
         isBooked: true,
       })
+      .then((res) => {
+        if (res) {
+          console.log(res.data.status)
+        }
+      })
       .catch((err) => {
-        console.log({ errMessage: err.message })
+        toast.error(err.message)
         dispatch({
           type: ROOM_ACTION_TYPES.BOOK_ROOM,
           payload: null,
         })
       })
-    if (res) {
-      console.log(res.data.status)
-    }
   }
 }
 export const releaseRoom = (payload) => {
   return async function (dispatch) {
-    const res = await instance
+    await instance
       .put(`/rooms/${payload.id}`, {
         isBooked: false,
       })
+      .then((res) => {
+        if (res) {
+          console.log(res.data.status)
+        }
+      })
       .catch((err) => {
-        console.log({ errMessage: err.message })
+        toast.error(err.message)
         dispatch({
           type: ROOM_ACTION_TYPES.RELEASE_ROOM,
           payload: null,
         })
       })
-    if (res) {
-      console.log(res.data.status)
-    }
   }
 }

@@ -13,17 +13,18 @@ import {
   CTableRow,
 } from '@coreui/react'
 import { Link } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { selectItem } from 'src/redux/Select/selectionActions'
 import instance from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
 
 function Hall() {
   const dispatch = useDispatch()
+  const role = useSelector((state) => state.auth.role)
   const [halls, setHalls] = useState([])
   useEffect(() => {
     const getHalls = async () => {
-      const res = await instance
+      await instance
         .get('/halls/all')
         .then((res) => {
           setHalls(res.data.data)
@@ -51,7 +52,10 @@ function Hall() {
                 <CTableRow>
                   <CTableHeaderCell scope="col">#</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Name</CTableHeaderCell>
-                  <CTableHeaderCell scope="col"> Action </CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Price</CTableHeaderCell>
+                  {role && role === 'admin' ? (
+                    <CTableHeaderCell scope="col"> Action </CTableHeaderCell>
+                  ) : null}
                 </CTableRow>
               </CTableHead>
               <CTableBody>
@@ -63,28 +67,39 @@ function Hall() {
                             {i + 1}
                           </CTableHeaderCell>
                           <CTableDataCell>{`${hall.name}`}</CTableDataCell>
-                          <CTableDataCell>
-                            {' '}
-                            <Link
-                              to="/booking/halls/info"
-                              onClick={() => {
-                                console.log('hall view')
-                                return dispatch(selectItem(hall))
-                              }}
-                            >
-                              view
-                            </Link>{' '}
-                            <Link
-                              to="/booking/halls/edit"
-                              onClick={() => {
-                                console.log('hall edit')
+                          <CTableDataCell>{`${hall.price} RWF`}</CTableDataCell>
+                          {role && role === 'admin' ? (
+                            <CTableDataCell>
+                              {' '}
+                              <Link
+                                to="/booking/halls/info"
+                                className="text-decoration-none btn btn-primary "
+                                disabled={
+                                  role && role !== 'admin' ? true : false
+                                }
+                                onClick={() => {
+                                  console.log('hall view')
+                                  return dispatch(selectItem(hall))
+                                }}
+                              >
+                                view
+                              </Link>{' '}
+                              <Link
+                                to="/booking/halls/edit"
+                                disabled={
+                                  role && role !== 'admin' ? true : false
+                                }
+                                className="text-decoration-none btn btn-warning"
+                                onClick={() => {
+                                  console.log('hall edit')
 
-                                return dispatch(selectItem(hall))
-                              }}
-                            >
-                              edit
-                            </Link>{' '}
-                          </CTableDataCell>
+                                  return dispatch(selectItem(hall))
+                                }}
+                              >
+                                edit
+                              </Link>{' '}
+                            </CTableDataCell>
+                          ) : null}
                         </CTableRow>
                       )
                     })

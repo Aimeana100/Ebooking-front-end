@@ -8,7 +8,7 @@ import { CATEGORY_ACTIONS } from './categoriesActionTypes'
 
 export const createProductCategory = function (payload) {
   return async function (dispatch) {
-    const res = await instance
+    await instance
       .get(`/products/category/add`)
       .then((res) => {
         dispatch({
@@ -26,7 +26,7 @@ export const createProductCategory = function (payload) {
 
 export const createServiceCategory = function (payload) {
   return async function (dispatch) {
-    const res = await instance
+    await instance
       .get(`/products/category/add`)
       .then((res) => {
         dispatch({
@@ -44,7 +44,7 @@ export const createServiceCategory = function (payload) {
 
 export const getProductCategories = function () {
   return async function (dispatch) {
-    const res = await instance
+    await instance
       .get(`/products/category/all`)
       .then((res) => {
         dispatch({
@@ -60,7 +60,7 @@ export const getProductCategories = function () {
 }
 export const getServiceCategories = function () {
   return async function (dispatch) {
-    const res = await instance
+    await instance
       .get(`/products/category/all`)
       .then((res) => {
         dispatch({

@@ -119,6 +119,9 @@ const RequestToStock = React.lazy(() =>
 const AllRequestToCashier = React.lazy(() =>
   import('./views/pages/Requests/AllRequestToCashier'),
 )
+const ViewRequestToCashier = React.lazy(() =>
+  import('./views/pages/Requests/ViewRequestToCashier'),
+)
 //stock
 
 const AddStock = React.lazy(() => import('./views/pages/stock/AddStock'))
@@ -147,6 +150,9 @@ const CustomerAdd = React.lazy(() =>
 )
 const CustomerView = React.lazy(() =>
   import('./views/pages/Customer/CustomerView'),
+)
+const CustomerEdit = React.lazy(() =>
+  import('./views/pages/Customer/CustomerEdit'),
 )
 
 //reports
@@ -467,6 +473,12 @@ const routes = [
     element: AllRequestToCashier,
   },
   {
+    path: '/booking/requests/cashier/view',
+    exact: true,
+    name: 'View Request To Cashier',
+    element: ViewRequestToCashier,
+  },
+  {
     path: '/booking/requests/stock',
     exact: true,
     name: 'Stock request',
@@ -489,6 +501,12 @@ const routes = [
     exact: true,
     name: 'View customer',
     element: CustomerView,
+  },
+  {
+    path: '/customers/edit',
+    exact: true,
+    name: 'Edit customer',
+    element: CustomerEdit,
   },
   {
     path: '/reports/create',

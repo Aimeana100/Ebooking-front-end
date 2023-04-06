@@ -16,22 +16,25 @@ import { useSelector } from 'react-redux'
 import { toast } from 'react-hot-toast'
 import instance from 'src/API/AxiosInstance'
 
-function CustomerAdd() {
-  let loggedInUser = useSelector((state) => state.auth.user.Role.name)
+function CustomerEdit() {
+  const selectedCustomer = useSelector((state) => state.selection.selected)
   const { register, handleSubmit, watch, reset } = useForm()
   const customerType = watch('customerType') || 'individual'
-
+  const loggedInUser = useSelector((state) => state.auth.role)
   const onSubmit = async (data) => {
+    console.log('903184-04389148-')
     if (customerType && customerType === 'company') {
       delete data['gender']
     }
+
+    //update user
     await instance
-      .post('/customers/add', data)
+      .put('/customers/update', { ...data, id: selectedCustomer.id })
       .then(() => {
-        toast.success('customer created')
+        toast.success('customer updated successfully')
       })
       .catch(() => {
-        toast.error('customer creation failed')
+        toast.error('customer update failed')
       })
     reset()
   }
@@ -58,33 +61,20 @@ function CustomerAdd() {
                   type="text"
                   name="names"
                   id="names"
-                  size="md"
+                  defaultValue={selectedCustomer.names}
                   placeholder="...firstname & lastname"
                   required
                   {...register('names', { required: true })}
                 />
               </CCol>
               <CCol md={6}>
-                <CFormLabel htmlFor="firstName"> Nationality </CFormLabel>
-                <CFormInput
-                  className="mb-1"
-                  type="text"
-                  name="nationality"
-                  id="nationality"
-                  size="md"
-                  placeholder="...nationality"
-                  required
-                  {...register('nationality', { required: true })}
-                />
-              </CCol>
-
-              <CCol md={6}>
                 <CFormLabel htmlFor="customer_type"> Type </CFormLabel>
                 <CFormSelect
                   name="type"
                   id="type"
-                  size="md"
                   className="mb-3"
+                  defaultValue={selectedCustomer.customerType}
+                  disabled={true}
                   aria-label="customer type"
                   {...register('customerType', { required: true })}
                 >
@@ -100,7 +90,7 @@ function CustomerAdd() {
                   type="text"
                   name="phone"
                   id="phone"
-                  size="md"
+                  defaultValue={selectedCustomer.phone}
                   required
                   {...register('phone')}
                 />
@@ -112,7 +102,7 @@ function CustomerAdd() {
                   type="text"
                   name="email"
                   id="email"
-                  size="md"
+                  defaultValue={selectedCustomer.email}
                   required
                   {...register('email')}
                 />
@@ -130,7 +120,7 @@ function CustomerAdd() {
                   type="text"
                   name="id"
                   id="id"
-                  size="md"
+                  defaultValue={selectedCustomer.identification}
                   required
                   {...register('identification', { required: true })}
                 />
@@ -141,9 +131,12 @@ function CustomerAdd() {
                   <CFormSelect
                     name="gender"
                     id="gender"
-                    size="md"
                     className="mb-3"
                     aria-label="gender"
+                    disabled={selectedCustomer.gender ? false : true}
+                    defaultValue={
+                      selectedCustomer.gender ? selectedCustomer.gender : ''
+                    }
                     {...register('gender')}
                   >
                     <option value="female"> Female</option>
@@ -160,7 +153,7 @@ function CustomerAdd() {
                     loggedInUser === 'controller' ? 'disabled' : ''
                   }`}
                   type="submit"
-                  value="Add Customer"
+                  value="Update Customer"
                 />
               </CCol>
             </CForm>
@@ -171,4 +164,4 @@ function CustomerAdd() {
   )
 }
 
-export default CustomerAdd
+export default CustomerEdit

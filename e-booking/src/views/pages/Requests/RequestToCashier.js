@@ -35,16 +35,16 @@ const RequestToCashier = React.forwardRef((props, ref) => {
   }
 
   const createPurchaseOrder = async (data) => {
-    const res = await instance
+    await instance
       .post('/purchase/order/add', data)
-      .then((res) => {
+      .then(() => {
         toast.success('purchase order created')
       })
       .catch((err) => {
         toast.error(err.message)
       })
   }
-  console.log(item)
+
   const onAdd = (data) => {
     data = { ...data, name: item[0].name, id: item[0].id }
     setRequestItems([...requestItems, data])
@@ -56,10 +56,9 @@ const RequestToCashier = React.forwardRef((props, ref) => {
   }
   useEffect(() => {
     const getStockItems = async () => {
-      const res = await instance
+      await instance
         .get('/stock/item/all')
         .then((res) => {
-          console.log(res)
           setStockItems(res.data.data)
         })
         .catch((err) => {

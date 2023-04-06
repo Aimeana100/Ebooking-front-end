@@ -22,8 +22,8 @@ function AddPaymentModal(props) {
   const { register, handleSubmit, watch, reset } = useForm()
   const onSubmit = async (data) => {
     data.reservationId = reservation.id
-    console.log(data)
-    const res = instance
+
+    await instance
       .post('/reservation/pay', data)
       .then(() => {
         toast.success('payment added')

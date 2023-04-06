@@ -5,10 +5,7 @@ import './login.scss'
 import Navigation from '../navigation/Navigation'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { auth, login } from 'src/redux/Auth/authActions'
-import { showSuccess } from 'src/redux/UI/ui-actions'
-import { success } from 'src/redux/Notifications/notificationActions'
-import { toast } from 'react-hot-toast'
+import { login } from 'src/redux/Auth/authActions'
 
 function Login() {
   const navigate = useNavigate()
@@ -37,12 +34,9 @@ function Login() {
     <div className="App">
       <div className="App-container">
         <Navigation />
-        <div className="Login">
+        <div className="Login d-flex flex-column justify-content-center">
           <div className="Login__guides">
-            <h1 className="heading"> Olympic Hotel </h1>
-            <p>Customer management system</p>
-            <p>Hotel resources management </p>
-            <p>E-booking system</p>
+            <h1 className="heading my-0"> Olympic Hotel </h1>
           </div>
           <div className="Login__form">
             <form method="POST" onSubmit={(e) => handleSubmit(e)}>
@@ -100,3 +94,9 @@ function Login() {
 }
 
 export default Login
+
+// <div>
+//               <p>Customer management system</p>
+//               <p>Hotel resources management </p>
+//               <p>E-booking system</p>
+//             </div>

@@ -37,7 +37,7 @@ const ReservationReport = React.forwardRef((props, ref) => {
   const [reservations, setReservations] = useState([])
   useEffect(() => {
     const getReservations = async () => {
-      const res = await instance
+      await instance
         .get('/reservation/all')
         .then((res) => {
           setReservations(res.data.data)

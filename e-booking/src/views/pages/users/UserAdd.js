@@ -131,18 +131,6 @@ const UserAdd = () => {
                       : null}
                   </CFormSelect>
                 </CCol>
-                <CCol md={6}>
-                  <CFormLabel htmlFor="password"> Password </CFormLabel>
-                  <CFormInput
-                    className="mb-1"
-                    type="password"
-                    name="password"
-                    id="password"
-                    size="md"
-                    required
-                    {...register('password')}
-                  />
-                </CCol>
                 <CCol xs={12}>
                   <CButton component="input" type="submit" value="Add a User" />
                 </CCol>

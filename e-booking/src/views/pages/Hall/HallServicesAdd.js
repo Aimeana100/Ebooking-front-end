@@ -21,10 +21,9 @@ function HallServicesAdd() {
   let loggedInUser = useSelector((state) => state.auth.role)
   const { register, handleSubmit, reset } = useForm()
   const onSubmit = async (data) => {
-    console.log(data)
-    const res = await instance
+    await instance
       .post('/hall/services/add', data)
-      .then((res) => {
+      .then(() => {
         toast.success('hall service create')
       })
       .catch((err) => {

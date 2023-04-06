@@ -9,12 +9,11 @@ $white__color__effect: rgba(213, 213, 213, 0.845);
 
 
 .Login{
+    text-align: center;
     height: 100%;
     display: flex;
-    justify-content: space-between;
     padding: 0em 8em;
     align-items: center;
-
     .Login__form{
         background-color: rgba(47, 39, 39, 0.766);
         padding: 30px;
@@ -22,7 +21,6 @@ $white__color__effect: rgba(213, 213, 213, 0.845);
         border-radius: 10px;
         
         .form__heading{
-            font-size: 3em;
             font-weight: bold;
             color: rgba(229, 229, 229, 0.982);
         }
@@ -59,17 +57,15 @@ $white__color__effect: rgba(213, 213, 213, 0.845);
     }
 
     .Login__guides{
-        margin-left: 10% ;
         padding: 30px;
         background-color: rgba(37, 9, 9, 0.084);
         line-height: 2em;
         display: block;
         
         .heading{
-            font-size: 4em;
             font-weight: bold;
             color: $secondary__color;
-            margin: 20px 0px;
+            //margin: 20px 0px;
             margin: 15% 0%;
         }
 

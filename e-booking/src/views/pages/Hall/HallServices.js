@@ -23,7 +23,7 @@ function HallServices() {
   const [hallServices, setHallServices] = useState([])
   useEffect(() => {
     const getHallServices = async () => {
-      const res = await instance
+      await instance
         .get('/hall/services/all')
         .then((res) => {
           setHallServices(res.data.data)
