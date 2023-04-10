@@ -8,18 +8,18 @@ import { CATEGORY_ACTIONS } from './categoriesActionTypes'
 
 export const createProductCategory = function (payload) {
   return async function (dispatch) {
+    console.log('yhis payload', payload)
     await instance
-      .get(`/products/category/add`)
+      .post(`/products/category/add`, payload)
       .then((res) => {
         dispatch({
-          type: CATEGORY_ACTIONS.GET_PRODUCT_CATEGORIES,
+          type: CATEGORY_ACTIONS.CREATE_PRODUCT_CATEGORY,
           payload: res.data.data,
         })
         toast.success('product category created')
       })
       .catch((err) => {
         toast.error(err.message)
-        dispatch({ type: CATEGORY_ACTIONS.GET_PRODUCT_CATEGORIES, payload: [] })
       })
   }
 }

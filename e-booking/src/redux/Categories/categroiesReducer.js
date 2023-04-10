@@ -8,8 +8,10 @@ const categoryReducer = (
     case CATEGORY_ACTIONS.GET_PRODUCT_CATEGORIES:
       return { ...state, productCategories: payload }
     case CATEGORY_ACTIONS.CREATE_PRODUCT_CATEGORY:
-      console.log('HAPAPAPAPA')
-      return { ...state, productCategories: [...payload] }
+      return {
+        ...state,
+        productCategories: [...state.productCategories, payload],
+      }
     case CATEGORY_ACTIONS.GET_SERVICE_CATEGORIES:
       console.log('before reducer', payload)
       return { ...state, serviceCategories: payload }

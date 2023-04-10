@@ -22,8 +22,6 @@ const Products = () => {
   const dispatch = useDispatch()
   const [products, setProducts] = useState([])
   let loggedInUser = useSelector((state) => state.auth.user.Role.name)
-
-  console.log(products)
   useEffect(() => {
     const getAllProducts = async () => {
       await instance

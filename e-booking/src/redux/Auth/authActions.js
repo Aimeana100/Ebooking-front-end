@@ -15,6 +15,7 @@ export const login = function (payload) {
       .post(`/login`, payload)
       .then((res1) => {
         console.log('RES1 ---RES1', res1)
+        localStorage.setItem('token', res1.data.accessToken)
         dispatch({
           type: IS_AUTH.LOGIN,
           payload: {
@@ -27,7 +28,6 @@ export const login = function (payload) {
           },
         })
         toast.success('User Logged in')
-        localStorage.setItem('token', res1.data.accessToken)
       })
       .catch((err) => {
         toast.error(err.message)
@@ -54,7 +54,6 @@ export const registerUser = function (payload) {
             type: IS_AUTH.REGISTER,
             payload: {
               isAuth: true,
-              status: res.status,
             },
           })
           toast.success('User created')

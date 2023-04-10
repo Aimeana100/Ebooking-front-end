@@ -1,17 +1,14 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useState } from 'react'
 import { CButton } from '@coreui/react'
-import axios from 'axios'
 import './login.scss'
 import Navigation from '../navigation/Navigation'
 import { Link, useNavigate } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { login } from 'src/redux/Auth/authActions'
 
 function Login() {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
-  const isAuth = useSelector((state) => state.auth.isAuth)
-  //const [isAuth, setIsAuth] = useState(auth);
   const dispatch = useDispatch()
   const [formState, setformState] = useState({})
 
@@ -75,7 +72,11 @@ function Login() {
                 </Link>
               </div>
               {(!formState?.email || !formState?.password) && (
-                <CButton type="submit" color="info" shape="rounded-0">
+                <CButton
+                  type="submit"
+                  color="white"
+                  className=" btn custom-btn btn-7 px-4 py-1"
+                >
                   Login
                 </CButton>
               )}

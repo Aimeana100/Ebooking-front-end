@@ -38,11 +38,11 @@ const Reservation = () => {
   }
   useEffect(() => {
     const getReservations = async () => {
-      const res = await instance
+      await instance
         .get('/reservation/all')
         .then((res) => {
           console.log(res.data.data)
-          setReservations(res.data.data)
+          setReservations(res.data.data.items)
         })
         .catch((err) => {
           toast.error(err.message)
