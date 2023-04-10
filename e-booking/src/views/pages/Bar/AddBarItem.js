@@ -68,12 +68,8 @@ const AddStockToTable = (props) => {
                   <CTableDataCell />
                   <CTableDataCell />
                   <CTableDataCell>
-                    {receivedItems
-                      .reduce(
-                        (acc, b) => acc + Number(b.price) * Number(b.quantity),
-                        0,
-                      )
-                      .toLocaleString()}
+                    (acc, b) => acc + Number(b.price) * Number(b.quantity), 0, )
+                    .toLocaleString()}
                   </CTableDataCell>
                 </CTableRow>
               </React.Fragment>
@@ -93,12 +89,9 @@ const AddBarItem = React.forwardRef((props, ref) => {
   let [purchaseOrders, setPurchaseOrders] = useState([])
   const [visible, setVisible] = useState(false)
   let [items, setItems] = useState([])
-  const [item, setItem] = useState([])
   let [item2, setItem2] = useState([])
   const [order, setOrder] = useState([])
-  //console.log('item', item)
-  console.log('order', order)
-  console.log('item2', item2)
+
   let stockItems =
     order && order.length !== 0
       ? order[0].StockPurchaseOrderDetails.map((e) => {

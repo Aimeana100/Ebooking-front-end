@@ -90,11 +90,32 @@ const ProductEdit = React.lazy(() =>
 const ProductSell = React.lazy(() =>
   import('./views/pages/products/ProductSell'),
 )
+const ProductSells = React.lazy(() =>
+  import('./views/pages/products/ProductSells'),
+)
 
 const ProductsAdd = React.lazy(() =>
   import('./views/pages/products/ProductsAdd'),
 )
 const Products = React.lazy(() => import('./views/pages/products/Products'))
+
+//product categories
+
+const ProductCategoryAdd = React.lazy(() =>
+  import('./views/pages/products/ProductCategoryAdd'),
+)
+const ProductCategories = React.lazy(() =>
+  import('./views/pages/products/ProductCategories'),
+)
+
+//product packages
+
+const ProductPackages = React.lazy(() =>
+  import('./views/pages/products/ProductPackages'),
+)
+const ProductPackageAdd = React.lazy(() =>
+  import('./views/pages/products/ProductPackageAdd'),
+)
 
 // services
 
@@ -381,6 +402,12 @@ const routes = [
     element: ProductSell,
   },
   {
+    path: '/booking/products/sell/all',
+    exact: true,
+    name: 'Product',
+    element: ProductSells,
+  },
+  {
     path: '/booking/products/add',
     exact: true,
     name: ' Add Product',
@@ -398,6 +425,30 @@ const routes = [
     exact: true,
     name: 'Product',
     element: Products,
+  },
+  {
+    path: '/booking/products/categories/add',
+    exact: true,
+    name: 'Product',
+    element: ProductCategoryAdd,
+  },
+  {
+    path: '/booking/products/categories/all',
+    exact: true,
+    name: 'Product',
+    element: ProductCategories,
+  },
+  {
+    path: '/booking/products/packages/all',
+    exact: true,
+    name: 'Product',
+    element: ProductPackages,
+  },
+  {
+    path: '/booking/products/packages/add',
+    exact: true,
+    name: 'Product',
+    element: ProductPackageAdd,
   },
   {
     path: '/booking/services/sell',

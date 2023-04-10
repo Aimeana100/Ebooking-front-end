@@ -89,7 +89,7 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
       : 0
   return (
     <CCard>
-      <CCardHeader>
+      <CCardHeader className="d-flex justify-content-end">
         {StockPurchaseOrderDetails && StockPurchaseOrderDetails !== 0 ? (
           <ReactToPrint
             trigger={() => (
@@ -98,6 +98,11 @@ const ViewRequestToCashier = React.forwardRef((props, ref) => {
             content={() => ref || componentRef.current}
           />
         ) : null}
+        <button className="btn btn-ghost-success text-black">Approve</button>
+        <button className="btn btn-ghost-warning text-black">
+          Request revision
+        </button>
+        <button className="btn btn-ghost-danger text-black">Cancel</button>
       </CCardHeader>
       <div style={{ display: 'none' }}>
         <PrintTemplate1 ref={ref || componentRef}>

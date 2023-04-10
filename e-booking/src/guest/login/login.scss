@@ -41,7 +41,6 @@ $white__color__effect: rgba(213, 213, 213, 0.845);
             border-radius: 4px;
             padding: 10px 20px;
             font-size: 1.2em;
-            color: $primary_color;
             cursor: pointer;
             border: none;
 
@@ -89,4 +88,54 @@ $white__color__effect: rgba(213, 213, 213, 0.845);
         }
        
     }
+}
+
+
+.custom-btn {
+ 
+ 
+  border: 2px solid #000;
+  color: #fff;
+  font-weight: 500;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  display: inline-block;
+}
+.btn-7 {
+ background: #000;
+  color: #fff;
+  line-height: 42px;
+  padding: 0;
+  border: none;
+  z-index: 1;
+   -webkit-transition: all 0.3s linear;
+	transition: all 0.3s linear;
+}
+.btn-7:hover {
+  background: transparent;
+  color: #000;
+}
+.btn-7:before,
+.btn-7:after {
+  position: absolute;
+  content: "";
+  left: 0;
+
+  right: 0;
+  z-index: -1;
+  background: #000;
+  transition: all 0.3s ease;
+}
+.btn-7:before {
+  top: 0;
+}
+.btn-7:after {
+  bottom: 0;
+}
+.btn-7:hover:before,
+.btn-7:hover:after {
+  height: 0;
+  background-color: #000;
 }

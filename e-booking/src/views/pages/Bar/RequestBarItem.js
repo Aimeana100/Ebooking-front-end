@@ -15,11 +15,9 @@ import {
   CCollapse,
 } from '@coreui/react'
 import { Typeahead } from 'react-bootstrap-typeahead'
-import { Link } from 'react-router-dom'
 import { toast } from 'react-hot-toast'
 import ReactToPrint from 'react-to-print'
 import PrintTemplate1 from '../Printing/PrintTemplate1'
-import PurchaseOrder from '../stock/PurchaseOrder'
 import instance from 'src/API/AxiosInstance'
 import StockOrder from './StockOrder'
 
@@ -37,7 +35,7 @@ const RequestBarItem = React.forwardRef((props, ref) => {
 
   let [stockItems, setStockItems] = useState([])
   const [visible, setVisible] = useState(false)
-  let [items, setItems] = useState(stockItems)
+
   const [item, setItem] = useState(null)
   const [requestItems, setRequestItems] = useState([])
   const clearPurchaseOrder = () => {
@@ -45,16 +43,6 @@ const RequestBarItem = React.forwardRef((props, ref) => {
   }
   const maxValue = item && item.length !== 0 ? item[0].quantity : null
   const dontAdd = quantity && maxValue && quantity > maxValue ? true : false
-  const createPurchaseOrder = async (data) => {
-    await instance
-      .post('/purchase/order/add', data)
-      .then(() => {
-        toast.success('purchase order created')
-      })
-      .catch((err) => {
-        toast.error(err.message)
-      })
-  }
 
   const onAdd = (data) => {
     data = {
@@ -67,10 +55,18 @@ const RequestBarItem = React.forwardRef((props, ref) => {
     setRequestItems([...requestItems, data])
     reset()
   }
-  const submitRequest = () => {
+
+  const submitRequest = async () => {
     const data = { data: requestItems }
     console.log(data)
-    createPurchaseOrder(data)
+    await instance
+      .post('/petitstock/order/add', data)
+      .then(() => {
+        toast.success('request submitted')
+      })
+      .catch((err) => {
+        toast.error(err.message)
+      })
   }
   useEffect(() => {
     const getStockItems = async () => {

@@ -122,9 +122,7 @@ const AddStock = React.forwardRef((props, ref) => {
   const [item, setItem] = useState([])
   let [item2, setItem2] = useState([])
   const [order, setOrder] = useState([])
-  //console.log('item', item)
-  console.log('order', order)
-  console.log('item2', item2)
+
   let stockItems =
     order && order.length !== 0
       ? order[0].StockPurchaseOrderDetails.map((e) => {
@@ -165,6 +163,7 @@ const AddStock = React.forwardRef((props, ref) => {
       .then(toast.success('items added to stock'))
       .catch((err) => {
         toast.error(err.message)
+        console.log(err)
       })
   }
 

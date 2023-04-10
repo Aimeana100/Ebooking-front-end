@@ -91,6 +91,10 @@ function ProductSell() {
   return (
     <React.Fragment>
       <CRow>
+        <CCardHeader>
+          <button className="btn btn-ghost-primary">Order</button>
+          <button className="btn btn-ghost-success text-dark">Checkout</button>
+        </CCardHeader>
         <CCol xs={12}>
           <CCard className="mb-4">
             <CCardHeader>
