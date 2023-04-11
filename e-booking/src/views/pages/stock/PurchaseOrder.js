@@ -47,7 +47,7 @@ function PurchaseOrder(props, ref) {
                           {' '}
                           {index + 1}{' '}
                         </CTableHeaderCell>
-                        <CTableDataCell> {added.name} </CTableDataCell>
+                        <CTableDataCell> {added.itemName} </CTableDataCell>
                         <CTableDataCell>
                           {' '}
                           {added.quantity} {added.unit}{' '}

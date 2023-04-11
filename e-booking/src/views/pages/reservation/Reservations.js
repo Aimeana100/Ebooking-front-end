@@ -25,6 +25,7 @@ const Reservation = () => {
   const [clicked, setClicked] = useState({})
   const [reservations, setReservations] = useState([])
   const [open, setOpen] = useState(false)
+  console.log('this is reservations', reservations)
   const confirmReservation = async (data) => {
     const res = await instance
       .put('/reservation/update', data)
