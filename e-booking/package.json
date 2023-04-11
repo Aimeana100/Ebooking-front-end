@@ -40,6 +40,7 @@
     "file-saver": "^2.0.5",
     "install-peerdeps": "^3.0.3",
     "js-cookie": "^3.0.1",
+    "lodash": "^4.17.21",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-app-polyfill": "^3.0.0",

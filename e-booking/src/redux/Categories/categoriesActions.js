@@ -8,7 +8,7 @@ import { CATEGORY_ACTIONS } from './categoriesActionTypes'
 
 export const createProductCategory = function (payload) {
   return async function (dispatch) {
-    console.log('yhis payload', payload)
+    console.log('his payload', payload)
     await instance
       .post(`/products/category/add`, payload)
       .then((res) => {

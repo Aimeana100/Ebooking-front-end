@@ -23,6 +23,7 @@ const ReservationReceipt = (props) => {
     reset()
   }
   const reservation = props.reservation
+  console.log(reservation)
   return (
     <CCard>
       <CCardBody>
