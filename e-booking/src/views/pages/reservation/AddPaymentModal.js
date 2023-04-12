@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import {
   CButton,
   CModal,
@@ -14,12 +13,12 @@ import {
 } from '@coreui/react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
-import instance from 'src/API/AxiosInstance'
+import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 import { currencies } from 'src/utils/constants'
 
 function AddPaymentModal(props) {
   let { reservation, open, setOpen } = props
-  const { register, handleSubmit, watch, reset } = useForm()
+  const { register, handleSubmit } = useForm()
   const onSubmit = async (data) => {
     data.reservationId = reservation.id
 

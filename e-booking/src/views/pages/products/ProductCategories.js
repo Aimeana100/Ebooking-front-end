@@ -12,7 +12,7 @@ import {
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { useDispatch, useSelector } from 'react-redux'
-import instance from 'src/API/AxiosInstance'
+import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 import { CATEGORY_ACTIONS } from 'src/redux/Categories/categoriesActionTypes'
 
 function ProductCategories() {

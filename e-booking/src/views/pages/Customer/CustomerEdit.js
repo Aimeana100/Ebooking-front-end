@@ -14,7 +14,7 @@ import {
 } from '@coreui/react'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-hot-toast'
-import instance from 'src/API/AxiosInstance'
+import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 
 function CustomerEdit() {
   const selectedCustomer = useSelector((state) => state.selection.selected)

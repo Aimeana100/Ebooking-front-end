@@ -16,7 +16,7 @@ import {
   CRow,
 } from '@coreui/react'
 import { useSelector } from 'react-redux'
-import instance from 'src/API/AxiosInstance'
+import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
 import OrdersTable from '../Bar/OrdersTable'
 
@@ -267,37 +267,3 @@ function ProductSell() {
 }
 
 export default ProductSell
-// <CFormInput
-//                     className="mb-1"
-//                     type="text"
-//                     name="title"
-//                     id="title"
-//                     size="md"
-//                     required
-//                     {...register('name')}
-//                   />
-
-// {
-//   products.length !== 0 && singleSelections.length !== 0
-//     ? singleSelections.map((pack) =>
-//         pack.Packages && pack.Packages.length !== 0
-//           ? pack.packages.map((p) => (
-//               <option value={p.id} key={p.id} {...register('pItem')}>
-//                 {p.name}
-//               </option>
-//             ))
-//           : null,
-//       )
-//     : null
-// }
-
-//  const price =
-//    products && products.length !== 0 && singleSelections.length !== 0
-//      ? products.filter((product) =>
-//          product.id == singleSelections[0].id
-//            ? product.Packages.filter((pack) =>
-//                pack.id == pItem ? pack.ProductPackage.price : null,
-//              )
-//            : null,
-//        )
-//      : 0

@@ -1,6 +1,6 @@
 import { IS_AUTH } from './AuthActionTypes'
 import { toast } from 'react-hot-toast'
-import instance from 'src/API/AxiosInstance'
+import { instance, setToken, getTokenPromise } from 'src/API/AxiosInstance'
 //import axios from 'axios'
 
 export const auth = function (payload) {
@@ -14,12 +14,10 @@ export const login = function (payload) {
     await instance
       .post(`/login`, payload)
       .then((res1) => {
-        console.log('RES1 ---RES1', res1)
         dispatch({
           type: IS_AUTH.LOGIN,
           payload: {
             isAuth: true,
-            jwt: res1.data.accessToken,
             user: res1.data.user,
             role: res1.data.user.Role.name,
             access: res1.data.user.Role.access,
@@ -27,7 +25,7 @@ export const login = function (payload) {
           },
         })
         toast.success('User Logged in')
-        localStorage.setItem('token', res1.data.accessToken)
+        setToken(res1.data.accessToken)
       })
       .catch((err) => {
         toast.error(err.message)
@@ -46,22 +44,24 @@ export const registerUser = function (payload) {
   //payload.role = Number(payload.role);
   console.log(payload)
   return async function (dispatch) {
-    await instance
-      .post(`users/add`, payload)
-      .then((res) => {
-        if (res.data.user) {
-          dispatch({
-            type: IS_AUTH.REGISTER,
-            payload: {
-              isAuth: true,
-            },
-          })
-          toast.success('User created')
-        }
-      })
-      .catch((err) => {
-        toast.error(err.message)
-      })
+    await getTokenPromise().then(async () => {
+      await instance
+        .post(`users/add`, payload)
+        .then((res) => {
+          if (res.data.user) {
+            dispatch({
+              type: IS_AUTH.REGISTER,
+              payload: {
+                isAuth: true,
+              },
+            })
+            toast.success('User created')
+          }
+        })
+        .catch((err) => {
+          toast.error(err.message)
+        })
+    })
   }
 }
 

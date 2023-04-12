@@ -15,17 +15,17 @@ import {
 } from '@coreui/react'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-hot-toast'
-import instance from 'src/API/AxiosInstance'
+import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 
 const FormControl = () => {
   let loggedInUser = useSelector((state) => state.auth.user.Role.name)
-  const { register, handleSubmit, watch, reset } = useForm()
+  const { register, handleSubmit, reset } = useForm()
   const [roomClasses, setRoomClasses] = useState([])
 
   const onSubmit = async (data) => {
-    const res = await instance
+    await instance
       .post('/room/add', data)
-      .then((res) => {
+      .then(() => {
         toast.success('Room created')
       })
       .catch((err) => {
@@ -36,7 +36,7 @@ const FormControl = () => {
   }
   useEffect(() => {
     const getRoomClasses = async () => {
-      const res = await instance
+      await instance
         .get('/roomclass/all')
         .then((res) => {
           setRoomClasses(res.data.data)

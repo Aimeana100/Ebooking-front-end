@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import {
@@ -15,11 +15,11 @@ import {
 } from '@coreui/react'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-hot-toast'
-import instance from 'src/API/AxiosInstance'
+import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 
 function HallAdd() {
   let loggedInUser = useSelector((state) => state.auth.role)
-  const [hallServices, setHallServices] = useState([])
+
   const { register, handleSubmit, reset } = useForm()
   const onSubmit = async (data) => {
     await instance

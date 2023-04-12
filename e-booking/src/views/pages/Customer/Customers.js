@@ -9,14 +9,13 @@ import {
   CRow,
   CTable,
   CTableBody,
-  CTableDataCell,
   CTableHead,
   CTableHeaderCell,
   CTableRow,
 } from '@coreui/react'
 
 import { useSelector } from 'react-redux'
-import instance from 'src/API/AxiosInstance'
+import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
 import { useForm } from 'react-hook-form'
 import CustomersTable from './CustomersTable'

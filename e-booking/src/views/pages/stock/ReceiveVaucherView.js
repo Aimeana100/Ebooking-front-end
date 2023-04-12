@@ -1,8 +1,6 @@
 import {
   CCard,
   CCardBody,
-  CImage,
-  CRow,
   CTable,
   CTableBody,
   CTableDataCell,
@@ -14,13 +12,10 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 
 const ReceiveVaucherView = (props, ref) => {
-  const { title } = props
-  let { receivedItems, purchaseOrderItems } = props
+  
   const vaucher = useSelector((state) => state.selection.selected)
   const role = useSelector((state) => state.auth.role)
-  console.log('vaucher view', vaucher)
-  // console.log('received Items', receivedItems)
-  // console.log('purchase order Items', purchaseOrderItems)
+ 
 
   const receiveTotal =
     vaucher && vaucher.StockReceiveVoucherDetails !== 0

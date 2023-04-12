@@ -11,12 +11,10 @@ import {
   CForm,
   CFormInput,
   CFormLabel,
-  CFormSelect,
   CRow,
 } from '@coreui/react'
- from 'react-redux'
 
-import instance from 'src/API/AxiosInstance'
+import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
 
 export default function RoomSell() {

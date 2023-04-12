@@ -11,31 +11,58 @@ const instance = axios.create({
   baseURL: 'http://206.81.29.111:8080/api/v1',
 })
 
-instance.defaults.headers.common['Authorization'] =
-  'Bearer ' + localStorage.getItem('token')
+let tokenPromise
 
 instance.interceptors.request.use(
-  async (config) => {
-    //const accessToken= await axios.get('/')
-    console.log(config)
+  (config) => {
+    if (localStorage.getItem('token')) {
+      config.headers.Authorization = `Bearer ${localStorage.getItem('token')}`
+    }
+
     return config
   },
   (error) => {
     return Promise.reject(error)
   },
 )
+
+function setToken(token) {
+  localStorage.setItem('token', token)
+
+  // Wait for the token to be set before resolving the promise
+  tokenPromise = new Promise((resolve) => {
+    resolve()
+  })
+}
+
+function getTokenPromise() {
+  return tokenPromise
+}
+
+//export { axiosInstance, setToken, getTokenPromise }
+
+// instance.interceptors.request.use(
+//   async (config) => {
+//     //const accessToken= await axios.get('/')
+//     console.log(config)
+//     return config
+//   },
+//   (error) => {
+//     return Promise.reject(error)
+//   },
+// )
 instance.interceptors.response.use(
   (response) => {
     return response
   },
-  // (error) => {
-  //   if (error.response.status === 401 || error.response.status === 403) {
-  //     // Clear the token and state fields from local storage
-  //     localStorage.removeItem('token')
-  //     localStorage.removeItem('state')
-  //   }
-  //   return Promise.reject(error)
-  // },
+  (error) => {
+    if (error.response.status === 401 || error.response.status === 403) {
+      // Clear the token and state fields from local storage
+      localStorage.removeItem('token')
+      localStorage.removeItem('state')
+    }
+    return Promise.reject(error)
+  },
 )
 
-export default instance
+export { instance, setToken, getTokenPromise }

@@ -16,9 +16,9 @@ import {
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
-import instance from 'src/API/AxiosInstance'
+import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 function AllBarItems() {
-  const { register, watch, reset } = useForm()
+  const { register } = useForm()
   const [items, setItems] = useState([])
   useEffect(() => {
     const getItems = async () => {

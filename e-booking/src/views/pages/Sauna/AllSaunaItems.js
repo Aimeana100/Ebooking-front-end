@@ -1,9 +1,6 @@
 import {
   CCardBody,
   CCardHeader,
-  CCol,
-  CFormLabel,
-  CFormSelect,
   CRow,
   CTable,
   CTableBody,
@@ -14,15 +11,14 @@ import {
 } from '@coreui/react'
 
 import React, { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
+
 import { toast } from 'react-hot-toast'
-import instance from 'src/API/AxiosInstance'
+import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 function AllBarItems() {
-  const { register, watch, reset } = useForm()
   const [items, setItems] = useState([])
   useEffect(() => {
     const getItems = async () => {
-      const res = await instance
+      await instance
         .get('/stock/item/all')
         .then((res) => {
           setItems(res.data.data)

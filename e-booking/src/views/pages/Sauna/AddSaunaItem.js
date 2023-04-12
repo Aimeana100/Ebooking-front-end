@@ -20,11 +20,10 @@ import {
   CCollapse,
 } from '@coreui/react'
 import { Highlighter, Typeahead } from 'react-bootstrap-typeahead'
-import { Link } from 'react-router-dom'
 import { toast } from 'react-hot-toast'
 import ReactToPrint from 'react-to-print'
 import ReceiveVaucherPrint from '../Printing/ReceiveVaucherPrint'
-import instance from 'src/API/AxiosInstance'
+import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 
 const AddStockToTable = (props) => {
   const [show, setShow] = useState(false)
@@ -118,13 +117,9 @@ const AddSaunaItem = React.forwardRef((props, ref) => {
   const componentRef = useRef()
   let [purchaseOrders, setPurchaseOrders] = useState([])
   const [visible, setVisible] = useState(false)
-  let [items, setItems] = useState([])
-  const [item, setItem] = useState([])
   let [item2, setItem2] = useState([])
   const [order, setOrder] = useState([])
-  //console.log('item', item)
-  console.log('order', order)
-  console.log('item2', item2)
+
   let stockItems =
     order && order.length !== 0
       ? order[0].StockPurchaseOrderDetails.map((e) => {
@@ -160,7 +155,8 @@ const AddSaunaItem = React.forwardRef((props, ref) => {
   }
   const onAddItemToStock = async (data) => {
     console.log('data to add to stock', { data: data })
-    const res = await instance
+
+    await instance
       .post('/receive/voucher/add', { data: data })
       .then(toast.success('items added to stock'))
       .catch((err) => {
@@ -182,7 +178,7 @@ const AddSaunaItem = React.forwardRef((props, ref) => {
 
   useEffect(() => {
     const getPurchaseOrders = async () => {
-      const res = await instance
+      await instance
         .get('/purchase/order/all')
         .then((res) => {
           console.log('res,res,res', res)

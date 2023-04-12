@@ -13,14 +13,14 @@ import {
   CTableRow,
 } from '@coreui/react'
 import { Link } from 'react-router-dom'
-import instance from 'src/API/AxiosInstance'
+import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
 
 const Services = () => {
   const [services, setServices] = useState([])
   useEffect(() => {
     const services = async () => {
-      const data = await instance
+      await instance
         .get('/services/all')
         .then((res) => {
           setServices(res.data.data)

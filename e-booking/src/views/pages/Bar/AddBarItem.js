@@ -24,7 +24,7 @@ import { Link } from 'react-router-dom'
 import { toast } from 'react-hot-toast'
 import ReactToPrint from 'react-to-print'
 import ReceiveVaucherPrint from '../Printing/ReceiveVaucherPrint'
-import instance from 'src/API/AxiosInstance'
+import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 
 const AddStockToTable = (props) => {
   const { receivedItems } = props
@@ -88,7 +88,7 @@ const AddBarItem = React.forwardRef((props, ref) => {
   const componentRef = useRef()
   let [purchaseOrders, setPurchaseOrders] = useState([])
   const [visible, setVisible] = useState(false)
-  let [items, setItems] = useState([])
+  let items = []
   let [item2, setItem2] = useState([])
   const [order, setOrder] = useState([])
 

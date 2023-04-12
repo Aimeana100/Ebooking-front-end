@@ -12,7 +12,7 @@ import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
-import instance from 'src/API/AxiosInstance'
+import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 import { selectItem } from 'src/redux/Select/selectionActions'
 
 function AllRequestToCashier() {

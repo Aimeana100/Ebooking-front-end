@@ -10,16 +10,15 @@ import {
   CFormLabel,
   CRow,
 } from '@coreui/react'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
-import instance from 'src/API/AxiosInstance'
+import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 import _nav from 'src/_nav'
 
 function UserRolesAdd() {
   const { register, handleSubmit, watch, reset } = useForm()
 
-  console.log('items', _nav)
   let items = _nav
   const [loading, setLoading] = useState(false)
   let access = watch('access')
@@ -34,9 +33,7 @@ function UserRolesAdd() {
       itemsWithSubs.includes(item.name.toLowerCase()) ? item : null,
     ) || []
   itemsForAccess = itemsForAccess.filter(Boolean)
-  console.log('okay', accessArray)
 
-  const permissionArray = ['view', 'add', 'edit', 'comment', 'delete']
   const onSubmit = async (data) => {
     console.log('data12', data)
     data.access = data.access.reduce((obj, e) => {
@@ -59,19 +56,18 @@ function UserRolesAdd() {
         delete data.access[key]
       }
     }
-    // if (data.access) {
-    //   data.access = [...data.access, 'Dashboard']
-    // }
+
     data = { name: data.name, access: data.access }
-    console.log('this user role add', data)
+
     setLoading(true)
-    const res = await instance
+
+    await instance
       .post('/roles/add', data)
-      .then((res) => {
+      .then(() => {
         toast.success('role created')
         reset()
       })
-      .catch((err) => {
+      .catch(() => {
         toast.error('role not created')
         reset()
       })
@@ -79,7 +75,7 @@ function UserRolesAdd() {
         setLoading(false)
       })
   }
-  useEffect(() => {}, [])
+
   return (
     <div>
       <CCard className="mb-4">

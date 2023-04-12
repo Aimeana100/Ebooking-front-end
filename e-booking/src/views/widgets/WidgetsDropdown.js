@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { CRow, CCol, CWidgetStatsF } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilUser, cilHome, cilHouse } from '@coreui/icons'
-import instance from 'src/API/AxiosInstance'
+import { instance } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
 
 const WidgetsDropdown = () => {
@@ -13,7 +13,7 @@ const WidgetsDropdown = () => {
   let [customers, setCustomers] = useState([])
   useEffect(() => {
     const getCustomers = async () => {
-      const res = await instance
+      await instance
         .get('/customers/all')
         .then((res) => {
           setCustomers(res.data.data)
@@ -23,7 +23,7 @@ const WidgetsDropdown = () => {
         })
     }
     const getRooms = async () => {
-      const res = await instance
+      await instance
         .get('/room/all')
         .then((res) => {
           setRooms(res.data.data)
@@ -34,7 +34,7 @@ const WidgetsDropdown = () => {
     }
 
     const getHalls = async () => {
-      const res = await instance
+      await instance
         .get('/halls/all')
         .then((res) => {
           setHalls(res.data.data)
@@ -42,27 +42,26 @@ const WidgetsDropdown = () => {
         .catch((err) => {
           toast.error(err.message)
         })
-      console.log('halls async to get halls')
     }
     const getReservations = async () => {
-      const res = await instance
+      await instance
         .get('/reservation/all')
         .then((res) => {
           setReservations(res.data.data)
         })
         .catch((err) => {
-          toast.error('error getting reservations', err.message)
+          toast.error(err.message)
         })
     }
 
     const getUsers = async () => {
-      const res = await instance
+      await instance
         .get(`/users/all`)
         .then((res) => {
           setUsers(res.data.users)
         })
         .catch((err) => {
-          toast.error('error getting users', { errMessage: err.message })
+          toast.error(err.message)
         })
     }
 

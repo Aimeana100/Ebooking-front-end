@@ -14,7 +14,7 @@ import { datesInRangeWithUnix } from 'src/utils/functions'
 import ReactToPrint from 'react-to-print'
 import PrintTemplate1 from '../Printing/PrintTemplate1'
 import ReservationsTable from './ReservationsTable'
-import instance from 'src/API/AxiosInstance'
+import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
 
 const ReservationReport = React.forwardRef((props, ref) => {
@@ -40,7 +40,7 @@ const ReservationReport = React.forwardRef((props, ref) => {
       await instance
         .get('/reservation/all')
         .then((res) => {
-          setReservations(res.data.data)
+          setReservations(res.data.data.items)
         })
         .catch((err) => {
           console.log('error getting reservations', err.message)
