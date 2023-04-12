@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useForm } from 'react-hook-form'
 import {
   CButton,
@@ -9,23 +9,21 @@ import {
   CForm,
   CFormInput,
   CFormLabel,
-  CFormSelect,
   CFormTextarea,
   CRow,
 } from '@coreui/react'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-hot-toast'
-import instance from 'src/API/AxiosInstance'
+import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 
 const RoomClassEdit = () => {
   let loggedInUser = useSelector((state) => state.auth.user.Role.name)
-  const { register, handleSubmit, watch, reset } = useForm()
-  const [roomClasses, setRoomClasses] = useState([])
+  const { register, handleSubmit, reset } = useForm()
   const selectedRoomClass = useSelector((state) => state.selection.selected)
-  console.log(selectedRoomClass)
   const onSubmit = async (data) => {
     data.id = selectedRoomClass.id
-    const res = await instance
+
+    await instance
       .put('/roomclass/update', data)
       .then((res) => {
         toast.success('Room class updated')
@@ -34,21 +32,9 @@ const RoomClassEdit = () => {
         toast.error(err.message)
         toast.error('Room class update failed')
       })
+
     reset()
   }
-  useEffect(() => {
-    const getRoomClasses = async () => {
-      const res = await instance
-        .get('/roomclass/all')
-        .then((res) => {
-          setRoomClasses(res.data.data)
-        })
-        .catch((err) => {
-          toast.error(err.message)
-        })
-    }
-    getRoomClasses()
-  }, [])
 
   return (
     <CRow>

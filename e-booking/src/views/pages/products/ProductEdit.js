@@ -13,11 +13,11 @@ import {
 } from '@coreui/react'
 import { useForm } from 'react-hook-form'
 import { useSelector } from 'react-redux'
-import instance from 'src/API/AxiosInstance'
+import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
 
 function ProductEdit() {
-  const { register, handleSubmit, watch, reset } = useForm()
+  const { register, handleSubmit } = useForm()
   const [allDataCategories, setAllDataCategories] = useState([])
   const role = useSelector((state) => state.auth.user.role)
   const selectedProduct =

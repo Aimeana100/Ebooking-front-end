@@ -22,7 +22,7 @@ import {
 import { Highlighter, Typeahead } from 'react-bootstrap-typeahead'
 import { toast } from 'react-hot-toast'
 import ReactToPrint from 'react-to-print'
-import instance from 'src/API/AxiosInstance'
+import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 import StockOrder from './StockOrder'
 import StockOrderPrint from '../Printing/StockOrderPrint'
 
@@ -120,8 +120,7 @@ const RequestSaunaItem = React.forwardRef((props, ref) => {
     isDisabled = !isDisabled
   }
   const onAddItemToStock = async (data) => {
-    console.log('data to add to stock', data)
-    const res = await instance
+    await instance
       .post('/purchase/order/data', data)
       .then(toast.success('items added to stock'))
       .catch((err) => {
@@ -131,7 +130,7 @@ const RequestSaunaItem = React.forwardRef((props, ref) => {
 
   useEffect(() => {
     const getPurchaseOrders = async () => {
-      const res = await instance
+      await instance
         .get('/purchase/order/all')
         .then((res) => {
           console.log(res)

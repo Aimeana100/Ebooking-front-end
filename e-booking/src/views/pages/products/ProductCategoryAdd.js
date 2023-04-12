@@ -11,14 +11,14 @@ import {
   CFormLabel,
   CRow,
 } from '@coreui/react'
-import { createProductCategory } from 'src/redux/Categories/categoriesActions'
-import instance from 'src/API/AxiosInstance'
+
+import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 import { useDispatch } from 'react-redux'
 import { CATEGORY_ACTIONS } from 'src/redux/Categories/categoriesActionTypes'
 import { toast } from 'react-hot-toast'
 
 const ProductCategoryAdd = () => {
-  const { register, handleSubmit, reset } = useForm()
+  const { register, handleSubmit } = useForm()
   const dispatch = useDispatch()
   const createCategory = async (payload) => {
     await instance

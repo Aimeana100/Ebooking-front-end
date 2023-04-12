@@ -15,8 +15,7 @@ import {
 } from '@coreui/react'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectRoom } from 'src/redux/Room/roomActions'
-import instance from 'src/API/AxiosInstance'
+import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
 import { selectItem } from 'src/redux/Select/selectionActions'
 
@@ -25,7 +24,7 @@ const RoomClasses = (prop) => {
   const dispatch = useDispatch()
   const [roomClasses, setRoomClasses] = useState([])
   const deleteRoomClass = async (roomClassId) => {
-    const res = await instance
+    await instance
       .delete(`/roomclass/delete/${roomClassId}`)
       .then(() => {
         toast.success('Room Class deleted')
@@ -36,7 +35,7 @@ const RoomClasses = (prop) => {
   }
   useEffect(() => {
     const getClasses = async () => {
-      const res = await instance
+      await instance
         .get('/roomclass/all')
         .then((res) => {
           setRoomClasses(res.data.data)

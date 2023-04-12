@@ -1,5 +1,5 @@
 import { toast } from 'react-hot-toast'
-import instance from 'src/API/AxiosInstance'
+import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 import { ROLE_ACTIONS } from './RoleActionTypes'
 
 //const baseUrl = 'http://206.81.29.111/api/v1/roles/all';

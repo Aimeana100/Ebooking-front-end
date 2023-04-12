@@ -17,16 +17,16 @@ import { cilArrowRight, cilClone } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
-import instance from 'src/API/AxiosInstance'
+import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 
 const RoomClassAdd = () => {
   const [roomClass, setroomClass] = useState([])
   const { register, handleSubmit, reset } = useForm()
 
   const onSubmit = async (data) => {
-    const res = await instance
+    await instance
       .post('/roomclass/add', data)
-      .then((res) => {
+      .then(() => {
         toast.success('Room class created')
         reset()
       })
@@ -41,7 +41,7 @@ const RoomClassAdd = () => {
   }, [roomClass])
 
   return (
-    <>
+    <React.Fragment>
       <CRow>
         <CCol xs={12}>
           <CCard className="mb-4">
@@ -132,7 +132,7 @@ const RoomClassAdd = () => {
       ) : (
         <div> No Records </div>
       )}
-    </>
+    </React.Fragment>
   )
 }
 

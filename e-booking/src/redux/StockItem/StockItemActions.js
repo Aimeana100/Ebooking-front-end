@@ -1,12 +1,7 @@
 //jshint esversion:9
-
-import axios from 'axios'
 import { toast } from 'react-hot-toast'
-import { getData, postData, getDataEndPoint } from 'src/API'
-import instance from 'src/API/AxiosInstance'
+import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 import { STOCK_ITEM_ACTIONS_TYPES } from './StockItemActionTypes'
-
-const baseUrlLive = 'http://206.81.29.111:80/api/v1'
 
 export const getStockItems = () => {
   return async function (dispatch) {

@@ -8,31 +8,26 @@ import {
   CForm,
   CFormInput,
   CFormLabel,
-  CFormTextarea,
   CFormSelect,
   CRow,
-  CFormCheck,
 } from '@coreui/react'
 import { useForm } from 'react-hook-form'
 import { useSelector } from 'react-redux'
-import instance from 'src/API/AxiosInstance'
+import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
 
 const ServiceAdd = () => {
-  const { register, handleSubmit, watch, reset } = useForm()
+  const { register, handleSubmit } = useForm()
   const role = useSelector((state) => state.auth.user.role) || ''
   const [categories, setCategories] = useState([
     { name: 'Sauna', id: 5001209 },
     { name: 'Gym', id: 69560 },
   ])
 
-  const category = watch('category', '---')
-  const price = watch('price', '---')
-  console.log(role)
   const onSubmit = async (data) => {
-    const res = await instance
+    await instance
       .post('/services/add', data)
-      .then((res) => {
+      .then(() => {
         toast.success('service added')
       })
       .catch((err) => {
@@ -40,7 +35,7 @@ const ServiceAdd = () => {
       })
   }
   const onManagerSubmit = async (data) => {
-    const res = await instance
+    await instance
       .post('/services/add', data)
       .then((res) => {
         console.log(res.data)
@@ -52,7 +47,7 @@ const ServiceAdd = () => {
   }
   useEffect(() => {
     const getServiceCategories = async () => {
-      const res = await instance
+      await instance
         .get('/services/category/all')
         .then((res) => {
           setCategories(res.data.data)

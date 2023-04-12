@@ -1,5 +1,4 @@
 import {
-  CButton,
   CCard,
   CCardBody,
   CCardHeader,
@@ -16,7 +15,7 @@ import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
-import instance from 'src/API/AxiosInstance'
+import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 import { selectItem } from 'src/redux/Select/selectionActions'
 
 function ReceiveVouchers() {
@@ -24,7 +23,7 @@ function ReceiveVouchers() {
   const [receiveVauchers, setReceiveVauchers] = useState([])
   useEffect(() => {
     const getVauchers = async () => {
-      const res = await instance
+      await instance
         .get('/receive/voucher/all')
         .then((res) => {
           console.log(res)

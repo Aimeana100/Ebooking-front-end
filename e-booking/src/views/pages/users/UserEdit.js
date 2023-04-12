@@ -1,5 +1,5 @@
 //jshint esversion:9
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   CButton,
@@ -16,14 +16,14 @@ import {
 import { getRoles } from 'src/redux/Roles/RolesActions'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
-import instance from 'src/API/AxiosInstance'
+import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 
 const UserEdit = () => {
   const { register, handleSubmit, watch } = useForm()
   let users = useSelector((state) => state.systemUsers.users)
   const selectedUser = useSelector((state) => state.selection.selected) || {}
   const roles = useSelector((state) => state.roles.userRoles) || []
-  let [formData, setformData] = useState({ ...selectedUser })
+  let formData = { ...selectedUser }
   let role = watch('role') || selectedUser.Role.name
   const dispatch = useDispatch()
 
@@ -36,19 +36,19 @@ const UserEdit = () => {
     )
     data.role = selectedUser.Role.name
 
-    const updateUser = await instance
+    await instance
       .put('/users/update', data)
-      .then((res) => {
+      .then(() => {
         toast.success('user updated')
       })
-      .catch((err) => {
+      .catch(() => {
         toast.error('user updated failed')
       })
   }
 
   useEffect(() => {
     dispatch(getRoles())
-  }, [])
+  }, [dispatch])
 
   return (
     <>

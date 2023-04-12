@@ -14,8 +14,8 @@ import {
 } from '@coreui/react'
 import { Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { selectProduct, getProducts } from 'src/redux/Product/productActions'
-import instance from 'src/API/AxiosInstance'
+import { selectProduct } from 'src/redux/Product/productActions'
+import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
 
 const Products = () => {

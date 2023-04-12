@@ -17,7 +17,7 @@ import { Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { selectItem } from 'src/redux/Select/selectionActions'
 import { toast } from 'react-hot-toast'
-import instance from 'src/API/AxiosInstance'
+import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 import AddPaymentModal from './AddPaymentModal'
 
 const Reservation = () => {
@@ -25,16 +25,16 @@ const Reservation = () => {
   const [clicked, setClicked] = useState({})
   const [reservations, setReservations] = useState([])
   const [open, setOpen] = useState(false)
-  console.log('this is reservations', reservations)
-  const confirmReservation = async (data) => {
-    const res = await instance
+
+  const changeReservationStatus = async (data, action) => {
+    await instance
       .put('/reservation/update', data)
       .then((res) => {
         console.log(res.data)
-        toast.success('Reservation updated')
+        toast.success(`Reservation ${action} success`)
       })
       .catch((err) => {
-        toast.error('Reservation update failed')
+        toast.error(`Reservation ${action} failed`)
       })
   }
   useEffect(() => {
@@ -142,10 +142,13 @@ const Reservation = () => {
                           <Link
                             className="badge badge-warning text-primary text-decoration-none"
                             onClick={() =>
-                              confirmReservation({
-                                id: reserv.id,
-                                status: 'confirmed',
-                              })
+                              changeReservationStatus(
+                                {
+                                  id: reserv.id,
+                                  status: 'confirmed',
+                                },
+                                'confirm',
+                              )
                             }
                           >
                             {' '}
@@ -154,10 +157,13 @@ const Reservation = () => {
                           <Link
                             className="badge badge-danger text-primary text-decoration-none"
                             onClick={() =>
-                              confirmReservation({
-                                id: reserv.id,
-                                status: 'canceled',
-                              })
+                              changeReservationStatus(
+                                {
+                                  id: reserv.id,
+                                  status: 'canceled',
+                                },
+                                'cancel',
+                              )
                             }
                           >
                             {' '}

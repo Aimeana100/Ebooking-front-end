@@ -10,15 +10,14 @@ import {
   CFormLabel,
   CRow,
 } from '@coreui/react'
-import React, { useEffect } from 'react'
-import { FormCheck } from 'react-bootstrap'
+import React from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 import { useSelector } from 'react-redux'
-import instance from 'src/API/AxiosInstance'
+import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 
 function UserRolesEdit() {
-  const { register, handleSubmit, watch, reset } = useForm()
+  const { register, handleSubmit, reset } = useForm()
   const role = useSelector((state) => state.selection.selected)
   const accessArray = [
     'halls',
@@ -46,13 +45,9 @@ function UserRolesEdit() {
       }
     }
 
-    console.log(data)
-    // if (data.access) {
-    //   data.access = [...data.access, 'Dashboard']
-    // }
     data = { ...data, id: role.id }
-    console.log(data)
-    const res = await instance
+
+    await instance
       .put('/roles/update', data)
       .then((res) => {
         toast.success('user role updated')
@@ -63,7 +58,7 @@ function UserRolesEdit() {
         reset()
       })
   }
-  useEffect(() => {}, [])
+
   return (
     <div>
       <CCard className="mb-4">
@@ -153,23 +148,3 @@ function UserRolesEdit() {
 }
 
 export default UserRolesEdit
-
-// <CCol>
-//                 <p className="fw-bolder"> Role permissions</p>
-//                 <div>
-//                   {permissionArray && permissionArray.length !== 0
-//                     ? permissionArray.map((e, i) => {
-//                         return (
-//                           <CFormCheck
-//                             key={e}
-//                             id={`permission ${i}`}
-//                             defaultChecked={role.permission.includes(e)}
-//                             value={e}
-//                             label={e.charAt(0).toUpperCase() + e.slice(1)}
-//                             {...register(`permission`)}
-//                           />
-//                         )
-//                       })
-//                     : null}
-//                 </div>
-//               </CCol>

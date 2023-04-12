@@ -20,14 +20,14 @@ import { toast } from 'react-hot-toast'
 import ReactToPrint from 'react-to-print'
 import PrintTemplate1 from '../Printing/PrintTemplate1'
 import PurchaseOrder from '../stock/PurchaseOrder'
-import instance from 'src/API/AxiosInstance'
+import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 
 const RequestToCashier = React.forwardRef((props, ref) => {
   const componentRef = useRef()
-  const { register, handleSubmit, getValues, reset } = useForm()
+  const { register, getValues, reset } = useForm()
   const [stockItems, setStockItems] = useState([])
   const [visible, setVisible] = useState(false)
-  let [items, setItems] = useState(stockItems)
+  let items = stockItems
   const [item, setItem] = useState(null)
   const [requestItems, setRequestItems] = useState([])
   const clearPurchaseOrder = () => {

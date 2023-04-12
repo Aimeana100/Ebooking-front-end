@@ -14,16 +14,16 @@ import {
 } from '@coreui/react'
 import { Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { selectRoom } from 'src/redux/Room/roomActions'
-import instance from 'src/API/AxiosInstance'
+import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
+import { selectItem } from 'src/redux/Select/selectionActions'
 
-const Room = (prop) => {
+const Room = () => {
   const dispatch = useDispatch()
   const [rooms, setRooms] = useState([])
   useEffect(() => {
     const getRooms = async () => {
-      const res = await instance
+      await instance
         .get('/room/all')
         .then((res) => {
           setRooms(res.data.data)
@@ -75,7 +75,7 @@ const Room = (prop) => {
                             <Link
                               to="/booking/reservations/add"
                               onClick={() => {
-                                return dispatch(selectRoom(room))
+                                return dispatch(selectItem(room))
                               }}
                             >
                               Book now

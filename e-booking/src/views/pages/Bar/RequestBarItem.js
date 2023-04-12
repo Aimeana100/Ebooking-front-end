@@ -18,7 +18,7 @@ import { Typeahead } from 'react-bootstrap-typeahead'
 import { toast } from 'react-hot-toast'
 import ReactToPrint from 'react-to-print'
 import PrintTemplate1 from '../Printing/PrintTemplate1'
-import instance from 'src/API/AxiosInstance'
+import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 import StockOrder from './StockOrder'
 
 const RequestBarItem = React.forwardRef((props, ref) => {

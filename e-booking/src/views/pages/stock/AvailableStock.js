@@ -11,13 +11,13 @@ import {
 
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
-import instance from 'src/API/AxiosInstance'
+import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 
 function AvailableStock() {
   const [items, setItems] = useState([])
   useEffect(() => {
     const getItems = async () => {
-      const res = await instance
+      await instance
         .get('/stock/item/balance')
         .then((res) => {
           setItems(res.data.data)

@@ -11,15 +11,14 @@ import {
   CForm,
   CFormInput,
   CFormLabel,
-  CFormSelect,
   CRow,
 } from '@coreui/react'
-import { useSelector } from 'react-redux'
-import instance from 'src/API/AxiosInstance'
+
+import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 import { toast } from 'react-hot-toast'
 
 function ServiceSell() {
-  const { register, handleSubmit, watch, reset } = useForm()
+  const { register, handleSubmit } = useForm()
   const [singleSelections, setSingleSelections] = useState([])
   const [services, setServices] = useState([])
   const onServiceSell = (data) => {
@@ -35,7 +34,7 @@ function ServiceSell() {
   const inputState = { minLength: 2 }
   useEffect(() => {
     const getAllServices = async () => {
-      const res = await instance
+      await instance
         .get('/services/all')
         .then((res) => {
           if (res.status === 200) {

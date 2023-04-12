@@ -16,18 +16,17 @@ import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectItem } from 'src/redux/Select/selectionActions'
 import { toast } from 'react-hot-toast'
-import instance from 'src/API/AxiosInstance'
+import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 const UserRoles = () => {
-  let users = useSelector((state) => state.systemUsers.users) || []
   let loggedInUser = useSelector((state) => state.auth.user.Role.name)
   const [roles, setRoles] = useState([])
   const [change, setChange] = useState(false)
-  users = users ? users : []
+
   const dispatch = useDispatch()
   const deleteUserRole = async (id) => {
-    const res = await instance
+    await instance
       .delete(`/roles/delete/${id}`)
-      .then((res) => {
+      .then(() => {
         toast.success('User role deleted')
       })
       .catch((err) => {
@@ -36,14 +35,14 @@ const UserRoles = () => {
   }
   useEffect(() => {
     const getAllRoles = async () => {
-      const res = await instance
+      await instance
         .get('/roles/all')
         .then((res) => {
           setRoles(res.data.roles)
           toast.success('all roles available')
         })
-        .catch(() => {
-          toast.error('network error')
+        .catch((err) => {
+          toast.error(err.message)
         })
     }
     getAllRoles()
@@ -138,7 +137,3 @@ const UserRoles = () => {
 }
 
 export default UserRoles
-
-//  {
-//    role.access[acces].map((e) => <p>{e}</p>)
-//  }

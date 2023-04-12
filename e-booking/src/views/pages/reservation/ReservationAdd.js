@@ -20,8 +20,9 @@ import DatePicker from 'react-datepicker'
 import { getAllRemoveDates } from 'src/utils/functions'
 import CalendarContainer from 'src/utils/CalendarContainer'
 import { toast } from 'react-hot-toast'
-import instance from 'src/API/AxiosInstance'
+import { instance, getTokenPromise } from 'src/API/AxiosInstance'
 import { currencies } from 'src/utils/constants'
+// import rw from 'date-fns/esm/locale/'
 
 //import TimePicker from 'react-multi-date-picker/plugins/time_picker'
 
@@ -260,6 +261,7 @@ const ReservationAdd = () => {
                           portalId="root-portal"
                           showTimeSelect
                           timeIntervals={60}
+                          dateFormat="dd/MM/yyyy"
                           popperPlacement="bottom-end"
                           popperContainer={CalendarContainer}
                           excludeDates={[...removeDates]}
@@ -276,6 +278,7 @@ const ReservationAdd = () => {
                           showTimeSelect
                           timeFormat="p"
                           minDate={new Date()}
+                          dateFormat="dd/MM/yyyy"
                           timeIntervals={60}
                           popperPlacement="bottom-end"
                           onChange={(date) => setEndDate(date)}
